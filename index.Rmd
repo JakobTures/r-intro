@@ -100,9 +100,6 @@ library(tidyverse)
 library(bookdown)
 ```
 
-Bei der Gestaltung dieser Website sowie der vorgestellten code Beispiele kam
-Folgendes zum Einsatz:
-
 ``` {r colophon}
 sessioninfo::session_info()
 ```
