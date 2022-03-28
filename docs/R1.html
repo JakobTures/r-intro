@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1 R Basics | Kurzeinführung zu R</title>
+  <meta name="description" content="1 R Basics | Kurzeinführung zu R" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1 R Basics | Kurzeinführung zu R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  <meta name="github-repo" content="https://github.com/JakobTures/r-intro.git" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1 R Basics | Kurzeinführung zu R" />
+  
+  
+  
+
+<meta name="author" content="Jakob Tures" />
+
+
+<meta name="date" content="2022-03-28" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="R2.html"/>
+<script src="libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+Kurzeinführung zu R
+
+<li class="divider"></li>
+<li><a href="index.html#einleitung">Einleitung<span></span></a>
+<ul>
+<li><a href="index.html#inhalt">Inhalt<span></span></a></li>
+<li><a href="index.html#konventionen">Konventionen<span></span></a></li>
+<li><a href="index.html#danksagung">Danksagung<span></span></a></li>
+<li><a href="index.html#colophon">Colophon<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="R1.html"><a href="R1.html"><i class="fa fa-check"></i><b>1</b> R Basics<span></span></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="R1.html"><a href="R1.html#installation"><i class="fa fa-check"></i><b>1.1</b> Installation<span></span></a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="R1.html"><a href="R1.html#r"><i class="fa fa-check"></i><b>1.1.1</b> R<span></span></a></li>
+<li class="chapter" data-level="1.1.2" data-path="R1.html"><a href="R1.html#rstudio"><i class="fa fa-check"></i><b>1.1.2</b> RStudio<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="R1.html"><a href="R1.html#erste-schritte"><i class="fa fa-check"></i><b>1.2</b> Erste Schritte<span></span></a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="R1.html"><a href="R1.html#übersicht-rstudio"><i class="fa fa-check"></i><b>1.2.1</b> Übersicht RStudio<span></span></a></li>
+<li class="chapter" data-level="1.2.2" data-path="R1.html"><a href="R1.html#hello-world"><i class="fa fa-check"></i><b>1.2.2</b> Hello World!<span></span></a></li>
+<li class="chapter" data-level="1.2.3" data-path="R1.html"><a href="R1.html#rechnen-mit-r"><i class="fa fa-check"></i><b>1.2.3</b> Rechnen mit R<span></span></a></li>
+<li class="chapter" data-level="1.2.4" data-path="R1.html"><a href="R1.html#vergleich"><i class="fa fa-check"></i><b>1.2.4</b> Vergleichsoperatoren<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="R1.html"><a href="R1.html#objekte"><i class="fa fa-check"></i><b>1.3</b> Objekte<span></span></a></li>
+<li class="chapter" data-level="1.4" data-path="R1.html"><a href="R1.html#vektoren"><i class="fa fa-check"></i><b>1.4</b> Vektoren<span></span></a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="R1.html"><a href="R1.html#subsetting"><i class="fa fa-check"></i><b>1.4.1</b> Subsetting<span></span></a></li>
+<li class="chapter" data-level="1.4.2" data-path="R1.html"><a href="R1.html#typen-von-vektoren"><i class="fa fa-check"></i><b>1.4.2</b> Typen von Vektoren<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="R1.html"><a href="R1.html#weitere-datentypen"><i class="fa fa-check"></i><b>1.5</b> Weitere Datentypen<span></span></a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="R1.html"><a href="R1.html#dataframes"><i class="fa fa-check"></i><b>1.5.1</b> Dataframes<span></span></a></li>
+<li class="chapter" data-level="1.5.2" data-path="R1.html"><a href="R1.html#listen"><i class="fa fa-check"></i><b>1.5.2</b> Listen<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="R1.html"><a href="R1.html#r-packages"><i class="fa fa-check"></i><b>1.6</b> R Packages<span></span></a>
+<ul>
+<li class="chapter" data-level="1.6.1" data-path="R1.html"><a href="R1.html#installieren-und-laden"><i class="fa fa-check"></i><b>1.6.1</b> Installieren und Laden<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.7" data-path="R1.html"><a href="R1.html#funktionen"><i class="fa fa-check"></i><b>1.7</b> Funktionen<span></span></a>
+<ul>
+<li class="chapter" data-level="1.7.1" data-path="R1.html"><a href="R1.html#namesspaces"><i class="fa fa-check"></i><b>1.7.1</b> Namesspaces<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.8" data-path="R1.html"><a href="R1.html#hilfe"><i class="fa fa-check"></i><b>1.8</b> Hilfe?<span></span></a>
+<ul>
+<li class="chapter" data-level="1.8.1" data-path="R1.html"><a href="R1.html#hilfe-1"><i class="fa fa-check"></i><b>1.8.1</b> Hilfe!<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="R2.html"><a href="R2.html"><i class="fa fa-check"></i><b>2</b> RStudio &amp; das tidyverse<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="R2.html"><a href="R2.html#rstudio-workflow"><i class="fa fa-check"></i><b>2.1</b> RStudio workflow<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="R2.html"><a href="R2.html#r-scripts"><i class="fa fa-check"></i><b>2.1.1</b> R Scripts<span></span></a></li>
+<li class="chapter" data-level="2.1.2" data-path="R2.html"><a href="R2.html#projekte"><i class="fa fa-check"></i><b>2.1.2</b> Projekte<span></span></a></li>
+<li class="chapter" data-level="2.1.3" data-path="R2.html"><a href="R2.html#kommentare"><i class="fa fa-check"></i><b>2.1.3</b> Kommentare<span></span></a></li>
+<li class="chapter" data-level="2.1.4" data-path="R2.html"><a href="R2.html#speichern"><i class="fa fa-check"></i><b>2.1.4</b> Speichern<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="R2.html"><a href="R2.html#tidyverse"><i class="fa fa-check"></i><b>2.2</b> tidyverse<span></span></a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="R2.html"><a href="R2.html#tidy-data"><i class="fa fa-check"></i><b>2.2.1</b> tidy data<span></span></a></li>
+<li class="chapter" data-level="2.2.2" data-path="R2.html"><a href="R2.html#tibbles"><i class="fa fa-check"></i><b>2.2.2</b> Tibbles<span></span></a></li>
+<li class="chapter" data-level="2.2.3" data-path="R2.html"><a href="R2.html#die-pipe"><i class="fa fa-check"></i><b>2.2.3</b> Die Pipe <code>%&gt;%</code><span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="R2.html"><a href="R2.html#weitere-hilfe"><i class="fa fa-check"></i><b>2.3</b> Weitere Hilfe!<span></span></a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="R2.html"><a href="R2.html#packages"><i class="fa fa-check"></i><b>2.3.1</b> Packages<span></span></a></li>
+<li class="chapter" data-level="2.3.2" data-path="R2.html"><a href="R2.html#empfohlene-externe-resourcen"><i class="fa fa-check"></i><b>2.3.2</b> Empfohlene externe Resourcen<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="R3.html"><a href="R3.html"><i class="fa fa-check"></i><b>3</b> Transformation und Analyse mit dplyr<span></span></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="R3.html"><a href="R3.html#die-stammdaten-des-17.---19.-bundestags"><i class="fa fa-check"></i><b>3.1</b> Die Stammdaten des 17. - 19. Bundestags<span></span></a></li>
+<li class="chapter" data-level="3.2" data-path="R3.html"><a href="R3.html#datentransformation-mit-dplyr"><i class="fa fa-check"></i><b>3.2</b> Datentransformation mit <strong>dplyr</strong><span></span></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="R3.html"><a href="R3.html#filter"><i class="fa fa-check"></i><b>3.2.1</b> <code>filter()</code><span></span></a></li>
+<li class="chapter" data-level="3.2.2" data-path="R3.html"><a href="R3.html#select"><i class="fa fa-check"></i><b>3.2.2</b> <code>select()</code><span></span></a></li>
+<li class="chapter" data-level="3.2.3" data-path="R3.html"><a href="R3.html#rename"><i class="fa fa-check"></i><b>3.2.3</b> <code>rename()</code><span></span></a></li>
+<li class="chapter" data-level="3.2.4" data-path="R3.html"><a href="R3.html#mutate"><i class="fa fa-check"></i><b>3.2.4</b> <code>mutate()</code><span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="R3.html"><a href="R3.html#speichern-der-transformierten-daten"><i class="fa fa-check"></i><b>3.3</b> Speichern der transformierten Daten<span></span></a></li>
+<li class="chapter" data-level="3.4" data-path="R3.html"><a href="R3.html#deskriptive-datenanalyse-mit-dplyr"><i class="fa fa-check"></i><b>3.4</b> Deskriptive Datenanalyse mit <strong>dplyr</strong><span></span></a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="R3.html"><a href="R3.html#summarise"><i class="fa fa-check"></i><b>3.4.1</b> <code>summarise()</code><span></span></a></li>
+<li class="chapter" data-level="3.4.2" data-path="R3.html"><a href="R3.html#summarise-group_by"><i class="fa fa-check"></i><b>3.4.2</b> <code>summarise()</code> &amp; <code>group_by()</code><span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="R3.html"><a href="R3.html#export"><i class="fa fa-check"></i><b>3.5</b> Export von Tabellen<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="R4.html"><a href="R4.html"><i class="fa fa-check"></i><b>4</b> Graphische Analyse mit ggplot2<span></span></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="R4.html"><a href="R4.html#ggplot2-syntax"><i class="fa fa-check"></i><b>4.1</b> ggplot2 syntax<span></span></a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="R4.html"><a href="R4.html#geoms-aesthetics"><i class="fa fa-check"></i><b>4.1.1</b> geoms &amp; aesthetics<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="R4.html"><a href="R4.html#graphische-analyse-der-stammdaten"><i class="fa fa-check"></i><b>4.2</b> Graphische Analyse der Stammdaten<span></span></a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="R4.html"><a href="R4.html#kontinuierliches-x-y"><i class="fa fa-check"></i><b>4.2.1</b> kontinuierliches x &amp; y<span></span></a></li>
+<li class="chapter" data-level="4.2.2" data-path="R4.html"><a href="R4.html#kategoriales-x-kontinuierliches-y"><i class="fa fa-check"></i><b>4.2.2</b> kategoriales x, kontinuierliches y<span></span></a></li>
+<li class="chapter" data-level="4.2.3" data-path="R4.html"><a href="R4.html#kontinuierliches-x"><i class="fa fa-check"></i><b>4.2.3</b> kontinuierliches x<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="R4.html"><a href="R4.html#graphiken-exportieren"><i class="fa fa-check"></i><b>4.3</b> Graphiken exportieren<span></span></a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Kurzeinführung zu R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="R1" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">1</span> R Basics<a href="R1.html#R1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="installation" class="section level2 hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> Installation<a href="R1.html#installation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In diesem Kurs werden wir mit der Sprache R in Kombination mit der
+Entwicklungsumgebung RStudio arbeiten. Bevor wir mit der Einführung in die
+grundlegende Bedienung beginnen, zunächst einige Worte zur Installation der
+kostenlos zugänglichen Software.</p>
+<div id="r" class="section level3 hasAnchor" number="1.1.1">
+<h3><span class="header-section-number">1.1.1</span> R<a href="R1.html#r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><em>R</em> ist eine Programmiersprache, die vor allem für statistische Analysen
+angewandt wird. Generelle Informationen zu R und die ausführliche Dokumentation
+finden sie unter: <a href="https://www.r-project.org/" target="_blank">https://www.r-project.org/</a>.</p>
+<p>Die aktuellste Version von R für alle gängigen Betriebssysteme findet sich stets
+im <em>CRAN</em>, dem <em>Comprehensive R Archive Network</em> unter:
+<a href="https://cran.r-project.org/" target="_blank">https://cran.r-project.org/</a>. Die Links zu den
+Installationsdateien finden sich im oberen Bereich der Website. Falls Sie
+Windows nutzen, wählen Sie bitte die “base” Version. Im Falle von MacOS, hängt
+die Wahl des Installers von der Version Ihres Betriebssystems ab. In beiden
+Fällen führen Sie bitte die passende Datei aus und Installieren Sie R in ein
+Verzeichnis Ihrer Wahl. Für Linux Systeme stellt CRAN Installationsanweisungen
+für einige der populären Distribution bereit.</p>
+<p>Die Code Beispiele auf dieser Website wurden mit der R Version 4.1.1
+“Kick Things” erstellt und getestet.</p>
+</div>
+<div id="rstudio" class="section level3 hasAnchor" number="1.1.2">
+<h3><span class="header-section-number">1.1.2</span> RStudio<a href="R1.html#rstudio" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>R kann nun bereits ausgeführt werden, erlaubt aber nur die Nutzung einer
+einfachen Konsole. Um die Arbeit mit R angenehmer zu gestalten, empfiehlt sich
+dringend die zusätzliche Installation einer IDE – Integrated Development
+Environment – also einer graphischen Benutzeroberfläche. Die populärste IDE ist
+<em>RStudio</em>, zu finden unter: <a href="https://www.rstudio.com/" target="_blank">https://www.rstudio.com/</a>. Unter
+“Download” wählen Sie bitte die kostenlose Version von “RStudio Desktop” und den
+passenden Installer für Ihr Betriebssystem.</p>
+<p>Installieren Sie bitte zuerst R und erst danach RStudio. Starten brauchen Sie
+dann in Zukunft nur noch RStudio.</p>
+</div>
+</div>
+<div id="erste-schritte" class="section level2 hasAnchor" number="1.2">
+<h2><span class="header-section-number">1.2</span> Erste Schritte<a href="R1.html#erste-schritte" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="übersicht-rstudio" class="section level3 hasAnchor" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Übersicht RStudio<a href="R1.html#übersicht-rstudio" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="images/RStudio.png" width="1922" /></p>
+<p>Das RStudio Interface besteht aus vier Unterbereichen. Links-unten finden Sie
+die “Console” sowie weitere Tabs, die Sie zu Beginn selten bis nie brauchen
+werden. Die Konsole kann genutzt werden, um R code einzugeben und auszuführen,
+mehr dazu in Kürze. Links-oben werden geöffnete R scripts angezeigt. Aktuell
+haben Sie noch kein script geöffnet, ab Kapitel <a href="R2.html#R2">2</a> wird dort aber der
+überwiegende Teil unserer Arbeit stattfinden. Rechts-oben finden sich mehrere
+Tabs, von denen für uns vor allem das “Environment” Tab von Interesse ist. Hier
+werden alle Objekte gelistet die Sie in ihrem code erstellen. Auch hierzu in
+Kürze mehr. Rechts-unten finden Sie erneute eine Anzahl Tabs. “Files” zeigt
+uns die Dateistruktur unseres Rechners, “Plots” den graphischen output (siehe
+Kapitel <a href="R3.html#R3">3</a>) und “Help” die Hilfedateien zu Funktionen und packages
+(mehr in Kapitel <a href="R2.html#R2">2</a>).</p>
+</div>
+<div id="hello-world" class="section level3 hasAnchor" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Hello World!<a href="R1.html#hello-world" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Nun können wir endlich damit beginnen unseren ersten R Befehl auszuführen. In
+diesem Kapitel werden wir Kommandos noch ausschließlich in der Konsole
+schreiben. In der untersten Zeile der Konsole sehen Sie ein <code>&gt;</code> Symbol. Hinter
+dieser Eingabeaufforderung können wir unsere Befehle schreiben und mit “Enter”
+ausführen. Versuchen Sie des mit folgender Zeile:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="R1.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Hello World!&quot;</span>)</span>
+<span id="cb3-2"><a href="R1.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;Hello World!&quot;</span></span></code></pre></div>
+<p>Sie haben gerade ihren ersten R Befehl ausgeführt, Ihren ersten Output erhalten
+und gleichzeitig auch Ihre erste Funktion genutzt. Mehr zu Funktionen folgt am
+Ende dieses Kapitels, fürs Erste genügt es aber zu wissen, dass <code>print()</code> alles
+innerhalb der Klammern als Output druckt. Der Output selbst beginnt mit <code>[1]</code>,
+was anzeigt, dass dies das erste und hier das einzige Element des Outputs ist.</p>
+<p>Bitte beachten Sie, dass R die auf dieser Website vor dem Output dargestellten
+<code>##</code> nicht abdruckt.</p>
+</div>
+<div id="rechnen-mit-r" class="section level3 hasAnchor" number="1.2.3">
+<h3><span class="header-section-number">1.2.3</span> Rechnen mit R<a href="R1.html#rechnen-mit-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>R versteht die arithmethischen Operatoren <code>+ - * /</code>. Sie können R also auch als
+übergroßen Taschenrechner nutzen. Für fortgeschrittenere Rechenoperationen steht
+eine Vielzahl von Funktionen zur Verfügung. Beispielsweise gibt Ihnen <code>sqrt()</code>
+die Quadratwurzel der von den Klammern umfassten Zahl als Output zurück. Oben
+mussten wir den Text <code>"Hello World!"</code> in Anführungszeichen einfassen. Zahlen
+müssen hingegen ohne Anführungszeichen geschrieben werden. Potenzen bekommen wir
+mit der Notation <code>x^y</code>. Im folgenden Codeblock finden Sie einige Beispiele, die
+Sie Zeile für Zeile in die console tippen und mit “Enter” ausführen können:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="R1.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dv">17</span> <span class="sc">+</span> <span class="dv">25</span></span>
+<span id="cb4-2"><a href="R1.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 42</span></span>
+<span id="cb4-3"><a href="R1.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dv">99</span> <span class="sc">-</span> <span class="dv">57</span></span>
+<span id="cb4-4"><a href="R1.html#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 42</span></span>
+<span id="cb4-5"><a href="R1.html#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="sc">*</span> <span class="fl">10.5</span></span>
+<span id="cb4-6"><a href="R1.html#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 42</span></span>
+<span id="cb4-7"><a href="R1.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="dv">84</span> <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb4-8"><a href="R1.html#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 42</span></span>
+<span id="cb4-9"><a href="R1.html#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">1764</span>)</span>
+<span id="cb4-10"><a href="R1.html#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 42</span></span>
+<span id="cb4-11"><a href="R1.html#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fl">6.480741</span> <span class="sc">^</span> <span class="dv">2</span></span>
+<span id="cb4-12"><a href="R1.html#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 42</span></span></code></pre></div>
+</div>
+<div id="vergleich" class="section level3 hasAnchor" number="1.2.4">
+<h3><span class="header-section-number">1.2.4</span> Vergleichsoperatoren<a href="R1.html#vergleich" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Vergleichsoperatoren können genutzt werden um zwei Werte miteinander zu
+vergleichen und das Testergebnis als <code>TRUE</code> oder <code>FALSE</code> Output zu erhalten. Um
+zu überprüfen, ob zwei Werte gleich sind, schreiben wir <code>==</code>. Dabei ist zu
+beachten, dass ein Vergleich zweier Werte stets zwei Gleichheitszeichen
+voraussetzt. <code>=</code> hat eine andere Bedeutung! Um zu testen ob zwei Werte <em>nicht</em>
+gleich sind, können wir <code>!=</code> nutzen, wobei das <code>!</code> generell für <em>nicht</em> steht.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="R1.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dv">42</span> <span class="sc">==</span> <span class="dv">42</span></span>
+<span id="cb5-2"><a href="R1.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] TRUE</span></span>
+<span id="cb5-3"><a href="R1.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dv">42</span> <span class="sc">!=</span> <span class="dv">42</span></span>
+<span id="cb5-4"><a href="R1.html#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] FALSE</span></span></code></pre></div>
+<p>Weitere mögliche Vergleiche sind <em>kleiner</em> <code>&lt;</code>, <em>kleiner gleich</em> <code>&lt;=</code>, <em>größer</em>
+<code>&gt;</code> und <em>größer gleich</em> <code>&gt;=</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="R1.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> <span class="sc">&lt;</span> <span class="dv">42</span></span>
+<span id="cb6-2"><a href="R1.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] TRUE</span></span>
+<span id="cb6-3"><a href="R1.html#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="dv">42</span> <span class="sc">&lt;=</span> <span class="dv">42</span></span>
+<span id="cb6-4"><a href="R1.html#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] TRUE</span></span>
+<span id="cb6-5"><a href="R1.html#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> <span class="sc">&gt;</span> <span class="dv">42</span></span>
+<span id="cb6-6"><a href="R1.html#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] FALSE</span></span>
+<span id="cb6-7"><a href="R1.html#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="dv">90</span> <span class="sc">&gt;=</span> <span class="dv">42</span></span>
+<span id="cb6-8"><a href="R1.html#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] TRUE</span></span></code></pre></div>
+</div>
+</div>
+<div id="objekte" class="section level2 hasAnchor" number="1.3">
+<h2><span class="header-section-number">1.3</span> Objekte<a href="R1.html#objekte" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In R können wir Daten und Ergebnisse unserer Analysen in Objekten speichern. So
+bleiben diese im Arbeitsspeicher erhalten und können später erneut aufgerufen
+und weiterverwendet werden. Ein Objekt ist dabei ein frei gewählter Name dem wir
+Daten zuweisen. Namen müssen dabei mit einem Buchstaben beginnen und sollten nur
+weitere Buchstaben, Ziffern oder <code>_</code> beinhalten. Verbreitete Konventionen für
+längere Objektnamen sind <em>snake case</em> – <code>the_answer</code> – und <em>camel case</em> –
+<code>theAnswer</code>. Dies ist letztlich Geschmackssache, es empfielt sich aber eine
+einheitliche Schreibweise sowie kurze aber klar verständliche Namen zu
+verwenden. Daten weisen wir einem Objekt mit dem <em>assignment operator</em> <code>&lt;-</code> zu.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="R1.html#cb7-1" aria-hidden="true" tabindex="-1"></a>the_answer <span class="ot">&lt;-</span> <span class="dv">42</span></span></code></pre></div>
+<p>Um sich Fingerakrobatik zu ersparen, ist es sinnvoll sich frühzeitig die
+Tastenkombination “Alt” + “-” anzugewöhnen, die <code>&lt;-</code> an der aktuellen Cursor
+Position einfügt.</p>
+<p>Die so in einem Objekt gespeicherten Daten können wir aufrufen, indem wir den
+Objektnamen als Befehl schreiben.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="R1.html#cb8-1" aria-hidden="true" tabindex="-1"></a>the_answer</span>
+<span id="cb8-2"><a href="R1.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 42</span></span></code></pre></div>
+<p>Wir können Werte in Objekten auch direkt in Berechnungen oder in Funktionen
+verwenden. Beachten Sie dabei, dass die Daten eines Objekts überschrieben
+werden, wenn wir diesem neue Daten zuweisen.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="R1.html#cb9-1" aria-hidden="true" tabindex="-1"></a>the_answer <span class="ot">&lt;-</span> the_answer <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb9-2"><a href="R1.html#cb9-2" aria-hidden="true" tabindex="-1"></a>the_answer</span>
+<span id="cb9-3"><a href="R1.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 21</span></span>
+<span id="cb9-4"><a href="R1.html#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="R1.html#cb9-5" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">17</span></span>
+<span id="cb9-6"><a href="R1.html#cb9-6" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb9-7"><a href="R1.html#cb9-7" aria-hidden="true" tabindex="-1"></a>the_answer <span class="ot">&lt;-</span> (a <span class="sc">+</span> b) <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb9-8"><a href="R1.html#cb9-8" aria-hidden="true" tabindex="-1"></a>the_answer</span>
+<span id="cb9-9"><a href="R1.html#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 42</span></span></code></pre></div>
+<p>So erstellte Objekte werden in dem “Environment” Tab (rechts-oben) gelistet.
+Möchten wir erstellte Objekte entfernen, können wir dazu die <code>rm()</code> Funktion
+nutzen. Dies ist zwar in der Regel nicht notwendig, kann aber hilfreich sein um
+versehentlich oder nur zum Test erstellte Objekte zu löschen und so den Tab
+etwas aufzuräumen.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="R1.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(the_answer)</span></code></pre></div>
+</div>
+<div id="vektoren" class="section level2 hasAnchor" number="1.4">
+<h2><span class="header-section-number">1.4</span> Vektoren<a href="R1.html#vektoren" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Als wir weiter oben eine Zahl einem Objekt zugewiesen haben, haben wir ohne es
+zu wissen bereits unseren ersten Vektor erstellt. Vektoren sind eindimensionale
+Datenstrukturen, die mehrere Elemente enthalten können. Die Länge eines Vektors
+bestimmt sich dabei anhand der Anzahl seiner Elemente. So erstellt auch
+<code>the_answer &lt;- 42</code> einen Vektor, jedoch einen Vektor der Länge 1.</p>
+<p>Möchten wir einen Vektor mit mehreren Elementen erstellen, nutzen wir dazu die
+Funktion <code>c()</code>, wobei “c” für “combine” steht. So werden alle durch Kommata
+getrennten Werte innerhalb der Klammern zu einem Vektor kombiniert.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="R1.html#cb11-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)</span>
+<span id="cb11-2"><a href="R1.html#cb11-2" aria-hidden="true" tabindex="-1"></a>v</span>
+<span id="cb11-3"><a href="R1.html#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1]  7  8  9 10</span></span></code></pre></div>
+<div id="subsetting" class="section level3 hasAnchor" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> Subsetting<a href="R1.html#subsetting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Möchten wir bestimme Elemente eines Vektors abrufen, nutzen wir <em>subsetting</em>.
+Dazu schreiben wir die Position des gewünschten Elements innerhalb des Vektors
+als Zahl in <code>[]</code> direkt nach dem Objektnamen. Um beispielsweise das erste oder
+das dritte Element unseres Vektors abzurufen:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="R1.html#cb12-1" aria-hidden="true" tabindex="-1"></a>v[<span class="dv">1</span>]</span>
+<span id="cb12-2"><a href="R1.html#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 7</span></span>
+<span id="cb12-3"><a href="R1.html#cb12-3" aria-hidden="true" tabindex="-1"></a>v[<span class="dv">3</span>]</span>
+<span id="cb12-4"><a href="R1.html#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 9</span></span></code></pre></div>
+<p>Mehrere Elemente gleichzeitig rufen wir ab indem wir mehrere Positionen mit
+<code>c()</code> kombinieren oder wir definieren mit <code>:</code> eine Spannweite von Positionen.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="R1.html#cb13-1" aria-hidden="true" tabindex="-1"></a>v[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span>
+<span id="cb13-2"><a href="R1.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 7 9</span></span>
+<span id="cb13-3"><a href="R1.html#cb13-3" aria-hidden="true" tabindex="-1"></a>v[<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb13-4"><a href="R1.html#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1]  8  9 10</span></span></code></pre></div>
+</div>
+<div id="typen-von-vektoren" class="section level3 hasAnchor" number="1.4.2">
+<h3><span class="header-section-number">1.4.2</span> Typen von Vektoren<a href="R1.html#typen-von-vektoren" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Betrachten wir den Vektor <code>v</code> im Environment, fällt auf, dass RStudio
+<code>num [1:4]</code> vor den gespeicherten Werten abduckt. Dies drückt zum einen aus,
+dass der Vektor die Länge 4 hat, zum anderen zeigt es den Typ des Vektors an.
+Hier handelt es sich um einen numerischen Vektor – <em>numeric</em>, ausgedrückt durch
+“num” – also einen Vektor der Zahlen enthält.</p>
+<p>Um Imformationen zu Typ, Länge und Inhalt von Objekten zu erhalten können wir
+auch die Funktion <code>str()</code> – structure – nutzen. Dies ist vor allem bei
+komplexeren Objekten wie Listen oder Dataframes (mehr dazu später) hilfreich, um
+einen ersten Überblick zu erhalten, ohne das komplette Objekt abzudrucken.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="R1.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(v)</span>
+<span id="cb14-2"><a href="R1.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  num [1:4] 7 8 9 10</span></span></code></pre></div>
+<p>R kennt noch weitere Typen von Vektoren, wobei für uns vor allem die Typen
+<em>logical</em> und <em>character</em> von Bedeutung sind.</p>
+<p>Logische Vektoren können nur die Werte <code>TRUE</code> und <code>FALSE</code> enthalten. Diese
+entstehen beispielsweise, wenn wir Vergleichsoperatoren für einen Test nutzen.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="R1.html#cb15-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="dv">5</span>)</span>
+<span id="cb15-2"><a href="R1.html#cb15-2" aria-hidden="true" tabindex="-1"></a>x <span class="sc">&gt;=</span> <span class="dv">5</span></span>
+<span id="cb15-3"><a href="R1.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] FALSE  TRUE FALSE  TRUE</span></span></code></pre></div>
+<p>Wir können logische Vektoren aber auch selbst erstellen.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="R1.html#cb16-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb16-2"><a href="R1.html#cb16-2" aria-hidden="true" tabindex="-1"></a>z</span>
+<span id="cb16-3"><a href="R1.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1]  TRUE FALSE  TRUE</span></span></code></pre></div>
+<p><em>Character</em> Vektoren beinhalten Zeichenfolgen, sogenannte <em>strings</em>. Strings
+müssen stets von Anführungszeichen umschlossen sein.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="R1.html#cb17-1" aria-hidden="true" tabindex="-1"></a>char_v <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;This&quot;</span>, <span class="st">&quot;is&quot;</span>, <span class="st">&quot;a&quot;</span>, <span class="st">&quot;character&quot;</span>, <span class="st">&quot;vector!&quot;</span>)</span>
+<span id="cb17-2"><a href="R1.html#cb17-2" aria-hidden="true" tabindex="-1"></a>char_v</span>
+<span id="cb17-3"><a href="R1.html#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;This&quot;      &quot;is&quot;        &quot;a&quot;         &quot;character&quot; &quot;vector!&quot;</span></span></code></pre></div>
+<p>Auch Character Vektoren können miteinander verglichen werden.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="R1.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;same&quot;</span> <span class="sc">==</span> <span class="st">&quot;same&quot;</span></span>
+<span id="cb18-2"><a href="R1.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] TRUE</span></span>
+<span id="cb18-3"><a href="R1.html#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;same&quot;</span> <span class="sc">==</span> <span class="st">&quot;not the same&quot;</span></span>
+<span id="cb18-4"><a href="R1.html#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] FALSE</span></span>
+<span id="cb18-5"><a href="R1.html#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;same&quot;</span> <span class="sc">!=</span> <span class="st">&quot;not the same&quot;</span></span>
+<span id="cb18-6"><a href="R1.html#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] TRUE</span></span></code></pre></div>
+<p>Da wir mit Character Vektoren natürlich nicht rechnen können, kann es zu
+Problemen kommen, wenn wir Zahlenwerte – beispielsweise als Strings aus einem
+Text ausgelesen – als Character Vektor gespeichert haben.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="R1.html#cb19-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb19-2"><a href="R1.html#cb19-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;7&quot;</span>, <span class="st">&quot;8&quot;</span>, <span class="st">&quot;9&quot;</span>)</span>
+<span id="cb19-3"><a href="R1.html#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="R1.html#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(a)</span>
+<span id="cb19-5"><a href="R1.html#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  num [1:3] 1 2 3</span></span>
+<span id="cb19-6"><a href="R1.html#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(b)</span>
+<span id="cb19-7"><a href="R1.html#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  chr [1:3] &quot;7&quot; &quot;8&quot; &quot;9&quot;</span></span>
+<span id="cb19-8"><a href="R1.html#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="R1.html#cb19-9" aria-hidden="true" tabindex="-1"></a>a <span class="sc">+</span> b</span>
+<span id="cb19-10"><a href="R1.html#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Error in a + b: non-numeric argument to binary operator</span></span></code></pre></div>
+<p>Wir können R aber anweisen einen Character Vektor in einen numerischen Vektor
+umzuwandeln.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="R1.html#cb20-1" aria-hidden="true" tabindex="-1"></a>a <span class="sc">+</span> <span class="fu">as.numeric</span>(b)</span>
+<span id="cb20-2"><a href="R1.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1]  8 10 12</span></span></code></pre></div>
+<p>Alle Typen von Vektoren können neben ihren nativen Inhalten auch <code>NA</code> enthalten,
+die Repräsentation von fehlenden Werten in R.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="R1.html#cb21-1" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="cn">NA</span>, <span class="dv">4</span>)</span>
+<span id="cb21-2"><a href="R1.html#cb21-2" aria-hidden="true" tabindex="-1"></a>c</span>
+<span id="cb21-3"><a href="R1.html#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1]  1  2 NA  4</span></span></code></pre></div>
+</div>
+</div>
+<div id="weitere-datentypen" class="section level2 hasAnchor" number="1.5">
+<h2><span class="header-section-number">1.5</span> Weitere Datentypen<a href="R1.html#weitere-datentypen" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="dataframes" class="section level3 hasAnchor" number="1.5.1">
+<h3><span class="header-section-number">1.5.1</span> Dataframes<a href="R1.html#dataframes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Dataframes sind zweidimensionale Datenobjekte aus Spalten und Zeilen, also das
+was wir uns im Allgemeinen unter einer Tabelle vorstellen. Spalten enthalten
+benannte Variablen, Zeilen enthalten Beobachtungen. Um einen Dataframe zu
+erstellen nutzen wir die Funktion <code>data.frame()</code> und definieren innerhalb der
+Klammern benannte Spalten und ihre Inhalte, getrennt durch Kommata.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="R1.html#cb22-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Name =</span> <span class="fu">c</span>(<span class="st">&quot;Peter&quot;</span>, <span class="st">&quot;Mary&quot;</span>), <span class="at">Alter =</span> <span class="fu">c</span>(<span class="dv">42</span>, <span class="dv">24</span>), <span class="at">Weiblich =</span> <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>))</span>
+<span id="cb22-2"><a href="R1.html#cb22-2" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb22-3"><a href="R1.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">##    Name Alter Weiblich</span></span>
+<span id="cb22-4"><a href="R1.html#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Peter    42    FALSE</span></span>
+<span id="cb22-5"><a href="R1.html#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2  Mary    24     TRUE</span></span></code></pre></div>
+<p>R erkennt dabei automatisch, welche Datentypen die Spalten enthalten.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="R1.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span>
+<span id="cb23-2"><a href="R1.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    2 obs. of  3 variables:</span></span>
+<span id="cb23-3"><a href="R1.html#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Name    : chr  &quot;Peter&quot; &quot;Mary&quot;</span></span>
+<span id="cb23-4"><a href="R1.html#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Alter   : num  42 24</span></span>
+<span id="cb23-5"><a href="R1.html#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Weiblich: logi  FALSE TRUE</span></span></code></pre></div>
+<p>Wir können Dataframes auch aus zuvor definierte Vektoren zusammensetzen.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="R1.html#cb24-1" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Peter&quot;</span>, <span class="st">&quot;Mary&quot;</span>)</span>
+<span id="cb24-2"><a href="R1.html#cb24-2" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">42</span>, <span class="dv">24</span>)</span>
+<span id="cb24-3"><a href="R1.html#cb24-3" aria-hidden="true" tabindex="-1"></a>female <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb24-4"><a href="R1.html#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="R1.html#cb24-5" aria-hidden="true" tabindex="-1"></a>df_2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Name =</span> name, <span class="at">Alter =</span> age, <span class="at">Weiblich =</span> female)</span>
+<span id="cb24-6"><a href="R1.html#cb24-6" aria-hidden="true" tabindex="-1"></a>df_2</span>
+<span id="cb24-7"><a href="R1.html#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="do">##    Name Alter Weiblich</span></span>
+<span id="cb24-8"><a href="R1.html#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Peter    42    FALSE</span></span>
+<span id="cb24-9"><a href="R1.html#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 2  Mary    24     TRUE</span></span></code></pre></div>
+<p>Da Dataframes zweidimensional sind, müssen wir beim Subsetting auch eine
+Position für die Zeilen und Spalten angeben. Diese werden ebenfalls in <code>[]</code> nach
+dem Objektnamen eingefasst und sind durch ein Komma getrennt. Vor dem Komma
+steht die Position der Zeilen, nach dem Komma die Position der Spalten. Für
+Spalten können wir statt der Position auch den Namen der Spalte nutzen.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="R1.html#cb25-1" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">1</span>, <span class="dv">2</span>]</span>
+<span id="cb25-2"><a href="R1.html#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 42</span></span>
+<span id="cb25-3"><a href="R1.html#cb25-3" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">1</span>, <span class="st">&quot;Alter&quot;</span>]</span>
+<span id="cb25-4"><a href="R1.html#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 42</span></span></code></pre></div>
+<p>Extrahieren wir mehrere Zeilenelemente gleichzeitig, bekommen wir einen neuen
+Dataframe zurück. Um eine ganze Zeile zu extrahieren, können wir den Wert der
+Spaltenposition auch freilassen. Gleiches gilt für ganze Spalten, wobei wir beim
+Subsetting einer einzelnen Spalte einen Vektor als Output bekommen, bei mehreren
+erneut einen Dataframe.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="R1.html#cb26-1" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb26-2"><a href="R1.html#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   Alter Weiblich</span></span>
+<span id="cb26-3"><a href="R1.html#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1    42    FALSE</span></span>
+<span id="cb26-4"><a href="R1.html#cb26-4" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">1</span>, ]</span>
+<span id="cb26-5"><a href="R1.html#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="do">##    Name Alter Weiblich</span></span>
+<span id="cb26-6"><a href="R1.html#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Peter    42    FALSE</span></span>
+<span id="cb26-7"><a href="R1.html#cb26-7" aria-hidden="true" tabindex="-1"></a>df[, <span class="st">&quot;Alter&quot;</span>]</span>
+<span id="cb26-8"><a href="R1.html#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 42 24</span></span>
+<span id="cb26-9"><a href="R1.html#cb26-9" aria-hidden="true" tabindex="-1"></a>df[, <span class="fu">c</span>(<span class="st">&quot;Alter&quot;</span>, <span class="st">&quot;Weiblich&quot;</span>)]</span>
+<span id="cb26-10"><a href="R1.html#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="do">##   Alter Weiblich</span></span>
+<span id="cb26-11"><a href="R1.html#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 1    42    FALSE</span></span>
+<span id="cb26-12"><a href="R1.html#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 2    24     TRUE</span></span></code></pre></div>
+</div>
+<div id="listen" class="section level3 hasAnchor" number="1.5.2">
+<h3><span class="header-section-number">1.5.2</span> Listen<a href="R1.html#listen" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Vektoren und Spalten von Dataframes können immer nur Daten eines Typs
+enthalten. Mischen wir Datentypen, werden diese auf den kleinsten gemeinsamen
+Nenner gebracht. Logische Werte können auch numerisch abgebildet werden, da
+<code>TRUE</code> dem Wert 1 entspricht, <code>FALSE</code> dem Wert 0. In letzter Instanz können alle
+Datentypen als Character Vektoren gespeichert werden.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="R1.html#cb27-1" aria-hidden="true" tabindex="-1"></a>log_vector <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb27-2"><a href="R1.html#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(log_vector)</span>
+<span id="cb27-3"><a href="R1.html#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  num [1:2] 24 1</span></span>
+<span id="cb27-4"><a href="R1.html#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="R1.html#cb27-5" aria-hidden="true" tabindex="-1"></a>char_vector <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Mary&quot;</span>, <span class="dv">24</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb27-6"><a href="R1.html#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(char_vector)</span>
+<span id="cb27-7"><a href="R1.html#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  chr [1:3] &quot;Mary&quot; &quot;24&quot; &quot;TRUE&quot;</span></span></code></pre></div>
+<p>Möchten wir Datentypen mischen, können wir stattdessen Listen nutzen, welche
+unterschiedliche Datentypen enthalten können.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="R1.html#cb28-1" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;Mary&quot;</span>, <span class="dv">24</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb28-2"><a href="R1.html#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(l)</span>
+<span id="cb28-3"><a href="R1.html#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="do">## List of 3</span></span>
+<span id="cb28-4"><a href="R1.html#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ : chr &quot;Mary&quot;</span></span>
+<span id="cb28-5"><a href="R1.html#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ : num 24</span></span>
+<span id="cb28-6"><a href="R1.html#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ : logi TRUE</span></span></code></pre></div>
+<p>Um Listen wieder aufzulösen, nutzen wir <code>unlist()</code>.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="R1.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unlist</span>(l)</span>
+<span id="cb29-2"><a href="R1.html#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;Mary&quot; &quot;24&quot;   &quot;TRUE&quot;</span></span></code></pre></div>
+<p>Listen können sogar andere Listen enthalten und sind so das flexibelste
+Datenobjekt das R bereitstellt.</p>
+<p>Beim Subsetting von Listen ist darauf zu achten, dass <code>[]</code> immer auch eine Liste
+zurückgibt, selbst wenn diese nur noch ein Element enthält. Direkten Zugang zu
+Elementen erhalten wir mit <code>[[]]</code>.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="R1.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(l[<span class="dv">1</span>])</span>
+<span id="cb30-2"><a href="R1.html#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="do">## List of 1</span></span>
+<span id="cb30-3"><a href="R1.html#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ : chr &quot;Mary&quot;</span></span>
+<span id="cb30-4"><a href="R1.html#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(l[[<span class="dv">1</span>]])</span>
+<span id="cb30-5"><a href="R1.html#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  chr &quot;Mary&quot;</span></span></code></pre></div>
+</div>
+</div>
+<div id="r-packages" class="section level2 hasAnchor" number="1.6">
+<h2><span class="header-section-number">1.6</span> R Packages<a href="R1.html#r-packages" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Die R Welt ist offen und kollaborativ. Neben dem base R Package, das in der
+Grundinstallation bereits enthalten ist, steht eine stetig steigende Zahl von
+nutzergeschriebenen Packages zum Download zur Verfügung. Diese Packages haben
+stets einen thematischen Fokus – beispielsweise Datenbereinigung, graphische
+Analyse oder Textanalyse – und enthalten eine Reihe von Funktionen, die den
+Einsatzbereich von R über das hinaus erweitern, was von den Originalentwicklern
+geplant war, oder kompliziert gestaltete base R Ansätze durch neue
+anwenderfreundlichere Funktionen ersetzen.</p>
+<p>Packages, ihre Dokumentation und weitere Informationen werden ebenfalls auf CRAN
+gehostet. Hier haben Sie auch bereits die Installationsdateien für R
+heruntergeladen. Wenn Sie gleich ein Package direkt aus RStudio installieren,
+greift die Software auf CRAN zu, um die erforderlichen Dateien herunterzuladen.</p>
+<div id="installieren-und-laden" class="section level3 hasAnchor" number="1.6.1">
+<h3><span class="header-section-number">1.6.1</span> Installieren und Laden<a href="R1.html#installieren-und-laden" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Packages installieren wir mit der R Funktion <code>install.packages()</code>, mit dem Namen
+des packages in <code>""</code> zwischen den Klammern der Funktion. Wir werden im Laufe
+des Seminars eine Reihe von Packages nutzen, darunter das <strong>tidyverse</strong>. Zur
+Installation des core <strong>tidyverse</strong> packages schreiben wir in der Konsole:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="R1.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span></code></pre></div>
+<p>R wird während der Installation eine lange Reihe von Informationen ausgeben, von
+denen uns – solange alles gut geht – nur das <code>DONE (tidyverse)</code> interessieren
+muss. Nach erfolgreicher Installation können wir das Paket laden. Ein Package
+laden wir mit <code>library()</code> mit dem Namen des Packages innerhalb der Klammern,
+hier ausnahmsweise ohne <code>""</code>.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="R1.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<p>Manche Pakete, wie das <strong>tidyverse</strong>, geben uns auch beim Laden eine Reihe von
+Informationen, die wir gleich noch genauer betrachten werden. Andere Pakete laden
+aber auch still, ohne Informationen in die Konsole zu schreiben. Sollte beim
+Laden eines packages ein Problem auftauchen, wird R dies rückmelden.</p>
+</div>
+</div>
+<div id="funktionen" class="section level2 hasAnchor" number="1.7">
+<h2><span class="header-section-number">1.7</span> Funktionen<a href="R1.html#funktionen" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Bis zu diesem Punkt haben wir bereits eine Reihe von Funktionen genutzt, ohne
+eigentlich zu wissen, was Funktionen sind. Die in base R und den diversen
+Packages enthaltenen Funktionen bieten einen einfachen Zugang zu komplexeren im
+Hintergrund ablaufenden Operationen. Statt beispielsweise eine komplizierte
+Datenanalysetechnik selbst zu implementieren, also jeden Rechenschritt Zeile für
+Zeile selbst zu schreiben, installieren wir ein Package mit einer passenden
+Funktion und sparen eventuell mehrere hundert Zeilen Code ein. Außerdem sind die
+Rechenoperationen in den Packages meist sehr viel effizienter geschrieben als
+Code, den wir als Laien schreiben würden.</p>
+<p>Um eine Funktion aufzurufen, schreiben wir deren Namen gefolgt von
+Klammern. Innerhalb der Klammern geben wir ein oder mehrere Argumente an die
+Funktion weiter. In vielen Fällen wird als erstes oder eniziges Argument ein
+Datenobjekt – oder rohe Daten – angegeben, auf das die Funktion angewandt
+werden soll. So “druckt” beispielsweise die base R Funktion <code>print()</code> die
+angegebenen Daten in die Konsole, wie bereits bei <code>print("Hello World!")</code>
+gesehen.</p>
+<p>Weitere Beispiele für Funktionen sind einige der in base R enthaltenen
+Möglichkeiten, statistische Maßzahlen zu berechnen. Legen wir zunächst einen
+numerischen Vektor mit einigen Beispieldaten an:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="R1.html#cb33-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">15</span>, <span class="dv">16</span>, <span class="dv">23</span>, <span class="dv">42</span>)</span></code></pre></div>
+<p>Unser Interesse sei es, das arithmetische Mittel, den Median sowie die
+Standardabweichung der Daten zu berechnen. Dazu können wir die Funktionen
+<code>mean()</code>, <code>median()</code> und <code>sd()</code> aus base R nutzen. Allen drei Funktionen geben
+wir als einziges Argument die zuvor in einem Objekt gespeicherten Daten weiter.
+Weitere Argumente sind zwar möglich, für dieses Beispiel aber nicht notwendig.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="R1.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(data)</span>
+<span id="cb34-2"><a href="R1.html#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 18</span></span>
+<span id="cb34-3"><a href="R1.html#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(data)</span>
+<span id="cb34-4"><a href="R1.html#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 15.5</span></span>
+<span id="cb34-5"><a href="R1.html#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(data)</span>
+<span id="cb34-6"><a href="R1.html#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 13.49074</span></span></code></pre></div>
+<p>Funktionen erlauben häufig mehrere Argumente, von denen einige optional sein
+können und es beispielsweise ermöglichen bestimmte Optionen einer Funktion zu
+verändern. Dies wird uns im weiteren Verlauf regelmäßig begegenen.</p>
+<div id="namesspaces" class="section level3 hasAnchor" number="1.7.1">
+<h3><span class="header-section-number">1.7.1</span> Namesspaces<a href="R1.html#namesspaces" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Betrachten wir nochmals den Output nach dem Laden von <strong>tidyverse</strong> weiter oben.
+R gibt uns neben Namen und Versionen der geladenen packages – das core
+<strong>tidyverse</strong> Package, welches wir geladen haben ist eigentlich eine Sammlung von
+Packages – auch die Information über zwei Konflikte aus. Konflikte entstehen,
+wenn zwei geladene packages Funktionen mit den selben Namen enthalten. Die
+Funktion aus dem später geladenen package überschreibt dabei die zuvor geladene
+Funktion. Hier überschreibt das tidyverse package <strong>dplyr</strong> die Funktionen
+<code>filter()</code> und <code>lag()</code> aus dem base R package <strong>stats</strong>. Ohne <strong>dplyr</strong>
+beziehungsweise <strong>tidyverse</strong> zu laden wäre beim aufruf von <code>filter()</code> die
+Funktion aus dem <strong>stats</strong> package genutzt worden. Nun wird die gleichnamige
+Funktion aus <strong>dplyr</strong> angewandt.</p>
+<p>Möchten wir zwar <strong>dplyr</strong> laden, aber die Funktion <code>filter()</code> aus <strong>stats</strong>
+nutzen, können wir den Namespace der Funktion explizit angeben. Der Namespace
+gibt R an, in welchem Package es nach der Funktion suchen soll. Geben wir nur
+den Funktionsnamen an, sucht R in den Funktionen die aktuell geladen sind. Da
+<code>filter()</code> aus <strong>dplyr</strong> die Funktion aus <strong>stats</strong> überschrieben hat, würde
+erstere angewandt. Deklarieren wir den Namespace, können wir R genau angeben, in
+welchem geladenen oder ungeladenen package die Funktion zu finden ist. Dazu
+nutzen wir die Notation <code>namespace::function</code>. Um also <code>filter()</code> aus <strong>stats</strong>
+zu nutzen, schreiben wir: <code>stats::filter()</code>.</p>
+</div>
+</div>
+<div id="hilfe" class="section level2 hasAnchor" number="1.8">
+<h2><span class="header-section-number">1.8</span> Hilfe?<a href="R1.html#hilfe" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="hilfe-1" class="section level3 hasAnchor" number="1.8.1">
+<h3><span class="header-section-number">1.8.1</span> Hilfe!<a href="R1.html#hilfe-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Wir haben nun bereits einige R Funktionen kennengelernt und eine ungefähre Idee
+davon, was diese machen. Wie bekommen wir aber weitere Informationen zu diesen
+und neuen Funktionen, zu deren Funktionsweise, den zugelassenen Argumenten
+oder den zurückgegebenen Ergebnissen?</p>
+<p>Der einfachste Weg ist das Nutzen der eingebauten Hilfefunktionalitäten in R.
+Dazu schreiben wir in der Konsole einfach ein <code>?</code> vor den Namen einer Funktion,
+zu der wir Hilfe benötigen. Die zugehörige Hilfedatei öffnet sich dann im “Help”
+Tab, rechts-unten. Versuchen wir dies für die Funktion <code>rnorm()</code>.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="R1.html#cb35-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">rnorm</span>()</span></code></pre></div>
+<p>Die Hilfedatei gibt uns eine ganze Reihe von Informationen. <code>rnorm()</code> ist Teil
+einer Familie von Funktionen, die sich auf die Normalverteilung beziehen. Dabei
+ist es die Funktionalität von <code>rnorm()</code>, Zufallszahlen aus der Normalverteilung zu
+generieren. Wir sehen auch, dass wir der Funktion 3 Argumente geben können. Die
+Anzahl der zu erzeugenden Zufallszahlen <code>n</code> sowie Mittelwert <code>mean</code> und
+Standardabweichung <code>sd</code> der zugrundeliegenden Normalverteilung. Dabei ist zu
+erkennen, dass <code>mean</code> und <code>sd</code> die Standardwerte 0 beziehungsweise 1 haben.
+Diese werden automatisch eingesetzt, wenn wir sie im Funktionsaufruf nicht durch
+neue Werte ersetzen. <code>n</code> hat keinen Standardwert, hier müssen wir also einen
+Wert angeben wenn wir die Funktion aufrufen.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="R1.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>)</span>
+<span id="cb36-2"><a href="R1.html#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] -0.3058367  0.7187122 -0.4376060 -0.4125264 -0.6004963  0.4240317</span></span>
+<span id="cb36-3"><a href="R1.html#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7]  1.3075067  0.2435375 -0.1935374 -0.1808801</span></span></code></pre></div>
+<p>So bekommen wir 10 Zufallswerte aus der Normalverteilung mit dem Mittelwert 0
+und der Standardabweichung 1. Da es sich um Zufallszahlen handelt, wird Ihr
+Output von dem auf der Website dargestellten abweichen.</p>
+<p>Möchten wir Mittelwert und Standardabweichung anpassen, können wir die
+entsprechenden Argumente nutzen um die Standardwerte durch andere zu ersetzen.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="R1.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb37-2"><a href="R1.html#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 10.782300  9.324677 10.421483  9.335728 11.104446  9.472333 10.257398</span></span>
+<span id="cb37-3"><a href="R1.html#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [8] 10.001974  9.754984  9.268117</span></span></code></pre></div>
+<p>Die Hilfe gibt uns meist auch weitere detaillierte Informationen zur
+Funktionsweise und dem Output (unter" Value") der Funktion, sowie eine Reihe
+von Beispielsanwendungen. Diese Informationen richten sich oft aber an eher
+erfahrene Nutzer.</p>
+<p>Weiter Möglichkeiten sich zur Funktionsweise von Packages sowie R generell zu
+informieren, finden Sie in Kapitel <a href="R2.html#R2">2</a>.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="R2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/JakobTures/r-intro.git/01-R1.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

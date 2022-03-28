@@ -1,0 +1,108 @@
+--- 
+title: "Kurzeinführung zu R"
+author: "Jakob Tures"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+link-citations: yes
+github-repo: https://github.com/JakobTures/r-intro.git
+---
+
+``` {r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(cache.path = 'cache/')
+```
+
+# Einleitung {-}
+
+Diese Kurzeinführung zu R und in die Datenanaylse mit dem **tidyverse** package
+wurde als Begleitmaterial für das Lehrforschungsprojekt "Supervised Machine
+Learning: Zwischenrufe im Bundestag" an der Universität Potsdam im
+Sommersemester 2022 erstellt.
+
+## Inhalt {-}
+
+Kapitel \@ref(R1) & \@ref(R2) führen in die Grundlagen von R und RStudio ein. R
+ist eine Programmiersprache die vor allem für statistische Analysen Anwendung
+findet. Die Grundfunktionen von R können durch das Einbinden von professionellen
+und nutzergeschriebenen *packages* erweitert werden. Diese Erweiterungen sind
+es, die R so flexibel machen und neben statistischen Analysen unter anderem auch
+das Schreiben von Websites direkt in R -- so wie diese Website -- und die
+Aufbereitung und Analyse von Textdaten ermöglichen. RStudio ist ein IDE -- 
+*integrated development environment* -- für R und vereinfacht das Arbeiten mit
+der Sprache. Die ersten beiden Kapitel umfassen Informationen zur Installation
+beider Softwares, der Bedienung von RStudio sowie grundlegender R Befehlen.
+
+Während Kapitel \@ref(R2) bereits die grundlegenden Prinzipien des **tidyverse**
+-- einer populären Sammlung von R packages -- erläutert, befassen sich Kapitel
+\@ref(R3) & \@ref(R4) mit den zwei Bestandteilen der Sammlung die wir in der
+Datenanalyse am häufigsten verwenden werden. **dplyr** wird genutzt um Daten zu
+bereinigen, zu transformieren, neue Daten aus bestehenden zu erzeugen und
+zusammenfassende Statistiken zu berechnen. **gplot2** gibt uns einen umfassenden
+Werzeugkasten zur graphischen Analyse an die Hand. Wir betrachten dessen
+grundlegende Syntax, einige häufig genutzte Diagrammtypen sowie Optionen die
+erstellten Plots ansprechend und aussagekräftig zu gestalten.
+
+
+## Konventionen {-}
+
+Die R Welt ist eine englischssprachige Welt. Die Namen von packages und
+Funktionen sind meist mehr oder weniger sprechend und stets Englisch. Auch sind
+die meisten Begriffe die sich auf R und RStudio beziehen englischsprachig.
+Sinnvolle Übersetzungen existieren meist nicht. Auch wäre es nicht zielführend
+diese Begriffe selbst zu übersetzen da dies nur unnötig verwirren würde. Einer
+der wichtigsten Skills die Sie im Umgang mit einer Sprache wie R entwickeln
+müssen, ist das gezielte Suchen nach Problemen beziehungsweisen deren Lösungen
+in Büchern und vor allem auch im Internet. Dazu benötigen Sie das
+englischsprachige Fachvokabular. Aus diesem Grund wurden englischsprachigen
+Fachbegriffe eingebunden ohne sie zu übersetzen.
+
+Die Namen von R packages werden fett geschrieben. Da R *case sensitive* ist,
+also Groß- und Kleinschreibung nicht beliebig austauschbar ist, werden die Namen
+der packages exakt so geschrieben wie sie benannt sind, auch wenn sie am
+Satzbeginn stehen. Ein Beispiel ist: **tidytext**
+
+Alle Codebeispiele sind in `code font` gesetzt. Teilweise im Text:
+`print("Hello World")`, teilweise als *code block*:
+
+``` {r hello_world_1}
+print("Hello World!")
+```
+
+Der output des R codes wird direkt innerhalb des code blocks hinter `##`
+gedruckt.
+
+Ich empfehle dringend den Inhalt der code blocks selbst in RStudio laufen zu
+lassen und den code dabei auch selbst zu tippen statt ihn zu kopieren. Um eine
+Sprache wir R zu erlernen, muss man sie regelmäßig selbst schreiben. Nur so
+können die Namen häufig genutzter Funktionen sowie die R syntax in Ihr "muscle
+memory" übergehen.
+
+
+## Danksagung {-}
+
+Besonderer Dank gilt Lukas Höttges für die Unterstützung bei der Erstellung
+dieser Website. Gleichermaßen danke ich den aktuellen und ehemaligen
+Teammitgliedern des Lehrstuhls für Methoden der empirischen Sozialforschung an
+der Universität Potsdam für ihr wertvolles Feedback zu technischen und
+inhaltlichen Fragen in diversen Kaffeepausen und Zoom-Gesprächen.
+
+Dank gilt auch den Erstellern der genutzten R packages, insbesondere
+**bookdown** und **tidyverse**, sowie der gesamten R community.
+
+## Colophon {-}
+
+``` {r package_load_colophon, include = FALSE}
+library(knitr)
+library(tidyverse)
+library(bookdown)
+```
+
+Bei der Gestaltung dieser Website sowie der vorgestellten code Beispiele kam
+Folgendes zum Einsatz:
+
+``` {r colophon}
+sessioninfo::session_info()
+```

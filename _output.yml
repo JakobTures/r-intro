@@ -1,0 +1,12 @@
+bookdown::gitbook:
+  config:
+    toc:
+      collapse: section
+      scroll_highlight: yes
+      before: |
+        Kurzeinführung zu R
+      after: |
+        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+    edit: https://github.com/JakobTures/r-intro.git/%s
+    download: no
+    sharing: no

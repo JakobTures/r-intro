@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 Transformation und Analyse mit dplyr | Kurzeinführung zu R</title>
+  <meta name="description" content="3 Transformation und Analyse mit dplyr | Kurzeinführung zu R" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 Transformation und Analyse mit dplyr | Kurzeinführung zu R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  <meta name="github-repo" content="https://github.com/JakobTures/r-intro.git" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Transformation und Analyse mit dplyr | Kurzeinführung zu R" />
+  
+  
+  
+
+<meta name="author" content="Jakob Tures" />
+
+
+<meta name="date" content="2022-03-28" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="R2.html"/>
+<link rel="next" href="R4.html"/>
+<script src="libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+Kurzeinführung zu R
+
+<li class="divider"></li>
+<li><a href="index.html#einleitung">Einleitung<span></span></a>
+<ul>
+<li><a href="index.html#inhalt">Inhalt<span></span></a></li>
+<li><a href="index.html#konventionen">Konventionen<span></span></a></li>
+<li><a href="index.html#danksagung">Danksagung<span></span></a></li>
+<li><a href="index.html#colophon">Colophon<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="R1.html"><a href="R1.html"><i class="fa fa-check"></i><b>1</b> R Basics<span></span></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="R1.html"><a href="R1.html#installation"><i class="fa fa-check"></i><b>1.1</b> Installation<span></span></a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="R1.html"><a href="R1.html#r"><i class="fa fa-check"></i><b>1.1.1</b> R<span></span></a></li>
+<li class="chapter" data-level="1.1.2" data-path="R1.html"><a href="R1.html#rstudio"><i class="fa fa-check"></i><b>1.1.2</b> RStudio<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="R1.html"><a href="R1.html#erste-schritte"><i class="fa fa-check"></i><b>1.2</b> Erste Schritte<span></span></a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="R1.html"><a href="R1.html#übersicht-rstudio"><i class="fa fa-check"></i><b>1.2.1</b> Übersicht RStudio<span></span></a></li>
+<li class="chapter" data-level="1.2.2" data-path="R1.html"><a href="R1.html#hello-world"><i class="fa fa-check"></i><b>1.2.2</b> Hello World!<span></span></a></li>
+<li class="chapter" data-level="1.2.3" data-path="R1.html"><a href="R1.html#rechnen-mit-r"><i class="fa fa-check"></i><b>1.2.3</b> Rechnen mit R<span></span></a></li>
+<li class="chapter" data-level="1.2.4" data-path="R1.html"><a href="R1.html#vergleich"><i class="fa fa-check"></i><b>1.2.4</b> Vergleichsoperatoren<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="R1.html"><a href="R1.html#objekte"><i class="fa fa-check"></i><b>1.3</b> Objekte<span></span></a></li>
+<li class="chapter" data-level="1.4" data-path="R1.html"><a href="R1.html#vektoren"><i class="fa fa-check"></i><b>1.4</b> Vektoren<span></span></a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="R1.html"><a href="R1.html#subsetting"><i class="fa fa-check"></i><b>1.4.1</b> Subsetting<span></span></a></li>
+<li class="chapter" data-level="1.4.2" data-path="R1.html"><a href="R1.html#typen-von-vektoren"><i class="fa fa-check"></i><b>1.4.2</b> Typen von Vektoren<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="R1.html"><a href="R1.html#weitere-datentypen"><i class="fa fa-check"></i><b>1.5</b> Weitere Datentypen<span></span></a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="R1.html"><a href="R1.html#dataframes"><i class="fa fa-check"></i><b>1.5.1</b> Dataframes<span></span></a></li>
+<li class="chapter" data-level="1.5.2" data-path="R1.html"><a href="R1.html#listen"><i class="fa fa-check"></i><b>1.5.2</b> Listen<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="R1.html"><a href="R1.html#r-packages"><i class="fa fa-check"></i><b>1.6</b> R Packages<span></span></a>
+<ul>
+<li class="chapter" data-level="1.6.1" data-path="R1.html"><a href="R1.html#installieren-und-laden"><i class="fa fa-check"></i><b>1.6.1</b> Installieren und Laden<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.7" data-path="R1.html"><a href="R1.html#funktionen"><i class="fa fa-check"></i><b>1.7</b> Funktionen<span></span></a>
+<ul>
+<li class="chapter" data-level="1.7.1" data-path="R1.html"><a href="R1.html#namesspaces"><i class="fa fa-check"></i><b>1.7.1</b> Namesspaces<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.8" data-path="R1.html"><a href="R1.html#hilfe"><i class="fa fa-check"></i><b>1.8</b> Hilfe?<span></span></a>
+<ul>
+<li class="chapter" data-level="1.8.1" data-path="R1.html"><a href="R1.html#hilfe-1"><i class="fa fa-check"></i><b>1.8.1</b> Hilfe!<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="R2.html"><a href="R2.html"><i class="fa fa-check"></i><b>2</b> RStudio &amp; das tidyverse<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="R2.html"><a href="R2.html#rstudio-workflow"><i class="fa fa-check"></i><b>2.1</b> RStudio workflow<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="R2.html"><a href="R2.html#r-scripts"><i class="fa fa-check"></i><b>2.1.1</b> R Scripts<span></span></a></li>
+<li class="chapter" data-level="2.1.2" data-path="R2.html"><a href="R2.html#projekte"><i class="fa fa-check"></i><b>2.1.2</b> Projekte<span></span></a></li>
+<li class="chapter" data-level="2.1.3" data-path="R2.html"><a href="R2.html#kommentare"><i class="fa fa-check"></i><b>2.1.3</b> Kommentare<span></span></a></li>
+<li class="chapter" data-level="2.1.4" data-path="R2.html"><a href="R2.html#speichern"><i class="fa fa-check"></i><b>2.1.4</b> Speichern<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="R2.html"><a href="R2.html#tidyverse"><i class="fa fa-check"></i><b>2.2</b> tidyverse<span></span></a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="R2.html"><a href="R2.html#tidy-data"><i class="fa fa-check"></i><b>2.2.1</b> tidy data<span></span></a></li>
+<li class="chapter" data-level="2.2.2" data-path="R2.html"><a href="R2.html#tibbles"><i class="fa fa-check"></i><b>2.2.2</b> Tibbles<span></span></a></li>
+<li class="chapter" data-level="2.2.3" data-path="R2.html"><a href="R2.html#die-pipe"><i class="fa fa-check"></i><b>2.2.3</b> Die Pipe <code>%&gt;%</code><span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="R2.html"><a href="R2.html#weitere-hilfe"><i class="fa fa-check"></i><b>2.3</b> Weitere Hilfe!<span></span></a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="R2.html"><a href="R2.html#packages"><i class="fa fa-check"></i><b>2.3.1</b> Packages<span></span></a></li>
+<li class="chapter" data-level="2.3.2" data-path="R2.html"><a href="R2.html#empfohlene-externe-resourcen"><i class="fa fa-check"></i><b>2.3.2</b> Empfohlene externe Resourcen<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="R3.html"><a href="R3.html"><i class="fa fa-check"></i><b>3</b> Transformation und Analyse mit dplyr<span></span></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="R3.html"><a href="R3.html#die-stammdaten-des-17.---19.-bundestags"><i class="fa fa-check"></i><b>3.1</b> Die Stammdaten des 17. - 19. Bundestags<span></span></a></li>
+<li class="chapter" data-level="3.2" data-path="R3.html"><a href="R3.html#datentransformation-mit-dplyr"><i class="fa fa-check"></i><b>3.2</b> Datentransformation mit <strong>dplyr</strong><span></span></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="R3.html"><a href="R3.html#filter"><i class="fa fa-check"></i><b>3.2.1</b> <code>filter()</code><span></span></a></li>
+<li class="chapter" data-level="3.2.2" data-path="R3.html"><a href="R3.html#select"><i class="fa fa-check"></i><b>3.2.2</b> <code>select()</code><span></span></a></li>
+<li class="chapter" data-level="3.2.3" data-path="R3.html"><a href="R3.html#rename"><i class="fa fa-check"></i><b>3.2.3</b> <code>rename()</code><span></span></a></li>
+<li class="chapter" data-level="3.2.4" data-path="R3.html"><a href="R3.html#mutate"><i class="fa fa-check"></i><b>3.2.4</b> <code>mutate()</code><span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="R3.html"><a href="R3.html#speichern-der-transformierten-daten"><i class="fa fa-check"></i><b>3.3</b> Speichern der transformierten Daten<span></span></a></li>
+<li class="chapter" data-level="3.4" data-path="R3.html"><a href="R3.html#deskriptive-datenanalyse-mit-dplyr"><i class="fa fa-check"></i><b>3.4</b> Deskriptive Datenanalyse mit <strong>dplyr</strong><span></span></a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="R3.html"><a href="R3.html#summarise"><i class="fa fa-check"></i><b>3.4.1</b> <code>summarise()</code><span></span></a></li>
+<li class="chapter" data-level="3.4.2" data-path="R3.html"><a href="R3.html#summarise-group_by"><i class="fa fa-check"></i><b>3.4.2</b> <code>summarise()</code> &amp; <code>group_by()</code><span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="R3.html"><a href="R3.html#export"><i class="fa fa-check"></i><b>3.5</b> Export von Tabellen<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="R4.html"><a href="R4.html"><i class="fa fa-check"></i><b>4</b> Graphische Analyse mit ggplot2<span></span></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="R4.html"><a href="R4.html#ggplot2-syntax"><i class="fa fa-check"></i><b>4.1</b> ggplot2 syntax<span></span></a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="R4.html"><a href="R4.html#geoms-aesthetics"><i class="fa fa-check"></i><b>4.1.1</b> geoms &amp; aesthetics<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="R4.html"><a href="R4.html#graphische-analyse-der-stammdaten"><i class="fa fa-check"></i><b>4.2</b> Graphische Analyse der Stammdaten<span></span></a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="R4.html"><a href="R4.html#kontinuierliches-x-y"><i class="fa fa-check"></i><b>4.2.1</b> kontinuierliches x &amp; y<span></span></a></li>
+<li class="chapter" data-level="4.2.2" data-path="R4.html"><a href="R4.html#kategoriales-x-kontinuierliches-y"><i class="fa fa-check"></i><b>4.2.2</b> kategoriales x, kontinuierliches y<span></span></a></li>
+<li class="chapter" data-level="4.2.3" data-path="R4.html"><a href="R4.html#kontinuierliches-x"><i class="fa fa-check"></i><b>4.2.3</b> kontinuierliches x<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="R4.html"><a href="R4.html#graphiken-exportieren"><i class="fa fa-check"></i><b>4.3</b> Graphiken exportieren<span></span></a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Kurzeinführung zu R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="R3" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Transformation und Analyse mit dplyr<a href="R3.html#R3" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="die-stammdaten-des-17.---19.-bundestags" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Die Stammdaten des 17. - 19. Bundestags<a href="R3.html#die-stammdaten-des-17.---19.-bundestags" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Dieses und das folgende Kapitel behandeln die Bereinigung, Transformation und
+deskriptive statistische Analyse von Daten mit <strong>dplyr</strong> sowie die graphische
+Analyse mit <strong>ggplot2</strong>. Zur Veranschaulichung analysieren wir eine Auswahl
+biographischer Daten der Bundestagsabgeordneten des 19. Bundestags. Die Daten
+stammen aus einer vom Bundestag bereitgestellten “.xml” Datei und wurden am
+24.03.2022 unter folgender URL heruntergeladen:
+<a href="https://www.bundestag.de/services/opendata" target="_blank">https://www.bundestag.de/services/opendata</a></p>
+<p>Das Script zur Extraktion der interessierenden Variablen aus den XML Daten und
+der Konstruktion des hier genutzten tibbles, finden Sie in meinem GitHub:
+<a href="https://github.com/JakobTures/r-intro/blob/master/scripts/stammdaten_extract.R" target="_blank">https://github.com/JakobTures/r-intro/blob/master/scripts/stammdaten_extract.R</a></p>
+<p>Das Script speichert eine Tibble mit allen genutzten Daten in der Datei
+“stammdaten_17_19.RData”, die von Seminarteilnehmer*innen auch in Moodle
+heruntergeladen werden kann. Laden wir diese Daten zunächst in R. Da es sich bei
+dem Datenobjekt um eine Tibble handelt, müssen wir auch zunächst das
+<strong>tidyverse</strong> package laden. R kennt ohne dieses keine Tibbles und interpretiert
+das Objekt als Dataframe.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="R3.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb54-2"><a href="R3.html#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="R3.html#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;stammdaten_17_19.RData&quot;</span>)</span></code></pre></div>
+<p>Die Datei enthielt das Objekt <code>stammdaten_17_19</code>, eine Tibble, welche die
+Stammdaten aller Bundestagsabgeordneten der 17. - 19. Legislaturperiode enthält.
+Schauen wir uns die Tibble einmal an:</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="R3.html#cb55-1" aria-hidden="true" tabindex="-1"></a>stammdaten_17_19</span>
+<span id="cb55-2"><a href="R3.html#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 2,060 × 9</span></span>
+<span id="cb55-3"><a href="R3.html#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="do">##       wp nachname  vorname   praefix geschlecht alter geb        Titel fraktion </span></span>
+<span id="cb55-4"><a href="R3.html#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;      &lt;int&gt; &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;    </span></span>
+<span id="cb55-5"><a href="R3.html#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  1    19 Abercron  Michael   von     männlich      64 17.11.1952 Dr.   Union    </span></span>
+<span id="cb55-6"><a href="R3.html#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  2    19 Achelwilm Doris     &lt;NA&gt;    weiblich      40 30.11.1976 &lt;NA&gt;  DIE LINK…</span></span>
+<span id="cb55-7"><a href="R3.html#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  3    17 Ackermann Jens      &lt;NA&gt;    männlich      34 02.07.1975 &lt;NA&gt;  FDP      </span></span>
+<span id="cb55-8"><a href="R3.html#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  4    19 Aggelidis Grigorios &lt;NA&gt;    männlich      52 19.08.1965 &lt;NA&gt;  FDP      </span></span>
+<span id="cb55-9"><a href="R3.html#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  5    17 Ahrendt   Christian &lt;NA&gt;    männlich      46 07.05.1963 &lt;NA&gt;  FDP      </span></span>
+<span id="cb55-10"><a href="R3.html#cb55-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  6    17 Aigner    Ilse      &lt;NA&gt;    weiblich      44 07.12.1964 &lt;NA&gt;  Union    </span></span>
+<span id="cb55-11"><a href="R3.html#cb55-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  7    19 Akbulut   Gökay     &lt;NA&gt;    weiblich      34 16.11.1982 &lt;NA&gt;  DIE LINK…</span></span>
+<span id="cb55-12"><a href="R3.html#cb55-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  8    17 Aken      Jan       van     männlich      48 01.05.1961 &lt;NA&gt;  DIE LINK…</span></span>
+<span id="cb55-13"><a href="R3.html#cb55-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  9    18 Aken      Jan       van     männlich      52 01.05.1961 &lt;NA&gt;  DIE LINK…</span></span>
+<span id="cb55-14"><a href="R3.html#cb55-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    18 Albani    Stephan   &lt;NA&gt;    männlich      45 03.06.1968 &lt;NA&gt;  Union    </span></span>
+<span id="cb55-15"><a href="R3.html#cb55-15" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 2,050 more rows</span></span></code></pre></div>
+<p>Die Tibble enthält 2060 Beobachtungen. Zu jeder
+Beobachtung stehen 9 Variablen bereit. Wahlperiode, Nachname, Vorname,
+Namenspräfix (bspw. “von”), Geschlecht, Alter, Geburtsdatum, akademischer Titel
+sowie die Fraktion in welcher der/die MdB die Legislaturperiode begonnen hat.
+Der Datensatz ist damit so angelegt, dass für eine Abgeordnete eine Beobachtung
+für jede Wahlperiode vorliegt, in der sie im Bundestag vertreten war. War eine
+Abgeordnete in allen drei Wahlperioden MdB, liegen entsprechend auch drei
+separate Beobachtungen vor. Dies entspricht den Prinzipien der tidy data.</p>
+<p>Wie Sie sehen, werden bei Tibbles standardmäßig nur die ersten 10 Zeilen
+gedruckt. Die Darstellung ist dadurch kompakt und übersichtlich. Eventuell
+könnten wir aber daran interessiert sein mehr als 10 Zeilen zu sehen. Ein Weg
+ist das Anklicken des Objekts im “Environment” Tab oder das Schreiben von
+<code>View(objektname)</code> in der console. Nun öffnet sich das Objekt in einem neuen Tab
+und kann komplett betrachtet werden. Ein anderer Weg ist es, R zu zwingen mehr
+Zeilen in die console abzudrucken. Dies ist mit der Funktion <code>print()</code> möglich.
+Als zweites Argument können wir mit <code>n =</code> angeben, wie viele Zeilen wir sehen
+möchten.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="R3.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(stammdaten_17_19, <span class="at">n =</span> <span class="dv">20</span>)</span>
+<span id="cb56-2"><a href="R3.html#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 2,060 × 9</span></span>
+<span id="cb56-3"><a href="R3.html#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="do">##       wp nachname   vorname       praefix geschlecht alter geb    Titel fraktion</span></span>
+<span id="cb56-4"><a href="R3.html#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;      &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   </span></span>
+<span id="cb56-5"><a href="R3.html#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  1    19 Abercron   Michael       von     männlich      64 17.11… Dr.   Union   </span></span>
+<span id="cb56-6"><a href="R3.html#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  2    19 Achelwilm  Doris         &lt;NA&gt;    weiblich      40 30.11… &lt;NA&gt;  DIE LIN…</span></span>
+<span id="cb56-7"><a href="R3.html#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  3    17 Ackermann  Jens          &lt;NA&gt;    männlich      34 02.07… &lt;NA&gt;  FDP     </span></span>
+<span id="cb56-8"><a href="R3.html#cb56-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  4    19 Aggelidis  Grigorios     &lt;NA&gt;    männlich      52 19.08… &lt;NA&gt;  FDP     </span></span>
+<span id="cb56-9"><a href="R3.html#cb56-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  5    17 Ahrendt    Christian     &lt;NA&gt;    männlich      46 07.05… &lt;NA&gt;  FDP     </span></span>
+<span id="cb56-10"><a href="R3.html#cb56-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  6    17 Aigner     Ilse          &lt;NA&gt;    weiblich      44 07.12… &lt;NA&gt;  Union   </span></span>
+<span id="cb56-11"><a href="R3.html#cb56-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  7    19 Akbulut    Gökay         &lt;NA&gt;    weiblich      34 16.11… &lt;NA&gt;  DIE LIN…</span></span>
+<span id="cb56-12"><a href="R3.html#cb56-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  8    17 Aken       Jan           van     männlich      48 01.05… &lt;NA&gt;  DIE LIN…</span></span>
+<span id="cb56-13"><a href="R3.html#cb56-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  9    18 Aken       Jan           van     männlich      52 01.05… &lt;NA&gt;  DIE LIN…</span></span>
+<span id="cb56-14"><a href="R3.html#cb56-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    18 Albani     Stephan       &lt;NA&gt;    männlich      45 03.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb56-15"><a href="R3.html#cb56-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 11    19 Albani     Stephan       &lt;NA&gt;    männlich      49 03.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb56-16"><a href="R3.html#cb56-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 12    18 Albsteiger Katrin        &lt;NA&gt;    weiblich      29 20.11… &lt;NA&gt;  Union   </span></span>
+<span id="cb56-17"><a href="R3.html#cb56-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 13    17 Alpers     Agnes         &lt;NA&gt;    weiblich      48 29.06… &lt;NA&gt;  DIE LIN…</span></span>
+<span id="cb56-18"><a href="R3.html#cb56-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 14    18 Alpers     Agnes         &lt;NA&gt;    weiblich      52 29.06… &lt;NA&gt;  DIE LIN…</span></span>
+<span id="cb56-19"><a href="R3.html#cb56-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 15    19 Alt        Renata        &lt;NA&gt;    weiblich      52 27.08… &lt;NA&gt;  FDP     </span></span>
+<span id="cb56-20"><a href="R3.html#cb56-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 16    19 Altenkamp  Norbert Maria &lt;NA&gt;    männlich      45 27.07… &lt;NA&gt;  Union   </span></span>
+<span id="cb56-21"><a href="R3.html#cb56-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 17    17 Altmaier   Peter         &lt;NA&gt;    männlich      51 18.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb56-22"><a href="R3.html#cb56-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 18    18 Altmaier   Peter         &lt;NA&gt;    männlich      55 18.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb56-23"><a href="R3.html#cb56-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 19    19 Altmaier   Peter         &lt;NA&gt;    männlich      59 18.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb56-24"><a href="R3.html#cb56-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 20    19 Amthor     Philipp       &lt;NA&gt;    männlich      24 10.11… &lt;NA&gt;  Union   </span></span>
+<span id="cb56-25"><a href="R3.html#cb56-25" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 2,040 more rows</span></span></code></pre></div>
+</div>
+<div id="datentransformation-mit-dplyr" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Datentransformation mit <strong>dplyr</strong><a href="R3.html#datentransformation-mit-dplyr" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Das <strong>dplyr</strong> package enthält eine Reihe von Funktionen zur Bereinigung,
+Transformation und deskriptiven Analyse von Daten. Wir beginnen damit, Zeilen
+und Spalten, die wir nicht benötigen, aus der Tibble zu entfernen, bevor wir die
+Daten in einigen bestehenden Spalten transformieren und neue Spalten aus den
+vorhandenen Daten erzeugen.</p>
+<p>Empfohlene weiterführende Resourcen zu <strong>dplyr</strong> sind das entsprechende RStudio
+Cheatsheet:
+<a href="https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-transformation.pdf" target="_blank">https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-transformation.pdf</a>
+sowie das Kapitel “Data transformation” in “R for Data Science”:
+<a href="https://r4ds.had.co.nz/transform.html" target="_blank">https://r4ds.had.co.nz/transform.html</a></p>
+<div id="filter" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> <code>filter()</code><a href="R3.html#filter" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><code>filter()</code> dient dazu, Beobachtungen – also Zeilen – aus einer Tibble zu
+filtern. Die Funktion nimmt dabei die Daten, auf die sie angewandt werden soll,
+als erstes und eine oder mehrere expressions als zweites Argument. Diese
+Ausdrücke sind letztlich die Regeln, nach denen die Funktion filtern soll.</p>
+<p>Zum Schreiben der Ausdrücke benötigen wir die in Kapitel <a href="R1.html#vergleich">1.2.4</a>
+bereits eingeführten Vergleichsoperatoren. Diese vergleichen den Wert auf der
+linken Seite des Operators mit dem auf der rechten und geben als Ergebnis ein
+<code>TRUE</code> zurück, wenn der Test bestanden wurde, beziehungsweise <code>FALSE</code>, wenn er
+nicht bestanden wurde.</p>
+<p>Wir könnten nun beispielsweise daran interessiert sein, nur die Daten bestimmter
+Fraktionen zu analysieren. Filtern wir zunächst die Stammdaten der
+Unions-Abgeordneten heraus. Wir können dazu in <code>filter()</code> testen, ob der Wert
+der Spalte “fraktion” gleich dem Wert “Union” ist. Bitte denken Sie daran, dass
+wir zum Vergleich zweier Werte immer <code>==</code> schreiben müssen, nicht <code>=</code>.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="R3.html#cb57-1" aria-hidden="true" tabindex="-1"></a>stammdaten_17_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb57-2"><a href="R3.html#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(fraktion <span class="sc">==</span> <span class="st">&quot;Union&quot;</span>)</span>
+<span id="cb57-3"><a href="R3.html#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 830 × 9</span></span>
+<span id="cb57-4"><a href="R3.html#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="do">##       wp nachname   vorname       praefix geschlecht alter geb    Titel fraktion</span></span>
+<span id="cb57-5"><a href="R3.html#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;      &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   </span></span>
+<span id="cb57-6"><a href="R3.html#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  1    19 Abercron   Michael       von     männlich      64 17.11… Dr.   Union   </span></span>
+<span id="cb57-7"><a href="R3.html#cb57-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  2    17 Aigner     Ilse          &lt;NA&gt;    weiblich      44 07.12… &lt;NA&gt;  Union   </span></span>
+<span id="cb57-8"><a href="R3.html#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  3    18 Albani     Stephan       &lt;NA&gt;    männlich      45 03.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb57-9"><a href="R3.html#cb57-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  4    19 Albani     Stephan       &lt;NA&gt;    männlich      49 03.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb57-10"><a href="R3.html#cb57-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  5    18 Albsteiger Katrin        &lt;NA&gt;    weiblich      29 20.11… &lt;NA&gt;  Union   </span></span>
+<span id="cb57-11"><a href="R3.html#cb57-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  6    19 Altenkamp  Norbert Maria &lt;NA&gt;    männlich      45 27.07… &lt;NA&gt;  Union   </span></span>
+<span id="cb57-12"><a href="R3.html#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  7    17 Altmaier   Peter         &lt;NA&gt;    männlich      51 18.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb57-13"><a href="R3.html#cb57-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  8    18 Altmaier   Peter         &lt;NA&gt;    männlich      55 18.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb57-14"><a href="R3.html#cb57-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  9    19 Altmaier   Peter         &lt;NA&gt;    männlich      59 18.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb57-15"><a href="R3.html#cb57-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    19 Amthor     Philipp       &lt;NA&gt;    männlich      24 10.11… &lt;NA&gt;  Union   </span></span>
+<span id="cb57-16"><a href="R3.html#cb57-16" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 820 more rows</span></span></code></pre></div>
+<p>Möchten wir mehrere Ausdrücke kombinieren, benötigen wir dazu
+<em>logische Operatoren</em>. <code>&amp;</code> – <em>UND</em> – testet, ob beide verbundenen Ausdrücke
+gleichzeitig <code>TRUE</code> sind und gibt nur dann <code>TRUE</code> zurück. <code>|</code> – <em>ODER</em> –
+testet, ob wenigstens einer der verbundenen Ausdrücke <code>TRUE</code> ist und gibt in
+diesem Fall <code>TRUE</code> zurück. Dies sind alle möglichen Kombinationen für 2
+Ausdrücke:</p>
+<ul>
+<li><code>TRUE &amp; TRUE</code> gibt <code>TRUE</code> zurück</li>
+<li><code>TRUE &amp; FALSE</code>, <code>FALSE &amp; TRUE</code> und <code>FALSE &amp; FALSE</code> geben alle <code>FALSE</code> zurück</li>
+<li><code>TRUE | TRUE</code>, <code>TRUE | FALSE</code> und <code>FALSE | TRUE</code> geben alle <code>TRUE</code> zurück</li>
+<li><code>FALSE | FALSE</code> gibt <code>FALSE</code> zurück</li>
+</ul>
+<p>Möchten wir nun beispielsweise alle Unions-Abgeordneten des 19. Bundestags
+filtern, können wir dazu den <code>&amp;</code> Operator einsetzen:</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="R3.html#cb58-1" aria-hidden="true" tabindex="-1"></a>stammdaten_17_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb58-2"><a href="R3.html#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(fraktion <span class="sc">==</span> <span class="st">&quot;Union&quot;</span> <span class="sc">&amp;</span> wp <span class="sc">==</span> <span class="dv">19</span>)</span>
+<span id="cb58-3"><a href="R3.html#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 261 × 9</span></span>
+<span id="cb58-4"><a href="R3.html#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="do">##       wp nachname    vorname       praefix geschlecht alter geb   Titel fraktion</span></span>
+<span id="cb58-5"><a href="R3.html#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;      &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   </span></span>
+<span id="cb58-6"><a href="R3.html#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  1    19 Abercron    Michael       von     männlich      64 17.1… Dr.   Union   </span></span>
+<span id="cb58-7"><a href="R3.html#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  2    19 Albani      Stephan       &lt;NA&gt;    männlich      49 03.0… &lt;NA&gt;  Union   </span></span>
+<span id="cb58-8"><a href="R3.html#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  3    19 Altenkamp   Norbert Maria &lt;NA&gt;    männlich      45 27.0… &lt;NA&gt;  Union   </span></span>
+<span id="cb58-9"><a href="R3.html#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  4    19 Altmaier    Peter         &lt;NA&gt;    männlich      59 18.0… &lt;NA&gt;  Union   </span></span>
+<span id="cb58-10"><a href="R3.html#cb58-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  5    19 Amthor      Philipp       &lt;NA&gt;    männlich      24 10.1… &lt;NA&gt;  Union   </span></span>
+<span id="cb58-11"><a href="R3.html#cb58-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  6    19 Auernhammer Artur         &lt;NA&gt;    männlich      54 09.0… &lt;NA&gt;  Union   </span></span>
+<span id="cb58-12"><a href="R3.html#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  7    19 Aumer       Peter         &lt;NA&gt;    männlich      41 17.0… &lt;NA&gt;  Union   </span></span>
+<span id="cb58-13"><a href="R3.html#cb58-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  8    19 Bär         Dorothee      &lt;NA&gt;    weiblich      39 19.0… &lt;NA&gt;  Union   </span></span>
+<span id="cb58-14"><a href="R3.html#cb58-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  9    19 Bareiß      Thomas        &lt;NA&gt;    männlich      42 15.0… &lt;NA&gt;  Union   </span></span>
+<span id="cb58-15"><a href="R3.html#cb58-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    19 Barthle     Norbert       &lt;NA&gt;    männlich      65 01.0… &lt;NA&gt;  Union   </span></span>
+<span id="cb58-16"><a href="R3.html#cb58-16" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 251 more rows</span></span></code></pre></div>
+<p>Möchten wir die MdBs der großen Koalition aus dem Datensatz filtern, also
+Abgeordnete der Union oder der SPD, können wir dies mit <code>|</code> realisieren:</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="R3.html#cb59-1" aria-hidden="true" tabindex="-1"></a>stammdaten_17_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb59-2"><a href="R3.html#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(fraktion <span class="sc">==</span> <span class="st">&quot;Union&quot;</span> <span class="sc">|</span> fraktion <span class="sc">==</span> <span class="st">&quot;SPD&quot;</span>)</span>
+<span id="cb59-3"><a href="R3.html#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 1,353 × 9</span></span>
+<span id="cb59-4"><a href="R3.html#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="do">##       wp nachname   vorname       praefix geschlecht alter geb    Titel fraktion</span></span>
+<span id="cb59-5"><a href="R3.html#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;      &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   </span></span>
+<span id="cb59-6"><a href="R3.html#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  1    19 Abercron   Michael       von     männlich      64 17.11… Dr.   Union   </span></span>
+<span id="cb59-7"><a href="R3.html#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  2    17 Aigner     Ilse          &lt;NA&gt;    weiblich      44 07.12… &lt;NA&gt;  Union   </span></span>
+<span id="cb59-8"><a href="R3.html#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  3    18 Albani     Stephan       &lt;NA&gt;    männlich      45 03.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb59-9"><a href="R3.html#cb59-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  4    19 Albani     Stephan       &lt;NA&gt;    männlich      49 03.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb59-10"><a href="R3.html#cb59-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  5    18 Albsteiger Katrin        &lt;NA&gt;    weiblich      29 20.11… &lt;NA&gt;  Union   </span></span>
+<span id="cb59-11"><a href="R3.html#cb59-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  6    19 Altenkamp  Norbert Maria &lt;NA&gt;    männlich      45 27.07… &lt;NA&gt;  Union   </span></span>
+<span id="cb59-12"><a href="R3.html#cb59-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  7    17 Altmaier   Peter         &lt;NA&gt;    männlich      51 18.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb59-13"><a href="R3.html#cb59-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  8    18 Altmaier   Peter         &lt;NA&gt;    männlich      55 18.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb59-14"><a href="R3.html#cb59-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  9    19 Altmaier   Peter         &lt;NA&gt;    männlich      59 18.06… &lt;NA&gt;  Union   </span></span>
+<span id="cb59-15"><a href="R3.html#cb59-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    19 Amthor     Philipp       &lt;NA&gt;    männlich      24 10.11… &lt;NA&gt;  Union   </span></span>
+<span id="cb59-16"><a href="R3.html#cb59-16" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 1,343 more rows</span></span></code></pre></div>
+<p>Es lassen sich auch mehr als zwei Ausdrücke mit <code>&amp;</code> bzw. <code>|</code> kombinieren.
+Beispielsweise um die die Abgeordneten der Oppositionsfraktionen zu filtern:</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="R3.html#cb60-1" aria-hidden="true" tabindex="-1"></a>stammdaten_17_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb60-2"><a href="R3.html#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(fraktion <span class="sc">==</span> <span class="st">&quot;AfD&quot;</span> <span class="sc">|</span> fraktion <span class="sc">==</span> <span class="st">&quot;FDP&quot;</span> <span class="sc">|</span> fraktion <span class="sc">==</span> <span class="st">&quot;Die Grünen&quot;</span> <span class="sc">|</span> fraktion <span class="sc">==</span> <span class="st">&quot;DIE LINKE.&quot;</span>)</span>
+<span id="cb60-3"><a href="R3.html#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 705 × 9</span></span>
+<span id="cb60-4"><a href="R3.html#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="do">##       wp nachname  vorname   praefix geschlecht alter geb        Titel fraktion </span></span>
+<span id="cb60-5"><a href="R3.html#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;      &lt;int&gt; &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;    </span></span>
+<span id="cb60-6"><a href="R3.html#cb60-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  1    19 Achelwilm Doris     &lt;NA&gt;    weiblich      40 30.11.1976 &lt;NA&gt;  DIE LINK…</span></span>
+<span id="cb60-7"><a href="R3.html#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  2    17 Ackermann Jens      &lt;NA&gt;    männlich      34 02.07.1975 &lt;NA&gt;  FDP      </span></span>
+<span id="cb60-8"><a href="R3.html#cb60-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  3    19 Aggelidis Grigorios &lt;NA&gt;    männlich      52 19.08.1965 &lt;NA&gt;  FDP      </span></span>
+<span id="cb60-9"><a href="R3.html#cb60-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  4    17 Ahrendt   Christian &lt;NA&gt;    männlich      46 07.05.1963 &lt;NA&gt;  FDP      </span></span>
+<span id="cb60-10"><a href="R3.html#cb60-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  5    19 Akbulut   Gökay     &lt;NA&gt;    weiblich      34 16.11.1982 &lt;NA&gt;  DIE LINK…</span></span>
+<span id="cb60-11"><a href="R3.html#cb60-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  6    17 Aken      Jan       van     männlich      48 01.05.1961 &lt;NA&gt;  DIE LINK…</span></span>
+<span id="cb60-12"><a href="R3.html#cb60-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  7    18 Aken      Jan       van     männlich      52 01.05.1961 &lt;NA&gt;  DIE LINK…</span></span>
+<span id="cb60-13"><a href="R3.html#cb60-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  8    17 Alpers    Agnes     &lt;NA&gt;    weiblich      48 29.06.1961 &lt;NA&gt;  DIE LINK…</span></span>
+<span id="cb60-14"><a href="R3.html#cb60-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  9    18 Alpers    Agnes     &lt;NA&gt;    weiblich      52 29.06.1961 &lt;NA&gt;  DIE LINK…</span></span>
+<span id="cb60-15"><a href="R3.html#cb60-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    19 Alt       Renata    &lt;NA&gt;    weiblich      52 27.08.1965 &lt;NA&gt;  FDP      </span></span>
+<span id="cb60-16"><a href="R3.html#cb60-16" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 695 more rows</span></span></code></pre></div>
+<p>Die Daten enthalten aktuell noch alle Abgeordneten der 17. - 19.
+Legislaturperioden. Im rahmen dieser Einführung, arbeiten wir nur mit den MdBs
+des 19. Bundestags. Mit <code>filter()</code> können wir den Datensatz auf diese reduzieren.</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="R3.html#cb61-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="ot">&lt;-</span> stammdaten_17_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb61-2"><a href="R3.html#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(wp <span class="sc">==</span> <span class="dv">19</span>)</span></code></pre></div>
+<p>Ab hier arbeiten wir mit dem Objekt <code>stammdaten_19</code> weiter.</p>
+</div>
+<div id="select" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> <code>select()</code><a href="R3.html#select" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Möchten wir ein Subset von Variablen bilden, könne wir dazu <code>select()</code> nutzen.
+Die Funktion nimmt die Daten, auf die sie angewendet werden soll, als erstes
+Argument – hier weitergegeben durch die Pipe – und dann einen oder mehrere
+Spaltennamen, die in der Tibble verbleiben sollen. Folgen die zu behaltenden
+Spalten aufeinander, können wir auch eine “von:bis” Notation nutzen. Nehmen wir
+an, wir möchten die Spalten “nachname”, “vorname”, “praefix” und “fraktion”
+extrahieren:</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="R3.html#cb62-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb62-2"><a href="R3.html#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nachname, vorname, praefix, fraktion)</span>
+<span id="cb62-3"><a href="R3.html#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 750 × 4</span></span>
+<span id="cb62-4"><a href="R3.html#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    nachname  vorname       praefix fraktion  </span></span>
+<span id="cb62-5"><a href="R3.html#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt;     &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;     </span></span>
+<span id="cb62-6"><a href="R3.html#cb62-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 Abercron  Michael       von     Union     </span></span>
+<span id="cb62-7"><a href="R3.html#cb62-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 Achelwilm Doris         &lt;NA&gt;    DIE LINKE.</span></span>
+<span id="cb62-8"><a href="R3.html#cb62-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 Aggelidis Grigorios     &lt;NA&gt;    FDP       </span></span>
+<span id="cb62-9"><a href="R3.html#cb62-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 Akbulut   Gökay         &lt;NA&gt;    DIE LINKE.</span></span>
+<span id="cb62-10"><a href="R3.html#cb62-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 Albani    Stephan       &lt;NA&gt;    Union     </span></span>
+<span id="cb62-11"><a href="R3.html#cb62-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 Alt       Renata        &lt;NA&gt;    FDP       </span></span>
+<span id="cb62-12"><a href="R3.html#cb62-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 Altenkamp Norbert Maria &lt;NA&gt;    Union     </span></span>
+<span id="cb62-13"><a href="R3.html#cb62-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 Altmaier  Peter         &lt;NA&gt;    Union     </span></span>
+<span id="cb62-14"><a href="R3.html#cb62-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 Amthor    Philipp       &lt;NA&gt;    Union     </span></span>
+<span id="cb62-15"><a href="R3.html#cb62-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 Amtsberg  Luise         &lt;NA&gt;    Die Grünen</span></span>
+<span id="cb62-16"><a href="R3.html#cb62-16" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 740 more rows</span></span>
+<span id="cb62-17"><a href="R3.html#cb62-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-18"><a href="R3.html#cb62-18" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb62-19"><a href="R3.html#cb62-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nachname<span class="sc">:</span>praefix, fraktion)</span>
+<span id="cb62-20"><a href="R3.html#cb62-20" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 750 × 4</span></span>
+<span id="cb62-21"><a href="R3.html#cb62-21" aria-hidden="true" tabindex="-1"></a><span class="do">##    nachname  vorname       praefix fraktion  </span></span>
+<span id="cb62-22"><a href="R3.html#cb62-22" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt;     &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;     </span></span>
+<span id="cb62-23"><a href="R3.html#cb62-23" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 Abercron  Michael       von     Union     </span></span>
+<span id="cb62-24"><a href="R3.html#cb62-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 Achelwilm Doris         &lt;NA&gt;    DIE LINKE.</span></span>
+<span id="cb62-25"><a href="R3.html#cb62-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 Aggelidis Grigorios     &lt;NA&gt;    FDP       </span></span>
+<span id="cb62-26"><a href="R3.html#cb62-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 Akbulut   Gökay         &lt;NA&gt;    DIE LINKE.</span></span>
+<span id="cb62-27"><a href="R3.html#cb62-27" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 Albani    Stephan       &lt;NA&gt;    Union     </span></span>
+<span id="cb62-28"><a href="R3.html#cb62-28" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 Alt       Renata        &lt;NA&gt;    FDP       </span></span>
+<span id="cb62-29"><a href="R3.html#cb62-29" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 Altenkamp Norbert Maria &lt;NA&gt;    Union     </span></span>
+<span id="cb62-30"><a href="R3.html#cb62-30" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 Altmaier  Peter         &lt;NA&gt;    Union     </span></span>
+<span id="cb62-31"><a href="R3.html#cb62-31" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 Amthor    Philipp       &lt;NA&gt;    Union     </span></span>
+<span id="cb62-32"><a href="R3.html#cb62-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 Amtsberg  Luise         &lt;NA&gt;    Die Grünen</span></span>
+<span id="cb62-33"><a href="R3.html#cb62-33" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 740 more rows</span></span></code></pre></div>
+<p>Wir können <code>select()</code>auch nutzen, um Variablen zu entfernen. Dazu schreiben wir
+<code>-</code> vor den zu entfernenden Spaltennamen. Da das genaue Geburtsdatum der
+Abgeordneten im Folgenden nicht mehr benötigt wird, können wir die Spalte “geb”
+entfernen.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="R3.html#cb63-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="ot">&lt;-</span> stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb63-2"><a href="R3.html#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>geb)</span>
+<span id="cb63-3"><a href="R3.html#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-4"><a href="R3.html#cb63-4" aria-hidden="true" tabindex="-1"></a>stammdaten_19</span>
+<span id="cb63-5"><a href="R3.html#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 750 × 8</span></span>
+<span id="cb63-6"><a href="R3.html#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="do">##       wp nachname  vorname       praefix geschlecht alter Titel fraktion  </span></span>
+<span id="cb63-7"><a href="R3.html#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;      &lt;int&gt; &lt;chr&gt; &lt;chr&gt;     </span></span>
+<span id="cb63-8"><a href="R3.html#cb63-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  1    19 Abercron  Michael       von     männlich      64 Dr.   Union     </span></span>
+<span id="cb63-9"><a href="R3.html#cb63-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  2    19 Achelwilm Doris         &lt;NA&gt;    weiblich      40 &lt;NA&gt;  DIE LINKE.</span></span>
+<span id="cb63-10"><a href="R3.html#cb63-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  3    19 Aggelidis Grigorios     &lt;NA&gt;    männlich      52 &lt;NA&gt;  FDP       </span></span>
+<span id="cb63-11"><a href="R3.html#cb63-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  4    19 Akbulut   Gökay         &lt;NA&gt;    weiblich      34 &lt;NA&gt;  DIE LINKE.</span></span>
+<span id="cb63-12"><a href="R3.html#cb63-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  5    19 Albani    Stephan       &lt;NA&gt;    männlich      49 &lt;NA&gt;  Union     </span></span>
+<span id="cb63-13"><a href="R3.html#cb63-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  6    19 Alt       Renata        &lt;NA&gt;    weiblich      52 &lt;NA&gt;  FDP       </span></span>
+<span id="cb63-14"><a href="R3.html#cb63-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  7    19 Altenkamp Norbert Maria &lt;NA&gt;    männlich      45 &lt;NA&gt;  Union     </span></span>
+<span id="cb63-15"><a href="R3.html#cb63-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  8    19 Altmaier  Peter         &lt;NA&gt;    männlich      59 &lt;NA&gt;  Union     </span></span>
+<span id="cb63-16"><a href="R3.html#cb63-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  9    19 Amthor    Philipp       &lt;NA&gt;    männlich      24 &lt;NA&gt;  Union     </span></span>
+<span id="cb63-17"><a href="R3.html#cb63-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    19 Amtsberg  Luise         &lt;NA&gt;    weiblich      33 &lt;NA&gt;  Die Grünen</span></span>
+<span id="cb63-18"><a href="R3.html#cb63-18" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 740 more rows</span></span></code></pre></div>
+</div>
+<div id="rename" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> <code>rename()</code><a href="R3.html#rename" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Ihnen wird eventuell bereits aufgefallen sein, dass alle Spaltennamen außer
+“Titel” mit einem kleingeschriebenen Buchstaben beginnen. Da habe ich
+anscheinend beim Erstellen des Datenobjekts meine eigenen Namenskonventionen
+– alles beginnt mit kleinen Buchstaben – außer Acht gelassen. Um diese nun
+umzubenennen, können wir <code>rename()</code> nutzen. Erneut werden als erstes Argument
+die Daten durch die Pipe weitergegeben, gefolgt von einem oder mehreren
+Argumenten in der Form <code>neuer_name = alter_name</code>.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="R3.html#cb64-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="ot">&lt;-</span> stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb64-2"><a href="R3.html#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">titel =</span> Titel)</span>
+<span id="cb64-3"><a href="R3.html#cb64-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-4"><a href="R3.html#cb64-4" aria-hidden="true" tabindex="-1"></a>stammdaten_19</span>
+<span id="cb64-5"><a href="R3.html#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 750 × 8</span></span>
+<span id="cb64-6"><a href="R3.html#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="do">##       wp nachname  vorname       praefix geschlecht alter titel fraktion  </span></span>
+<span id="cb64-7"><a href="R3.html#cb64-7" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;      &lt;int&gt; &lt;chr&gt; &lt;chr&gt;     </span></span>
+<span id="cb64-8"><a href="R3.html#cb64-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  1    19 Abercron  Michael       von     männlich      64 Dr.   Union     </span></span>
+<span id="cb64-9"><a href="R3.html#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  2    19 Achelwilm Doris         &lt;NA&gt;    weiblich      40 &lt;NA&gt;  DIE LINKE.</span></span>
+<span id="cb64-10"><a href="R3.html#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  3    19 Aggelidis Grigorios     &lt;NA&gt;    männlich      52 &lt;NA&gt;  FDP       </span></span>
+<span id="cb64-11"><a href="R3.html#cb64-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  4    19 Akbulut   Gökay         &lt;NA&gt;    weiblich      34 &lt;NA&gt;  DIE LINKE.</span></span>
+<span id="cb64-12"><a href="R3.html#cb64-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  5    19 Albani    Stephan       &lt;NA&gt;    männlich      49 &lt;NA&gt;  Union     </span></span>
+<span id="cb64-13"><a href="R3.html#cb64-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  6    19 Alt       Renata        &lt;NA&gt;    weiblich      52 &lt;NA&gt;  FDP       </span></span>
+<span id="cb64-14"><a href="R3.html#cb64-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  7    19 Altenkamp Norbert Maria &lt;NA&gt;    männlich      45 &lt;NA&gt;  Union     </span></span>
+<span id="cb64-15"><a href="R3.html#cb64-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  8    19 Altmaier  Peter         &lt;NA&gt;    männlich      59 &lt;NA&gt;  Union     </span></span>
+<span id="cb64-16"><a href="R3.html#cb64-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  9    19 Amthor    Philipp       &lt;NA&gt;    männlich      24 &lt;NA&gt;  Union     </span></span>
+<span id="cb64-17"><a href="R3.html#cb64-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    19 Amtsberg  Luise         &lt;NA&gt;    weiblich      33 &lt;NA&gt;  Die Grünen</span></span>
+<span id="cb64-18"><a href="R3.html#cb64-18" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 740 more rows</span></span></code></pre></div>
+</div>
+<div id="mutate" class="section level3 hasAnchor" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> <code>mutate()</code><a href="R3.html#mutate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><code>mutate()</code> dient dazu, Daten in bestehenden Spalten zu transformieren und neue
+Spalten aus den Daten bestehender Spalten zu generieren. Dabei schreiben wir
+innerhalb der Klammern den Namen der zu transformierenden oder neu zu
+erstellenden Spalte <code>=</code> einem Ausdruck der beschreibt, wir die Daten
+transformiert oder generiert werden sollen. Dies kann eine einfache Berechnung
+wie <code>mutate(neue_spalte = spalte_a + spalte b)</code> sein, aber auch weitere
+Funktionen beinhalten. Auch in <code>mutate()</code> können wir innerhalb der Klammern
+mehrere mutate-Schritte der Form <code>alte/neue_Spalte = Ausdruck</code> durch Kommata
+“aneinanderhängen”.</p>
+<p>Hier erstellen wir eine kleine Tibble mit Beispieldaten um die Funktionsweise
+von <code>mutate()</code> zu veranschaulichen:</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="R3.html#cb65-1" aria-hidden="true" tabindex="-1"></a>exmpl_tbl <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x1 =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,</span>
+<span id="cb65-2"><a href="R3.html#cb65-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x2 =</span> <span class="dv">5</span><span class="sc">:</span><span class="dv">1</span>)</span>
+<span id="cb65-3"><a href="R3.html#cb65-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-4"><a href="R3.html#cb65-4" aria-hidden="true" tabindex="-1"></a>exmpl_tbl</span>
+<span id="cb65-5"><a href="R3.html#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 5 × 2</span></span>
+<span id="cb65-6"><a href="R3.html#cb65-6" aria-hidden="true" tabindex="-1"></a><span class="do">##      x1    x2</span></span>
+<span id="cb65-7"><a href="R3.html#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb65-8"><a href="R3.html#cb65-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     1     5</span></span>
+<span id="cb65-9"><a href="R3.html#cb65-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     2     4</span></span>
+<span id="cb65-10"><a href="R3.html#cb65-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     3     3</span></span>
+<span id="cb65-11"><a href="R3.html#cb65-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     4     2</span></span>
+<span id="cb65-12"><a href="R3.html#cb65-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     5     1</span></span>
+<span id="cb65-13"><a href="R3.html#cb65-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-14"><a href="R3.html#cb65-14" aria-hidden="true" tabindex="-1"></a>exmpl_tbl <span class="sc">%&gt;%</span> </span>
+<span id="cb65-15"><a href="R3.html#cb65-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">x1 =</span> <span class="fu">sqrt</span>(x1),</span>
+<span id="cb65-16"><a href="R3.html#cb65-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">x3 =</span> x1 <span class="sc">*</span> x2,</span>
+<span id="cb65-17"><a href="R3.html#cb65-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">x4 =</span> <span class="fu">round</span>(x3, <span class="at">digits =</span> <span class="dv">2</span>))</span>
+<span id="cb65-18"><a href="R3.html#cb65-18" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 5 × 4</span></span>
+<span id="cb65-19"><a href="R3.html#cb65-19" aria-hidden="true" tabindex="-1"></a><span class="do">##      x1    x2    x3    x4</span></span>
+<span id="cb65-20"><a href="R3.html#cb65-20" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb65-21"><a href="R3.html#cb65-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 1  1        5  5     5   </span></span>
+<span id="cb65-22"><a href="R3.html#cb65-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 2  1.41     4  5.66  5.66</span></span>
+<span id="cb65-23"><a href="R3.html#cb65-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 3  1.73     3  5.20  5.2 </span></span>
+<span id="cb65-24"><a href="R3.html#cb65-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  2        2  4     4   </span></span>
+<span id="cb65-25"><a href="R3.html#cb65-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 5  2.24     1  2.24  2.24</span></span></code></pre></div>
+<p>In diesem Beispiel wird der Inhalt der Spalte “x1” durch die Quadratwurzel der
+enthaltenen Werte ersetzt – <code>sqrt()</code> ist eine base R Funktion zum Ziehen der
+Quadratwurzel. Die Originalwerte werden also mit den transformierten Werten
+ersetzt. Die Werte in “x2” werden hier nicht ersetzt. Die Spalten “x3” und “x4”
+werden beide neu aus den Werten der bestehenden Spalten erstellt. Bitte beachten
+Sie dabei, dass bei der Erstellung von “x3” bereits die transformierten Werte
+aus “x1” in die Berechnung eingehen, nicht die Originalwerte. Die Funktion
+<code>round()</code>, welche bei der Erstellung von “x4” genutzt wird, rundet die Werte aus
+“x3” auf zwei Nachkommastellen. Die Anzahl Nachkommastellen wird über das
+optionale Argument <code>digits =</code> kontrolliert. Geben wir dies nicht an, wird auf
+Null Nachkommastellen, also Ganzzahlen, gerundet.</p>
+<p>Gehen wir nun zur Transformation unseres Datensatzes über.
+Die Spalte “titel” listet aktuell die akademischen Titel der Abgeordneten. Liegt
+ein Titel vor, wird dieser genau benannt. Liegt keiner vor enthält die Spalte
+ein <code>NA</code>, die Repräsentation fehlender Werte in R. Für diese Analyse
+interessiert uns nur, ob ein Titel vorliegt, aber nicht welcher. Dazu könnten
+wir eine neue Spalte generieren, welche einen logischen Vektor enthält, der
+angibt, ob ein Titel vorliegt (<code>TRUE</code>) oder nicht (<code>FALSE</code>). Dies ist eine
+sogenannte Dummyvariable. Zum Generieren können wir die <strong>dplyr</strong> Funktion
+<code>if_else()</code> nutzen. Wir geben als erstes Argument eine Bedingung an, die getestet
+wird. Hier <code>!is.na(titel)</code>, welche testet ob der Inhalt von “titel” <em>nicht</em> –
+angezeigt durch das <code>!</code> – missing ist. Das zweite und dritte Argument geben an,
+was eingesetzt werden soll wenn die getestete Bedingung erfüllt beziehungsweise
+nicht erfüllt ist. Hier soll im ersten Fall <code>TRUE</code>, im zweiten <code>FALSE</code>
+eingesetzt werden.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="R3.html#cb66-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="ot">&lt;-</span> stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb66-2"><a href="R3.html#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">titel_dummy =</span> <span class="fu">if_else</span>(<span class="sc">!</span><span class="fu">is.na</span>(titel), <span class="cn">TRUE</span>, <span class="cn">FALSE</span>))</span>
+<span id="cb66-3"><a href="R3.html#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="R3.html#cb66-4" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb66-5"><a href="R3.html#cb66-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(titel, titel_dummy)</span>
+<span id="cb66-6"><a href="R3.html#cb66-6" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 750 × 2</span></span>
+<span id="cb66-7"><a href="R3.html#cb66-7" aria-hidden="true" tabindex="-1"></a><span class="do">##    titel titel_dummy</span></span>
+<span id="cb66-8"><a href="R3.html#cb66-8" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt; &lt;lgl&gt;      </span></span>
+<span id="cb66-9"><a href="R3.html#cb66-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 Dr.   TRUE       </span></span>
+<span id="cb66-10"><a href="R3.html#cb66-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 &lt;NA&gt;  FALSE      </span></span>
+<span id="cb66-11"><a href="R3.html#cb66-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 &lt;NA&gt;  FALSE      </span></span>
+<span id="cb66-12"><a href="R3.html#cb66-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 &lt;NA&gt;  FALSE      </span></span>
+<span id="cb66-13"><a href="R3.html#cb66-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 &lt;NA&gt;  FALSE      </span></span>
+<span id="cb66-14"><a href="R3.html#cb66-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 &lt;NA&gt;  FALSE      </span></span>
+<span id="cb66-15"><a href="R3.html#cb66-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 &lt;NA&gt;  FALSE      </span></span>
+<span id="cb66-16"><a href="R3.html#cb66-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 &lt;NA&gt;  FALSE      </span></span>
+<span id="cb66-17"><a href="R3.html#cb66-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 &lt;NA&gt;  FALSE      </span></span>
+<span id="cb66-18"><a href="R3.html#cb66-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 &lt;NA&gt;  FALSE      </span></span>
+<span id="cb66-19"><a href="R3.html#cb66-19" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 740 more rows</span></span></code></pre></div>
+<p>Die Spalte “fraktion” ist aktuell als Character Vektor abgelegt. Bei der
+Fraktionszugehörigkeit handelt es sich aber um eine kategoriale Variable. So
+gibt es nur eine begrenzte Anzahl möglicher Ausprägungen, nämlich die Namen der
+im 19. Bundestag vertretenen Fraktionen sowie die Kategorie “Flos” für
+Fraktionslose. Die Repräsentation kategorialer Variablen in R nennt sich
+<em>factor</em>. Das core tidyverse Package <strong>forcats</strong> ermöglicht es uns,
+Faktorvariablen anzulegen und zu manipulieren.</p>
+<p>Der einfachste Weg ist es, R selbst auslesen zu lassen, welche Kategorien in
+einer Variable vorhanden sind. Dazu wenden wir einfach die Funktion <code>factor()</code>
+innerhalb von <code>mutate()</code> auf eine Spalte an.</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="R3.html#cb67-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="ot">&lt;-</span> stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb67-2"><a href="R3.html#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fraktion =</span> <span class="fu">factor</span>(fraktion))</span></code></pre></div>
+<p>Um herauszufinden, welche Kategorien ein factor vector umfasst, nutzen wir
+<code>levels()</code>.</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="R3.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(stammdaten_19<span class="sc">$</span>fraktion)</span>
+<span id="cb68-2"><a href="R3.html#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;AfD&quot;        &quot;Die Grünen&quot; &quot;DIE LINKE.&quot; &quot;FDP&quot;        &quot;Flos&quot;      </span></span>
+<span id="cb68-3"><a href="R3.html#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [6] &quot;SPD&quot;        &quot;Union&quot;</span></span></code></pre></div>
+<p>Dies scheint funktioniert zu haben. R hat automatisch und korrekt alle
+Ausprägungen der Varibale erkannt und jede einem factor zugeordnet. Aktuell sind
+die Kategorien alphabetisch geordnet, inhaltlicher sinnvoller wäre aber
+beispielsweise eine Ordnung nach der Größe der Fraktionen im 19. Bundestag.</p>
+<p>Um die Kategorien manuell neu zu ordnen, könnten wir <code>fct_relevel()</code> nutzen.
+Dazu müssten wir aber die gewünschte Reihenfolge per Hand notieren. Bequemer
+geht es mit <code>fct_infreq()</code>, welche die Kategorien automatisch nach der
+Häufigkeit Ihres Auftretens in den Daten ordnet. Also in unserem Fall von der
+Kategorie mit den meisten Abgeordneten bis zu der mit den wenigsten.</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="R3.html#cb69-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="ot">&lt;-</span> stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb69-2"><a href="R3.html#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fraktion =</span> <span class="fu">fct_infreq</span>(fraktion))</span>
+<span id="cb69-3"><a href="R3.html#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-4"><a href="R3.html#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(stammdaten_19<span class="sc">$</span>fraktion)</span>
+<span id="cb69-5"><a href="R3.html#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;Union&quot;      &quot;SPD&quot;        &quot;AfD&quot;        &quot;FDP&quot;        &quot;Die Grünen&quot;</span></span>
+<span id="cb69-6"><a href="R3.html#cb69-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [6] &quot;DIE LINKE.&quot; &quot;Flos&quot;</span></span></code></pre></div>
+<p>Dass die Grünen vor der Linken eingeordnet wurden obwohl die Linken im 19.
+Bundestag zwei Mandate mehr hatten, liegt daran, dass der Datensatz auch
+ausgeschiedene MdBs umfasst. Von diesen hatten die Grünen drei mehr, so dass sie
+sich in der Gesamtzahl von Beobachtungen im Datensatz knapp vor die Linke
+setzen.</p>
+<p>Die Spalte “geschlecht” liegt ebenfalls als Character Vektor vor und kann auf
+dem selben Weg in einen Factor umgewandelt werden.</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="R3.html#cb70-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="ot">&lt;-</span> stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb70-2"><a href="R3.html#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">geschlecht =</span> <span class="fu">factor</span>(geschlecht))</span>
+<span id="cb70-3"><a href="R3.html#cb70-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-4"><a href="R3.html#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(stammdaten_19<span class="sc">$</span>geschlecht)</span>
+<span id="cb70-5"><a href="R3.html#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;männlich&quot; &quot;weiblich&quot;</span></span></code></pre></div>
+<p>Damit sind die Daten zur weiteren Analyse vorbereitet. Die Spalte “titel” ist
+allerdings nicht mehr notwendig, da wir die enthaltenen Informationen in die neue
+Dummyvariable überführt haben. Wir können diese also mit <code>select()</code> entfernen.</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="R3.html#cb71-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="ot">&lt;-</span> stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb71-2"><a href="R3.html#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>titel)</span>
+<span id="cb71-3"><a href="R3.html#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-4"><a href="R3.html#cb71-4" aria-hidden="true" tabindex="-1"></a>stammdaten_19</span>
+<span id="cb71-5"><a href="R3.html#cb71-5" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 750 × 8</span></span>
+<span id="cb71-6"><a href="R3.html#cb71-6" aria-hidden="true" tabindex="-1"></a><span class="do">##       wp nachname  vorname       praefix geschlecht alter fraktion   titel_dummy</span></span>
+<span id="cb71-7"><a href="R3.html#cb71-7" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;         &lt;chr&gt;   &lt;fct&gt;      &lt;int&gt; &lt;fct&gt;      &lt;lgl&gt;      </span></span>
+<span id="cb71-8"><a href="R3.html#cb71-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  1    19 Abercron  Michael       von     männlich      64 Union      TRUE       </span></span>
+<span id="cb71-9"><a href="R3.html#cb71-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  2    19 Achelwilm Doris         &lt;NA&gt;    weiblich      40 DIE LINKE. FALSE      </span></span>
+<span id="cb71-10"><a href="R3.html#cb71-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  3    19 Aggelidis Grigorios     &lt;NA&gt;    männlich      52 FDP        FALSE      </span></span>
+<span id="cb71-11"><a href="R3.html#cb71-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  4    19 Akbulut   Gökay         &lt;NA&gt;    weiblich      34 DIE LINKE. FALSE      </span></span>
+<span id="cb71-12"><a href="R3.html#cb71-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  5    19 Albani    Stephan       &lt;NA&gt;    männlich      49 Union      FALSE      </span></span>
+<span id="cb71-13"><a href="R3.html#cb71-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  6    19 Alt       Renata        &lt;NA&gt;    weiblich      52 FDP        FALSE      </span></span>
+<span id="cb71-14"><a href="R3.html#cb71-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  7    19 Altenkamp Norbert Maria &lt;NA&gt;    männlich      45 Union      FALSE      </span></span>
+<span id="cb71-15"><a href="R3.html#cb71-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  8    19 Altmaier  Peter         &lt;NA&gt;    männlich      59 Union      FALSE      </span></span>
+<span id="cb71-16"><a href="R3.html#cb71-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  9    19 Amthor    Philipp       &lt;NA&gt;    männlich      24 Union      FALSE      </span></span>
+<span id="cb71-17"><a href="R3.html#cb71-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    19 Amtsberg  Luise         &lt;NA&gt;    weiblich      33 Die Grünen FALSE      </span></span>
+<span id="cb71-18"><a href="R3.html#cb71-18" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 740 more rows</span></span></code></pre></div>
+</div>
+</div>
+<div id="speichern-der-transformierten-daten" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Speichern der transformierten Daten<a href="R3.html#speichern-der-transformierten-daten" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Wir werden im nächsten Kapitel mit den hier transformierten Daten
+weiterarbeiten. Dazu sollten Sie entweder zu Beginn des Kapitels das Script aus
+diesem Kapitel nochmals durchlaufen lassen, oder Sie speichern die bearbeiteten
+Daten:</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="R3.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(stammdaten_19, <span class="at">file =</span> <span class="st">&quot;stammdaten_19.RData&quot;</span>)</span></code></pre></div>
+</div>
+<div id="deskriptive-datenanalyse-mit-dplyr" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Deskriptive Datenanalyse mit <strong>dplyr</strong><a href="R3.html#deskriptive-datenanalyse-mit-dplyr" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="summarise" class="section level3 hasAnchor" number="3.4.1">
+<h3><span class="header-section-number">3.4.1</span> <code>summarise()</code><a href="R3.html#summarise" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Die Funktion <code>summarise()</code> ermöglicht es uns, zusammenfassende Maßzahlen zu
+einer Tibble zu berechnen. Die Syntax funktioniert dabei ähnlich zu <code>mutate()</code>.
+Wir definieren einen Namen für die Spalte, in der die Maßzahlen gelistet werden
+sollen, und nach dem <code>=</code> eine entsprechende Berechnung oder Funktion. Das
+Ergebnis ist ein neue Tibble, welche die angeforderten Statistiken enthält.</p>
+<p>Betrachten wir zunächst die Spalte “alter”. Wir könnten uns für das
+arithmetische Mittel des Alters der MdBs interessieren. Dazu definieren wir
+innerhalb von <code>summarise()</code> den Namen der neuen Spalte und nach dem <code>=</code> nutzen
+wir die base R Funktion <code>mean()</code>:</p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="R3.html#cb73-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb73-2"><a href="R3.html#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">arith_mittel =</span> <span class="fu">mean</span>(alter))</span>
+<span id="cb73-3"><a href="R3.html#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 1 × 1</span></span>
+<span id="cb73-4"><a href="R3.html#cb73-4" aria-hidden="true" tabindex="-1"></a><span class="do">##   arith_mittel</span></span>
+<span id="cb73-5"><a href="R3.html#cb73-5" aria-hidden="true" tabindex="-1"></a><span class="do">##          &lt;dbl&gt;</span></span>
+<span id="cb73-6"><a href="R3.html#cb73-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1         49.4</span></span></code></pre></div>
+<p>Wir können uns auch mehrere Statistiken gleichzeitig ausgeben, indem wir die
+entsprechenden Anfragen mit <code>,</code> verbinden:</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="R3.html#cb74-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb74-2"><a href="R3.html#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">minimum =</span> <span class="fu">min</span>(alter),</span>
+<span id="cb74-3"><a href="R3.html#cb74-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">arith_mittel =</span> <span class="fu">mean</span>(alter),</span>
+<span id="cb74-4"><a href="R3.html#cb74-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(alter),</span>
+<span id="cb74-5"><a href="R3.html#cb74-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">maximum =</span> <span class="fu">max</span>(alter))</span>
+<span id="cb74-6"><a href="R3.html#cb74-6" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 1 × 4</span></span>
+<span id="cb74-7"><a href="R3.html#cb74-7" aria-hidden="true" tabindex="-1"></a><span class="do">##   minimum arith_mittel median maximum</span></span>
+<span id="cb74-8"><a href="R3.html#cb74-8" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;int&gt;        &lt;dbl&gt;  &lt;dbl&gt;   &lt;int&gt;</span></span>
+<span id="cb74-9"><a href="R3.html#cb74-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 1      24         49.4     50      77</span></span></code></pre></div>
+<p>Das sieht alles schon ordentlich aus, ist aber auch auf einfacherem Wege
+erzielbar, beispielsweise mit der praktischen base R Funktion <code>summary()</code>.
+Wirklich mächtig wird <code>summarise()</code> erst durch die Kombination mit <code>group_by()</code>.
+So können wir die Daten gruppieren und die zusammenfassenden Statistiken für
+jede dieser Gruppen separat berechnen.</p>
+</div>
+<div id="summarise-group_by" class="section level3 hasAnchor" number="3.4.2">
+<h3><span class="header-section-number">3.4.2</span> <code>summarise()</code> &amp; <code>group_by()</code><a href="R3.html#summarise-group_by" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Unsere Daten bieten sich für eine Analyse nach Fraktionszugehörigkeit an. Als
+ersten Schritt können wir die Daten also nach dem Inhalt der Spalte “fraktion”
+gruppieren und zunächst einmal zählen, wie viele Abgeordnete pro Fraktion im
+Bundestag vertreten sind. Hier bitte erneut beachten, dass sowohl ausgeschiedene
+Abgeordnete sowie deren NachrückerInnen im Datensatz enthalten sind. Die
+Analyseergebnisse werden dementsprechend nicht exakt mit der Mandatszahl
+übereinstimmen. Innerhalb von <code>summarise()</code> nutzen wir hier die <strong>dplyr</strong>
+Funktion <code>n()</code>, welche die Anzahl Beobachtungen pro Gruppe, also die
+Gruppengröße, zurückgibt.</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="R3.html#cb75-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb75-2"><a href="R3.html#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(fraktion) <span class="sc">%&gt;%</span> </span>
+<span id="cb75-3"><a href="R3.html#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">abgeordnete =</span> <span class="fu">n</span>())</span>
+<span id="cb75-4"><a href="R3.html#cb75-4" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 7 × 2</span></span>
+<span id="cb75-5"><a href="R3.html#cb75-5" aria-hidden="true" tabindex="-1"></a><span class="do">##   fraktion   abgeordnete</span></span>
+<span id="cb75-6"><a href="R3.html#cb75-6" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;fct&gt;            &lt;int&gt;</span></span>
+<span id="cb75-7"><a href="R3.html#cb75-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Union              261</span></span>
+<span id="cb75-8"><a href="R3.html#cb75-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 SPD                165</span></span>
+<span id="cb75-9"><a href="R3.html#cb75-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 AfD                 94</span></span>
+<span id="cb75-10"><a href="R3.html#cb75-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 FDP                 85</span></span>
+<span id="cb75-11"><a href="R3.html#cb75-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 Die Grünen          72</span></span>
+<span id="cb75-12"><a href="R3.html#cb75-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 DIE LINKE.          71</span></span>
+<span id="cb75-13"><a href="R3.html#cb75-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 7 Flos                 2</span></span></code></pre></div>
+<p>Eben haben wir das Durchschnittsalter aller Abgeordneten berechnet. Dies können
+wir natürlich auch gruppiert nach Fraktionen machen.</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="R3.html#cb76-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb76-2"><a href="R3.html#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(fraktion) <span class="sc">%&gt;%</span> </span>
+<span id="cb76-3"><a href="R3.html#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">minimum =</span> <span class="fu">min</span>(alter),</span>
+<span id="cb76-4"><a href="R3.html#cb76-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">arith_mittel =</span> <span class="fu">mean</span>(alter),</span>
+<span id="cb76-5"><a href="R3.html#cb76-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">std_abweichung =</span> <span class="fu">sd</span>(alter),</span>
+<span id="cb76-6"><a href="R3.html#cb76-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(alter),</span>
+<span id="cb76-7"><a href="R3.html#cb76-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">maximum =</span> <span class="fu">max</span>(alter),</span>
+<span id="cb76-8"><a href="R3.html#cb76-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">anzahl =</span> <span class="fu">n</span>())</span>
+<span id="cb76-9"><a href="R3.html#cb76-9" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 7 × 7</span></span>
+<span id="cb76-10"><a href="R3.html#cb76-10" aria-hidden="true" tabindex="-1"></a><span class="do">##   fraktion   minimum arith_mittel std_abweichung median maximum anzahl</span></span>
+<span id="cb76-11"><a href="R3.html#cb76-11" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;fct&gt;        &lt;int&gt;        &lt;dbl&gt;          &lt;dbl&gt;  &lt;dbl&gt;   &lt;int&gt;  &lt;int&gt;</span></span>
+<span id="cb76-12"><a href="R3.html#cb76-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Union           24         50.0           9.72   51        75    261</span></span>
+<span id="cb76-13"><a href="R3.html#cb76-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 SPD             27         50.3           9.35   52        68    165</span></span>
+<span id="cb76-14"><a href="R3.html#cb76-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 AfD             26         50.9          12.2    50        77     94</span></span>
+<span id="cb76-15"><a href="R3.html#cb76-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 FDP             24         45.6          10.7    46        76     85</span></span>
+<span id="cb76-16"><a href="R3.html#cb76-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 Die Grünen      26         46.9           9.90   47.5      64     72</span></span>
+<span id="cb76-17"><a href="R3.html#cb76-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 DIE LINKE.      27         50.4           9.72   52        69     71</span></span>
+<span id="cb76-18"><a href="R3.html#cb76-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 7 Flos            42         42             0      42        42      2</span></span></code></pre></div>
+<p>Oft ist es hilfreich, die Daten nach einer Statistik, die uns interessiert, zu
+ordnen. Möchten wir beispielsweise wissen, welche Fraktion den höchsten
+beziehungsweise niedrigsten Mittelwert des Alters hat, können wir die Ergebnisse
+in einem weiteren Schritt mit der Funktion <code>arrange()</code> nach den Werten dieser
+Variable ordnen. Die zusätzliche Funktion <code>desc()</code> bewirkt, dass die Daten
+absteigend geordnet werden.</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="R3.html#cb77-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb77-2"><a href="R3.html#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(fraktion) <span class="sc">%&gt;%</span> </span>
+<span id="cb77-3"><a href="R3.html#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">minimum =</span> <span class="fu">min</span>(alter),</span>
+<span id="cb77-4"><a href="R3.html#cb77-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">arith_mittel =</span> <span class="fu">mean</span>(alter),</span>
+<span id="cb77-5"><a href="R3.html#cb77-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">std_abweichung =</span> <span class="fu">sd</span>(alter),</span>
+<span id="cb77-6"><a href="R3.html#cb77-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(alter),</span>
+<span id="cb77-7"><a href="R3.html#cb77-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">maximum =</span> <span class="fu">max</span>(alter),</span>
+<span id="cb77-8"><a href="R3.html#cb77-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">anzahl =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb77-9"><a href="R3.html#cb77-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(arith_mittel))</span>
+<span id="cb77-10"><a href="R3.html#cb77-10" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 7 × 7</span></span>
+<span id="cb77-11"><a href="R3.html#cb77-11" aria-hidden="true" tabindex="-1"></a><span class="do">##   fraktion   minimum arith_mittel std_abweichung median maximum anzahl</span></span>
+<span id="cb77-12"><a href="R3.html#cb77-12" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;fct&gt;        &lt;int&gt;        &lt;dbl&gt;          &lt;dbl&gt;  &lt;dbl&gt;   &lt;int&gt;  &lt;int&gt;</span></span>
+<span id="cb77-13"><a href="R3.html#cb77-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 AfD             26         50.9          12.2    50        77     94</span></span>
+<span id="cb77-14"><a href="R3.html#cb77-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 DIE LINKE.      27         50.4           9.72   52        69     71</span></span>
+<span id="cb77-15"><a href="R3.html#cb77-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 SPD             27         50.3           9.35   52        68    165</span></span>
+<span id="cb77-16"><a href="R3.html#cb77-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Union           24         50.0           9.72   51        75    261</span></span>
+<span id="cb77-17"><a href="R3.html#cb77-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 Die Grünen      26         46.9           9.90   47.5      64     72</span></span>
+<span id="cb77-18"><a href="R3.html#cb77-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 FDP             24         45.6          10.7    46        76     85</span></span>
+<span id="cb77-19"><a href="R3.html#cb77-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 7 Flos            42         42             0      42        42      2</span></span></code></pre></div>
+<p>Für die Mehrzahl der Fraktionen liegt der Mittelwert des Alters bei ca. 50 Jahren.
+Dabei beträgt die Differenz des arithmetischen Mitels zwischen AfD und Union
+etwa 1 Jahr. Wir sehen für die AfD aber auch eine höhere Standardabweichung und
+einen niedrigeren Median. Wir könnten also vermuten, dass in der AfD einige
+besonders alte Abgeordnete vertreten sind, welche den Mittelwert nach oben
+verzerren. Die FDP ist dem Mittelwert nach die jüngste, die Grünen die
+zweitjüngste Fraktion. Während sich das Alter der jüngsten Fraktionsmitglieder
+relativ wenig unterscheidet, bestehen beim Alter der ältesten Mitglieder
+deutliche Unterschiede. Während es bei den Grünen keine MdBs über 64 gibt, geht
+das Maximalalter bei AfD, Union und FDP bis in die mittleren 70er. Die
+Statistiken für die Gruppe der fraktionslosen sind nicht besonders belastbar, da
+sie nur aus zwei Personen besteht, und lassen sich nicht sinnvoll analysieren.
+Diesen ersten Befunden werden wir bei der graphischen Analyse im folgenden
+Kapitel weiter auf den Grund gehen.</p>
+<p>Die Spalte “titel_dummy” ist ein logischer Vektor der <code>TRUE</code> enthält, wenn ein
+MdB einen akademischen Titel besitzt und <code>FALSE</code>, wenn keiner vorliegt. Hinter
+einem logischen Vektor stehen Zahlenwerte. <code>TRUE</code> ist die Repräsentation von 1,
+<code>FALSE</code> von 0. Wir können also direkt mit den Werten des Vektors rechnen. Um die
+absolute Anzahl an Titeln zu berechenn, reicht es so die Summe des Vektors zu
+bilden. Alle Werte werden aufaddiert und da wir nur Einsen und Nullen haben, ist
+das Ergebnis gleich der Anzahl der Abgeordneten, die einen akademischen Titel
+tragen. Um den relativen Anteil zu berechnen, können wir das arithmetische
+Mittel nutzen. Alle Einsen und Nullen werden aufaddiert und durch die Anzahl der
+Beobachtungen geteilt. Dies ist der Anteil der Abgeordneten mit Titel.</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="R3.html#cb78-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb78-2"><a href="R3.html#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">absolut =</span> <span class="fu">sum</span>(titel_dummy),</span>
+<span id="cb78-3"><a href="R3.html#cb78-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">relativ =</span> <span class="fu">mean</span>(titel_dummy)</span>
+<span id="cb78-4"><a href="R3.html#cb78-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb78-5"><a href="R3.html#cb78-5" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 1 × 2</span></span>
+<span id="cb78-6"><a href="R3.html#cb78-6" aria-hidden="true" tabindex="-1"></a><span class="do">##   absolut relativ</span></span>
+<span id="cb78-7"><a href="R3.html#cb78-7" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;int&gt;   &lt;dbl&gt;</span></span>
+<span id="cb78-8"><a href="R3.html#cb78-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     147   0.196</span></span></code></pre></div>
+<p>Wir könnten uns dafür interessieren, ob sich das Alter der Abgeordneten mit
+Titel von denen unterscheidet die keinen Titel tragen. Dazu gruppieren wir nach
+der Spalte “titel_dummy” und berechnen die Statistiken zum Alter.</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="R3.html#cb79-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb79-2"><a href="R3.html#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(titel_dummy) <span class="sc">%&gt;%</span> </span>
+<span id="cb79-3"><a href="R3.html#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">minimum =</span> <span class="fu">min</span>(alter),</span>
+<span id="cb79-4"><a href="R3.html#cb79-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">arith_mittel =</span> <span class="fu">mean</span>(alter),</span>
+<span id="cb79-5"><a href="R3.html#cb79-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">std_abweichung =</span> <span class="fu">sd</span>(alter),</span>
+<span id="cb79-6"><a href="R3.html#cb79-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(alter),</span>
+<span id="cb79-7"><a href="R3.html#cb79-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">maximum =</span> <span class="fu">max</span>(alter),</span>
+<span id="cb79-8"><a href="R3.html#cb79-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">anzahl =</span> <span class="fu">n</span>())</span>
+<span id="cb79-9"><a href="R3.html#cb79-9" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 2 × 7</span></span>
+<span id="cb79-10"><a href="R3.html#cb79-10" aria-hidden="true" tabindex="-1"></a><span class="do">##   titel_dummy minimum arith_mittel std_abweichung median maximum anzahl</span></span>
+<span id="cb79-11"><a href="R3.html#cb79-11" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;lgl&gt;         &lt;int&gt;        &lt;dbl&gt;          &lt;dbl&gt;  &lt;int&gt;   &lt;int&gt;  &lt;int&gt;</span></span>
+<span id="cb79-12"><a href="R3.html#cb79-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 FALSE            24         49.1           10.1     50      77    603</span></span>
+<span id="cb79-13"><a href="R3.html#cb79-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 TRUE             28         50.8           10.6     50      76    147</span></span></code></pre></div>
+<p>Abgeordnete mit Titel sind im Durchschnitt etwas älter. Dies macht Sinn, da
+sowohl das Erlangen eines Titels als auch eines Bundestagmandats hohe
+Zeitinvestitionen darstellen.</p>
+<p>Wir können auch nach mehreren Spalten gleichzeitig gruppieren. In diesem Fall
+werden die Statistiken für jede Gruppenkombination berechnet.</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="R3.html#cb80-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb80-2"><a href="R3.html#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(fraktion, titel_dummy) <span class="sc">%&gt;%</span> </span>
+<span id="cb80-3"><a href="R3.html#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">minimum =</span> <span class="fu">min</span>(alter),</span>
+<span id="cb80-4"><a href="R3.html#cb80-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">arith_mittel =</span> <span class="fu">mean</span>(alter),</span>
+<span id="cb80-5"><a href="R3.html#cb80-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">std_abweichung =</span> <span class="fu">sd</span>(alter),</span>
+<span id="cb80-6"><a href="R3.html#cb80-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(alter),</span>
+<span id="cb80-7"><a href="R3.html#cb80-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">maximum =</span> <span class="fu">max</span>(alter),</span>
+<span id="cb80-8"><a href="R3.html#cb80-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">anzahl =</span> <span class="fu">n</span>())</span>
+<span id="cb80-9"><a href="R3.html#cb80-9" aria-hidden="true" tabindex="-1"></a><span class="do">## `summarise()` has grouped output by &#39;fraktion&#39;. You can override using the `.groups` argument.</span></span>
+<span id="cb80-10"><a href="R3.html#cb80-10" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 14 × 8</span></span>
+<span id="cb80-11"><a href="R3.html#cb80-11" aria-hidden="true" tabindex="-1"></a><span class="do">## # Groups:   fraktion [7]</span></span>
+<span id="cb80-12"><a href="R3.html#cb80-12" aria-hidden="true" tabindex="-1"></a><span class="do">##    fraktion   titel_dummy minimum arith_mittel std_abweichung median maximum</span></span>
+<span id="cb80-13"><a href="R3.html#cb80-13" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;fct&gt;      &lt;lgl&gt;         &lt;int&gt;        &lt;dbl&gt;          &lt;dbl&gt;  &lt;dbl&gt;   &lt;int&gt;</span></span>
+<span id="cb80-14"><a href="R3.html#cb80-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 Union      FALSE            24         49.7           9.83   51        70</span></span>
+<span id="cb80-15"><a href="R3.html#cb80-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 Union      TRUE             32         50.9           9.32   50        75</span></span>
+<span id="cb80-16"><a href="R3.html#cb80-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 SPD        FALSE            27         50.2           9.45   52        68</span></span>
+<span id="cb80-17"><a href="R3.html#cb80-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 SPD        TRUE             33         50.9           8.95   49.5      67</span></span>
+<span id="cb80-18"><a href="R3.html#cb80-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 AfD        FALSE            26         49.8          11.7    49        77</span></span>
+<span id="cb80-19"><a href="R3.html#cb80-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 AfD        TRUE             28         54.8          13.5    55.5      76</span></span>
+<span id="cb80-20"><a href="R3.html#cb80-20" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 FDP        FALSE            24         44.9           9.77   46        66</span></span>
+<span id="cb80-21"><a href="R3.html#cb80-21" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 FDP        TRUE             31         48.4          13.5    44.5      76</span></span>
+<span id="cb80-22"><a href="R3.html#cb80-22" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 Die Grünen FALSE            26         47.8          10.1    49        64</span></span>
+<span id="cb80-23"><a href="R3.html#cb80-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 Die Grünen TRUE             34         43.8           8.79   42.5      64</span></span>
+<span id="cb80-24"><a href="R3.html#cb80-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 11 DIE LINKE. FALSE            27         49.0           9.74   50        66</span></span>
+<span id="cb80-25"><a href="R3.html#cb80-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 12 DIE LINKE. TRUE             48         56.9           6.67   56        69</span></span>
+<span id="cb80-26"><a href="R3.html#cb80-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 13 Flos       FALSE            42         42            NA      42        42</span></span>
+<span id="cb80-27"><a href="R3.html#cb80-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 14 Flos       TRUE             42         42            NA      42        42</span></span>
+<span id="cb80-28"><a href="R3.html#cb80-28" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 1 more variable: anzahl &lt;int&gt;</span></span></code></pre></div>
+<p>Wir sehen an den Mittelwerten, dass der oben für den gesamten Bundestag
+analysierte Unterschied im mittleren Alter von MdBs mit und ohne Titel nicht für
+alle Fraktionen gleichermaßen gilt. Während Titelträger in AfD, FDP und LINKE im
+Mittel klar älter sind als Abgeordnete ohne Titel, ist die Differenz für die
+Union und die SPD relativ gering. Bei den Grünen sind Titelträger im Mittel
+sogar deutlich jünger. Auch dies werden wir in der graphischen Analyse erneut
+betrachten.</p>
+<p>An dieser Stelle müssen wir noch über eine Besonderheit in der Zusammenarbeit
+von <code>group_by()</code> und <code>summarise()</code> sprechen, welche zu Problemen führen kann,
+wenn Sie sich ihr nicht bewusst sind. Grundsätzlich wird jeder Aufruf von
+<code>summarise()</code> nach einem <code>group_by()</code> Befehl eine Ebene der Gruppierung
+auflösen. Für die Beispiele in denen wir nur nach Fraktion oder Titel gruppiert
+haben, bedeutet dies also, dass die Daten nach dem <code>summarise()</code> Befehl nicht
+mehr gruppiert waren. Wir hatten <em>eine</em> Gruppierungsebene und diese wurde
+automatisch entfernt. Im letzten Beispiel hatten wir zwei Gruppierungsebenen.
+Von diesen wurde nur die niedrigere Gruppierungsebene – die Reihenfolge der
+Variablen in <code>group_by()</code> bestimmt auch die Reihenfolge der Gruppierung –, also
+die Gruppierung nach dem Titel aufgelöst. Die Gruppierung nach der
+Fraktionsmitgliedschaft ist weiterhin aktiv. Dies ist auch im Output anhand der
+Zeile <code># Groups:   fraktion [7]</code> erkennbar. Die Daten sind nach der Fraktion
+gruppiert und wir haben 7 Gruppen. Möchten wir mit den Ergebnissen dieser
+Berechnungen weiterarbeiten, müssen wir uns auch über die Gruppierung bewusst
+sein. Sollen die Daten weiterhin gruppiert sein? Dann ist alles gut, sollen
+sie es nicht sein müssen wir die Gruppierung vollständig auflösen. Dies machen
+wir mit der Funktion <code>ungroup()</code>. Solange Sie sich nicht sicher sind, dass Sie
+die Gruppierung wirklich weiterhin brauchen, würde ich immer zu einem
+<code>ungroup()</code> am Ende einer <code>group_by()</code> und <code>summarise()</code> Operation mit mehreren
+Gruppen tendieren. So verhindern sie versehentliche Berechnungen auf
+Gruppenbasis und die Gruppierung lässt sich jederzeit schnell wieder herstellen,
+sollte dies notwendig werden.</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="R3.html#cb81-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb81-2"><a href="R3.html#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(fraktion, titel_dummy) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-3"><a href="R3.html#cb81-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">minimum =</span> <span class="fu">min</span>(alter),</span>
+<span id="cb81-4"><a href="R3.html#cb81-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">arith_mittel =</span> <span class="fu">mean</span>(alter),</span>
+<span id="cb81-5"><a href="R3.html#cb81-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">std_abweichung =</span> <span class="fu">sd</span>(alter),</span>
+<span id="cb81-6"><a href="R3.html#cb81-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(alter),</span>
+<span id="cb81-7"><a href="R3.html#cb81-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">maximum =</span> <span class="fu">max</span>(alter),</span>
+<span id="cb81-8"><a href="R3.html#cb81-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">anzahl =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-9"><a href="R3.html#cb81-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb81-10"><a href="R3.html#cb81-10" aria-hidden="true" tabindex="-1"></a><span class="do">## `summarise()` has grouped output by &#39;fraktion&#39;. You can override using the `.groups` argument.</span></span>
+<span id="cb81-11"><a href="R3.html#cb81-11" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 14 × 8</span></span>
+<span id="cb81-12"><a href="R3.html#cb81-12" aria-hidden="true" tabindex="-1"></a><span class="do">##    fraktion   titel_dummy minimum arith_mittel std_abweichung median maximum</span></span>
+<span id="cb81-13"><a href="R3.html#cb81-13" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;fct&gt;      &lt;lgl&gt;         &lt;int&gt;        &lt;dbl&gt;          &lt;dbl&gt;  &lt;dbl&gt;   &lt;int&gt;</span></span>
+<span id="cb81-14"><a href="R3.html#cb81-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 Union      FALSE            24         49.7           9.83   51        70</span></span>
+<span id="cb81-15"><a href="R3.html#cb81-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 Union      TRUE             32         50.9           9.32   50        75</span></span>
+<span id="cb81-16"><a href="R3.html#cb81-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 SPD        FALSE            27         50.2           9.45   52        68</span></span>
+<span id="cb81-17"><a href="R3.html#cb81-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 SPD        TRUE             33         50.9           8.95   49.5      67</span></span>
+<span id="cb81-18"><a href="R3.html#cb81-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 AfD        FALSE            26         49.8          11.7    49        77</span></span>
+<span id="cb81-19"><a href="R3.html#cb81-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 AfD        TRUE             28         54.8          13.5    55.5      76</span></span>
+<span id="cb81-20"><a href="R3.html#cb81-20" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 FDP        FALSE            24         44.9           9.77   46        66</span></span>
+<span id="cb81-21"><a href="R3.html#cb81-21" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 FDP        TRUE             31         48.4          13.5    44.5      76</span></span>
+<span id="cb81-22"><a href="R3.html#cb81-22" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 Die Grünen FALSE            26         47.8          10.1    49        64</span></span>
+<span id="cb81-23"><a href="R3.html#cb81-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 Die Grünen TRUE             34         43.8           8.79   42.5      64</span></span>
+<span id="cb81-24"><a href="R3.html#cb81-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 11 DIE LINKE. FALSE            27         49.0           9.74   50        66</span></span>
+<span id="cb81-25"><a href="R3.html#cb81-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 12 DIE LINKE. TRUE             48         56.9           6.67   56        69</span></span>
+<span id="cb81-26"><a href="R3.html#cb81-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 13 Flos       FALSE            42         42            NA      42        42</span></span>
+<span id="cb81-27"><a href="R3.html#cb81-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 14 Flos       TRUE             42         42            NA      42        42</span></span>
+<span id="cb81-28"><a href="R3.html#cb81-28" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 1 more variable: anzahl &lt;int&gt;</span></span></code></pre></div>
+</div>
+</div>
+<div id="export" class="section level2 hasAnchor" number="3.5">
+<h2><span class="header-section-number">3.5</span> Export von Tabellen<a href="R3.html#export" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Ein flexibler Weg zum direkten Export von Tabellen ist es, diese als “.csv”
+abzuspeichern. Dieses Format kann wiederum direkt in Excel importiert werden.</p>
+<p><em>CSV</em> steht für “comma-separated values”. Da diese Dateien sehr einfach gehalten
+sind und von einer großen Bandbreite an Software verarbeitet werden können, ist
+CSV eines der meistgenutzten Formate für zweidimensionale Datenstrukturen.</p>
+<p>Hier fehlt der Platz um ins Detail zu gehen, aber wir können kurz die
+Grundstruktur einer CSV Datei betrachten:</p>
+<pre><code>column1, column2, column3
+data1_1, data1_2, data1_3
+data2_1, data2_2, data2_3
+data3_1, data3_2, data3_3</code></pre>
+<p>Die Zeilen einer Tabelle sind durch Zeilenumbrüche getrennt, die Spalten durch
+Kommata. In der ersten Zeile stehen dabei häufig, aber nicht immer, die
+Spaltennamen. Damit wissen Sie bereits das Wichtigste. Mehr zu “.csv” Dateien
+finden sie unter:
+<a href="https://jakobtures.github.io/web-scraping/files.html" target="_blank">https://jakobtures.github.io/web-scraping/files.html</a></p>
+<p>Wir können beispielsweise das Ergebnis einer <code>summarise()</code> Operation mit
+<code>write_csv()</code> aus <strong>readr</strong> (core <strong>tidyverse</strong>) abspeichern.</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="R3.html#cb83-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb83-2"><a href="R3.html#cb83-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(fraktion, titel_dummy) <span class="sc">%&gt;%</span> </span>
+<span id="cb83-3"><a href="R3.html#cb83-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">minimum =</span> <span class="fu">min</span>(alter),</span>
+<span id="cb83-4"><a href="R3.html#cb83-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">arith_mittel =</span> <span class="fu">mean</span>(alter),</span>
+<span id="cb83-5"><a href="R3.html#cb83-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">std_abweichung =</span> <span class="fu">sd</span>(alter),</span>
+<span id="cb83-6"><a href="R3.html#cb83-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(alter),</span>
+<span id="cb83-7"><a href="R3.html#cb83-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">maximum =</span> <span class="fu">max</span>(alter),</span>
+<span id="cb83-8"><a href="R3.html#cb83-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">anzahl =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb83-9"><a href="R3.html#cb83-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb83-10"><a href="R3.html#cb83-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(<span class="at">file =</span> <span class="st">&quot;alter_fraktion_titel_1.csv&quot;</span>)</span>
+<span id="cb83-11"><a href="R3.html#cb83-11" aria-hidden="true" tabindex="-1"></a><span class="do">## `summarise()` has grouped output by &#39;fraktion&#39;. You can override using the `.groups` argument.</span></span></code></pre></div>
+<p>Aus Gründen, die vermutlich nur Microsoft selbst bekannt sind – ich tippe auf
+missverstandene “Nutzerfreundlichkeit” –, können “.csv” Dateien, in denen die
+Spalten durch Kommata getrennt sind – der internationale Standard –, auf
+deutschen Windows Systemen oft nicht ohne weiteres importiert werden. Nutzen Sie
+statt Microsoft Office die Open Source Alternative LibreOffice, ist das Problem
+bereits behoben. Möchten Sie aber Microsoft Office auf einem deutschen System
+nutzen, sollten Sie die Datei eventuel im Deutschen Standard speichern. Dabei
+werden statt Kommata Semikolons als Trennzeichen der Spalten verwendet, da die
+Kommata in Deutschland zur Darstellung von Dezimalzahlen benötigt werden. Dies
+ist mit <code>write_csv2()</code> auf einfachem Wege möglich.</p>
+<div id="weiterführende-resourcen" class="section level4 hasAnchor" number="3.5.0.1">
+<h4><span class="header-section-number">3.5.0.1</span> Weiterführende Resourcen<a href="R3.html#weiterführende-resourcen" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Es existiert eine Vielzahl von Packages, die Funktionen zur Formatierung und dem
+Export von Tabellen mitbringen. Aus Platzgründen können wir nicht auf die
+Details eingehen, hier aber einige Startpunkte:</p>
+<p>Möchten sie direkt nach “.xlsx” exportieren, wären zwei der Optionen:</p>
+<ul>
+<li><strong>writexl</strong>: <a href="https://cran.r-project.org/web/packages/writexl/index.html" target="_blank">https://cran.r-project.org/web/packages/writexl/index.html</a></li>
+<li><strong>openxlsx</strong>: <a href="https://cran.r-project.org/web/packages/openxlsx/index.html" target="_blank">https://cran.r-project.org/web/packages/openxlsx/index.html</a></li>
+</ul>
+<p>Tabellen direkt im “.docx” Format zu erstellen ermöglicht <strong>flextable</strong>:
+<a href="https://davidgohel.github.io/flextable/" target="_blank">https://davidgohel.github.io/flextable/</a></p>
+<p><strong>huxtable</strong> kann Tabellen im “.tex” Format zur Arbeit in LaTeX ausgeben,
+beherrscht aber auch HTML sowie Word, Excel und Powerpoint Output:
+<a href="https://hughjonesd.github.io/huxtable/" target="_blank">https://hughjonesd.github.io/huxtable/</a></p>
+<p>Möchten sie externe Software zum Schreiben von Hausarbeiten und Papers ganz
+umgehen, könnte <em>R Markdown</em> für Sie von Interesse sein. Dies ermöglicht das
+gleichzeitige Schreiben von Text und Code in einem Dokument. Die Ausgabe lässt
+sich in unterschiedliche Formate exportieren und kann neben dem Text auch Code, der
+dargestellt werden soll, sowie Tabellen und Grafiken enthalten. Einige Resourcen
+zu R Markdown finden Sie hier:</p>
+<ul>
+<li>Einführung der RStudio website: <a href="https://rmarkdown.rstudio.com/lesson-1.html" class="uri">https://rmarkdown.rstudio.com/lesson-1.html</a>{target_“blank”}</li>
+<li>Das R Markdown cheatsheet: <a href="https://raw.githubusercontent.com/rstudio/cheatsheets/master/rmarkdown.pdf" target="_blank">https://raw.githubusercontent.com/rstudio/cheatsheets/master/rmarkdown.pdf</a></li>
+<li>Kapitel zu R Markdown in “R for Data Science” von Hadley Wickham und Garrett Grolemund: <a href="https://r4ds.had.co.nz/r-markdown.html" target="_blank">https://r4ds.had.co.nz/r-markdown.html</a></li>
+<li>“R Markdown Cookbook” von Yihui Xie, Christophe Dervieux, Emily Riederer: <a href="https://bookdown.org/yihui/rmarkdown-cookbook/" target="_blank">https://bookdown.org/yihui/rmarkdown-cookbook/</a></li>
+</ul>
+<p>Die Website, die Sie aktuell betrachten, sowie viele der verlinkten Resourcen
+sind mit <strong>bookdown</strong> geschrieben, welches auf R Markdown aufbaut und sich vor
+allem für umfangreichere Projekte eignet.</p>
+<ul>
+<li>“bookdown: Authoring Books and Technical Documents with R Markdown” von Yihui Xie: <a href="https://bookdown.org/yihui/bookdown/" target="_blank">https://bookdown.org/yihui/bookdown/</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="R2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="R4.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/JakobTures/r-intro.git/03-R3.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

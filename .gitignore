@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+quanti-text.Rproj
+*.xml
+*.XML
+*.DTD
+stammdaten.RData
+stammdaten_19.RData
+cache/*

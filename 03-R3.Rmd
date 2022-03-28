@@ -1,0 +1,638 @@
+# Transformation und Analyse mit dplyr {#R3}
+
+``` {r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(cache.path = 'cache/')
+```
+
+
+## Die Stammdaten des 17. - 19. Bundestags
+
+Dieses und das folgende Kapitel behandeln die Bereinigung, Transformation und
+deskriptive statistische Analyse von Daten mit **dplyr** sowie die graphische
+Analyse mit **ggplot2**. Zur Veranschaulichung analysieren wir eine Auswahl
+biographischer Daten der Bundestagsabgeordneten des 19. Bundestags. Die Daten
+stammen aus einer vom Bundestag bereitgestellten ".xml" Datei und wurden am
+24.03.2022 unter folgender URL heruntergeladen:
+<https://www.bundestag.de/services/opendata>{target="_blank"}
+
+Das Script zur Extraktion der interessierenden Variablen aus den XML Daten und
+der Konstruktion des hier genutzten tibbles, finden Sie in meinem GitHub:
+<https://github.com/JakobTures/r-intro/blob/master/scripts/stammdaten_extract.R>{target="_blank"}
+
+Das Script speichert eine Tibble mit allen genutzten Daten in der Datei
+"stammdaten_17_19.RData", die von Seminarteilnehmer*innen auch in Moodle
+heruntergeladen werden kann. Laden wir diese Daten zunächst in R. Da es sich bei
+dem Datenobjekt um eine Tibble handelt, müssen wir auch zunächst das
+**tidyverse** package laden. R kennt ohne dieses keine Tibbles und interpretiert
+das Objekt als Dataframe.
+
+``` {r load_stammdaten}
+library(tidyverse)
+
+load("stammdaten_17_19.RData")
+```
+
+
+Die Datei enthielt das Objekt `stammdaten_17_19`, eine Tibble, welche die
+Stammdaten aller Bundestagsabgeordneten der 17. - 19. Legislaturperiode enthält.
+Schauen wir uns die Tibble einmal an:
+
+``` {r print_stammdaten}
+stammdaten_17_19
+```
+
+Die Tibble enthält 2060 Beobachtungen. Zu jeder
+Beobachtung stehen 9 Variablen bereit. Wahlperiode, Nachname, Vorname,
+Namenspräfix (bspw. "von"), Geschlecht, Alter, Geburtsdatum, akademischer Titel
+sowie die Fraktion in welcher der/die MdB die Legislaturperiode begonnen hat.
+Der Datensatz ist damit so angelegt, dass für eine Abgeordnete eine Beobachtung
+für jede Wahlperiode vorliegt, in der sie im Bundestag vertreten war. War eine
+Abgeordnete in allen drei Wahlperioden MdB, liegen entsprechend auch drei
+separate Beobachtungen vor. Dies entspricht den Prinzipien der tidy data.
+
+Wie Sie sehen, werden bei Tibbles standardmäßig nur die ersten 10 Zeilen
+gedruckt. Die Darstellung ist dadurch kompakt und übersichtlich. Eventuell
+könnten wir aber daran interessiert sein mehr als 10 Zeilen zu sehen. Ein Weg
+ist das Anklicken des Objekts im "Environment" Tab oder das Schreiben von
+`View(objektname)` in der console. Nun öffnet sich das Objekt in einem neuen Tab
+und kann komplett betrachtet werden. Ein anderer Weg ist es, R zu zwingen mehr
+Zeilen in die console abzudrucken. Dies ist mit der Funktion `print()` möglich.
+Als zweites Argument können wir mit `n = ` angeben, wie viele Zeilen wir sehen
+möchten.
+
+``` {r print_more_stammdaten}
+print(stammdaten_17_19, n = 20)
+```
+
+
+## Datentransformation mit **dplyr**
+
+Das **dplyr** package enthält eine Reihe von Funktionen zur Bereinigung,
+Transformation und deskriptiven Analyse von Daten. Wir beginnen damit, Zeilen
+und Spalten, die wir nicht benötigen, aus der Tibble zu entfernen, bevor wir die
+Daten in einigen bestehenden Spalten transformieren und neue Spalten aus den
+vorhandenen Daten erzeugen.
+
+Empfohlene weiterführende Resourcen zu **dplyr** sind das entsprechende RStudio
+Cheatsheet:
+<https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-transformation.pdf>{target="_blank"}
+sowie das Kapitel "Data transformation" in "R for Data Science":
+<https://r4ds.had.co.nz/transform.html>{target="_blank"}
+
+
+### `filter()`
+
+`filter()` dient dazu, Beobachtungen -- also Zeilen -- aus einer Tibble zu
+filtern. Die Funktion nimmt dabei die Daten, auf die sie angewandt werden soll,
+als erstes und eine oder mehrere expressions als zweites Argument. Diese
+Ausdrücke sind letztlich die Regeln, nach denen die Funktion filtern soll.
+
+Zum Schreiben der Ausdrücke benötigen wir die in Kapitel \@ref(vergleich)
+bereits eingeführten Vergleichsoperatoren. Diese vergleichen den Wert auf der
+linken Seite des Operators mit dem auf der rechten und geben als Ergebnis ein
+`TRUE` zurück, wenn der Test bestanden wurde, beziehungsweise `FALSE`, wenn er
+nicht bestanden wurde.
+
+Wir könnten nun beispielsweise daran interessiert sein, nur die Daten bestimmter
+Fraktionen zu analysieren. Filtern wir zunächst die Stammdaten der
+Unions-Abgeordneten heraus. Wir können dazu in `filter()` testen, ob der Wert
+der Spalte "fraktion" gleich dem Wert "Union" ist. Bitte denken Sie daran, dass
+wir zum Vergleich zweier Werte immer `==` schreiben müssen, nicht `=`.
+
+``` {r filter_1}
+stammdaten_17_19 %>% 
+  filter(fraktion == "Union")
+```
+
+Möchten wir mehrere Ausdrücke kombinieren, benötigen wir dazu
+*logische Operatoren*. `&` -- *UND* -- testet, ob beide verbundenen Ausdrücke
+gleichzeitig `TRUE` sind und gibt nur dann `TRUE` zurück. `|` -- *ODER* --
+testet, ob wenigstens einer der verbundenen Ausdrücke `TRUE` ist und gibt in
+diesem Fall `TRUE` zurück. Dies sind alle möglichen Kombinationen für 2
+Ausdrücke:
+
+* `TRUE & TRUE` gibt `TRUE` zurück
+* `TRUE & FALSE`, `FALSE & TRUE` und `FALSE & FALSE` geben alle `FALSE` zurück
+* `TRUE | TRUE`, `TRUE | FALSE` und `FALSE | TRUE` geben alle `TRUE` zurück
+* `FALSE | FALSE` gibt `FALSE` zurück
+
+Möchten wir nun beispielsweise alle Unions-Abgeordneten des 19. Bundestags
+filtern, können wir dazu den `&` Operator einsetzen:
+
+``` {r filter_2}
+stammdaten_17_19 %>% 
+  filter(fraktion == "Union" & wp == 19)
+```
+
+Möchten wir die MdBs der großen Koalition aus dem Datensatz filtern, also
+Abgeordnete der Union oder der SPD, können wir dies mit `|` realisieren:
+
+``` {r filter_3}
+stammdaten_17_19 %>% 
+  filter(fraktion == "Union" | fraktion == "SPD")
+```
+
+Es lassen sich auch mehr als zwei Ausdrücke mit `&` bzw. `|` kombinieren.
+Beispielsweise um die die Abgeordneten der Oppositionsfraktionen zu filtern:
+
+``` {r filter_4}
+stammdaten_17_19 %>% 
+  filter(fraktion == "AfD" | fraktion == "FDP" | fraktion == "Die Grünen" | fraktion == "DIE LINKE.")
+```
+
+Die Daten enthalten aktuell noch alle Abgeordneten der 17. - 19.
+Legislaturperioden. Im rahmen dieser Einführung, arbeiten wir nur mit den MdBs
+des 19. Bundestags. Mit `filter()` können wir den Datensatz auf diese reduzieren.
+
+``` {r filter_19}
+stammdaten_19 <- stammdaten_17_19 %>% 
+  filter(wp == 19)
+```
+
+Ab hier arbeiten wir mit dem Objekt `stammdaten_19` weiter.
+
+### `select()`
+
+Möchten wir ein Subset von Variablen bilden, könne wir dazu `select()` nutzen.
+Die Funktion nimmt die Daten, auf die sie angewendet werden soll, als erstes
+Argument -- hier weitergegeben durch die Pipe -- und dann einen oder mehrere
+Spaltennamen, die in der Tibble verbleiben sollen. Folgen die zu behaltenden
+Spalten aufeinander, können wir auch eine "von:bis" Notation nutzen. Nehmen wir
+an, wir möchten die Spalten "nachname", "vorname", "praefix" und "fraktion"
+extrahieren:
+
+``` {r select_1}
+stammdaten_19 %>% 
+  select(nachname, vorname, praefix, fraktion)
+
+stammdaten_19 %>% 
+  select(nachname:praefix, fraktion)
+```
+
+Wir können `select()`auch nutzen, um Variablen zu entfernen. Dazu schreiben wir
+`-` vor den zu entfernenden Spaltennamen. Da das genaue Geburtsdatum der
+Abgeordneten im Folgenden nicht mehr benötigt wird, können wir die Spalte "geb"
+entfernen. 
+
+``` {r select_2}
+stammdaten_19 <- stammdaten_19 %>% 
+  select(-geb)
+
+stammdaten_19
+```
+
+
+### `rename()`
+
+Ihnen wird eventuell bereits aufgefallen sein, dass alle Spaltennamen außer
+"Titel" mit einem kleingeschriebenen Buchstaben beginnen. Da habe ich
+anscheinend beim Erstellen des Datenobjekts meine eigenen Namenskonventionen
+-- alles beginnt mit kleinen Buchstaben -- außer Acht gelassen. Um diese nun
+umzubenennen, können wir `rename()` nutzen. Erneut werden als erstes Argument
+die Daten durch die Pipe weitergegeben, gefolgt von einem oder mehreren
+Argumenten in der Form `neuer_name = alter_name`.
+
+``` {r rename}
+stammdaten_19 <- stammdaten_19 %>% 
+  rename(titel = Titel)
+
+stammdaten_19
+```
+
+
+### `mutate()`
+
+`mutate()` dient dazu, Daten in bestehenden Spalten zu transformieren und neue
+Spalten aus den Daten bestehender Spalten zu generieren. Dabei schreiben wir
+innerhalb der Klammern den Namen der zu transformierenden oder neu zu
+erstellenden Spalte `=` einem Ausdruck der beschreibt, wir die Daten
+transformiert oder generiert werden sollen. Dies kann eine einfache Berechnung
+wie `mutate(neue_spalte = spalte_a + spalte b)` sein, aber auch weitere
+Funktionen beinhalten. Auch in `mutate()` können wir innerhalb der Klammern
+mehrere mutate-Schritte der Form `alte/neue_Spalte = Ausdruck` durch Kommata
+"aneinanderhängen".
+
+Hier erstellen wir eine kleine Tibble mit Beispieldaten um die Funktionsweise
+von `mutate()` zu veranschaulichen:
+
+``` {r exmpl_data}
+exmpl_tbl <- tibble(x1 = 1:5,
+                    x2 = 5:1)
+
+exmpl_tbl
+
+exmpl_tbl %>% 
+  mutate(x1 = sqrt(x1),
+         x3 = x1 * x2,
+         x4 = round(x3, digits = 2))
+```
+
+In diesem Beispiel wird der Inhalt der Spalte "x1" durch die Quadratwurzel der
+enthaltenen Werte ersetzt -- `sqrt()` ist eine base R Funktion zum Ziehen der
+Quadratwurzel. Die Originalwerte werden also mit den transformierten Werten
+ersetzt. Die Werte in "x2" werden hier nicht ersetzt. Die Spalten "x3" und "x4"
+werden beide neu aus den Werten der bestehenden Spalten erstellt. Bitte beachten
+Sie dabei, dass bei der Erstellung von "x3" bereits die transformierten Werte
+aus "x1" in die Berechnung eingehen, nicht die Originalwerte. Die Funktion
+`round()`, welche bei der Erstellung von "x4" genutzt wird, rundet die Werte aus
+"x3" auf zwei Nachkommastellen. Die Anzahl Nachkommastellen wird über das
+optionale Argument `digits = ` kontrolliert. Geben wir dies nicht an, wird auf
+Null Nachkommastellen, also Ganzzahlen, gerundet.
+
+Gehen wir nun zur Transformation unseres Datensatzes über.
+Die Spalte "titel" listet aktuell die akademischen Titel der Abgeordneten. Liegt
+ein Titel vor, wird dieser genau benannt. Liegt keiner vor enthält die Spalte
+ein `NA`, die Repräsentation fehlender Werte in R. Für diese Analyse
+interessiert uns nur, ob ein Titel vorliegt, aber nicht welcher. Dazu könnten
+wir eine neue Spalte generieren, welche einen logischen Vektor enthält, der
+angibt, ob ein Titel vorliegt (`TRUE`) oder nicht (`FALSE`). Dies ist eine
+sogenannte Dummyvariable. Zum Generieren können wir die **dplyr** Funktion
+`if_else()` nutzen. Wir geben als erstes Argument eine Bedingung an, die getestet
+wird. Hier `!is.na(titel)`, welche testet ob der Inhalt von "titel" *nicht* --
+angezeigt durch das `!` -- missing ist. Das zweite und dritte Argument geben an,
+was eingesetzt werden soll wenn die getestete Bedingung erfüllt beziehungsweise
+nicht erfüllt ist. Hier soll im ersten Fall `TRUE`, im zweiten `FALSE`
+eingesetzt werden.
+
+``` {r mutate_titel}
+stammdaten_19 <- stammdaten_19 %>% 
+  mutate(titel_dummy = if_else(!is.na(titel), TRUE, FALSE))
+
+stammdaten_19 %>% 
+  select(titel, titel_dummy)
+```
+
+Die Spalte "fraktion" ist aktuell als Character Vektor abgelegt. Bei der
+Fraktionszugehörigkeit handelt es sich aber um eine kategoriale Variable. So
+gibt es nur eine begrenzte Anzahl möglicher Ausprägungen, nämlich die Namen der
+im 19. Bundestag vertretenen Fraktionen sowie die Kategorie "Flos" für
+Fraktionslose. Die Repräsentation kategorialer Variablen in R nennt sich
+*factor*. Das core tidyverse Package **forcats** ermöglicht es uns,
+Faktorvariablen anzulegen und zu manipulieren.
+
+Der einfachste Weg ist es, R selbst auslesen zu lassen, welche Kategorien in
+einer Variable vorhanden sind. Dazu wenden wir einfach die Funktion `factor()`
+innerhalb von `mutate()` auf eine Spalte an.
+
+``` {r factor_1}
+stammdaten_19 <- stammdaten_19 %>% 
+  mutate(fraktion = factor(fraktion))
+```
+
+Um herauszufinden, welche Kategorien ein factor vector umfasst, nutzen wir
+`levels()`.
+
+``` {r factor_2}
+levels(stammdaten_19$fraktion)
+```
+
+Dies scheint funktioniert zu haben. R hat automatisch und korrekt alle
+Ausprägungen der Varibale erkannt und jede einem factor zugeordnet. Aktuell sind
+die Kategorien alphabetisch geordnet, inhaltlicher sinnvoller wäre aber
+beispielsweise eine Ordnung nach der Größe der Fraktionen im 19. Bundestag.
+
+Um die Kategorien manuell neu zu ordnen, könnten wir `fct_relevel()` nutzen.
+Dazu müssten wir aber die gewünschte Reihenfolge per Hand notieren. Bequemer
+geht es mit `fct_infreq()`, welche die Kategorien automatisch nach der
+Häufigkeit Ihres Auftretens in den Daten ordnet. Also in unserem Fall von der
+Kategorie mit den meisten Abgeordneten bis zu der mit den wenigsten.
+
+``` {r factor_4}
+stammdaten_19 <- stammdaten_19 %>% 
+  mutate(fraktion = fct_infreq(fraktion))
+
+levels(stammdaten_19$fraktion)
+```
+
+Dass die Grünen vor der Linken eingeordnet wurden obwohl die Linken im 19.
+Bundestag zwei Mandate mehr hatten, liegt daran, dass der Datensatz auch
+ausgeschiedene MdBs umfasst. Von diesen hatten die Grünen drei mehr, so dass sie
+sich in der Gesamtzahl von Beobachtungen im Datensatz knapp vor die Linke
+setzen.
+
+Die Spalte "geschlecht" liegt ebenfalls als Character Vektor vor und kann auf
+dem selben Weg in einen Factor umgewandelt werden.
+
+``` {r factor_5}
+stammdaten_19 <- stammdaten_19 %>% 
+  mutate(geschlecht = factor(geschlecht))
+
+levels(stammdaten_19$geschlecht)
+```
+
+Damit sind die Daten zur weiteren Analyse vorbereitet. Die Spalte "titel" ist
+allerdings nicht mehr notwendig, da wir die enthaltenen Informationen in die neue
+Dummyvariable überführt haben. Wir können diese also mit `select()` entfernen.
+
+``` {r cleanup_1}
+stammdaten_19 <- stammdaten_19 %>% 
+  select(-titel)
+
+stammdaten_19
+```
+
+
+## Speichern der transformierten Daten
+
+Wir werden im nächsten Kapitel mit den hier transformierten Daten
+weiterarbeiten. Dazu sollten Sie entweder zu Beginn des Kapitels das Script aus
+diesem Kapitel nochmals durchlaufen lassen, oder Sie speichern die bearbeiteten
+Daten:
+
+``` {r save_R3}
+save(stammdaten_19, file = "stammdaten_19.RData")
+```
+
+
+## Deskriptive Datenanalyse mit **dplyr**
+
+### `summarise()`
+
+Die Funktion `summarise()` ermöglicht es uns, zusammenfassende Maßzahlen zu
+einer Tibble zu berechnen. Die Syntax funktioniert dabei ähnlich zu `mutate()`.
+Wir definieren einen Namen für die Spalte, in der die Maßzahlen gelistet werden
+sollen, und nach dem `=` eine entsprechende Berechnung oder Funktion. Das
+Ergebnis ist ein neue Tibble, welche die angeforderten Statistiken enthält.
+
+Betrachten wir zunächst die Spalte "alter". Wir könnten uns für das
+arithmetische Mittel des Alters der MdBs interessieren. Dazu definieren wir
+innerhalb von `summarise()` den Namen der neuen Spalte und nach dem `=` nutzen
+wir die base R Funktion `mean()`:
+
+``` {r alter_summary_1}
+stammdaten_19 %>% 
+  summarise(arith_mittel = mean(alter))
+```
+
+Wir können uns auch mehrere Statistiken gleichzeitig ausgeben, indem wir die
+entsprechenden Anfragen mit `,` verbinden:
+
+``` {r alter_summary_2}
+stammdaten_19 %>% 
+  summarise(minimum = min(alter),
+            arith_mittel = mean(alter),
+            median = median(alter),
+            maximum = max(alter))
+```
+
+Das sieht alles schon ordentlich aus, ist aber auch auf einfacherem Wege
+erzielbar, beispielsweise mit der praktischen base R Funktion `summary()`.
+Wirklich mächtig wird `summarise()` erst durch die Kombination mit `group_by()`.
+So können wir die Daten gruppieren und die zusammenfassenden Statistiken für
+jede dieser Gruppen separat berechnen.
+
+
+### `summarise()` & `group_by()`
+
+Unsere Daten bieten sich für eine Analyse nach Fraktionszugehörigkeit an. Als
+ersten Schritt können wir die Daten also nach dem Inhalt der Spalte "fraktion"
+gruppieren und zunächst einmal zählen, wie viele Abgeordnete pro Fraktion im
+Bundestag vertreten sind. Hier bitte erneut beachten, dass sowohl ausgeschiedene
+Abgeordnete sowie deren NachrückerInnen im Datensatz enthalten sind. Die
+Analyseergebnisse werden dementsprechend nicht exakt mit der Mandatszahl
+übereinstimmen. Innerhalb von `summarise()` nutzen wir hier die **dplyr**
+Funktion `n()`, welche die Anzahl Beobachtungen pro Gruppe, also die
+Gruppengröße, zurückgibt.
+
+
+``` {r partei_summary}
+stammdaten_19 %>% 
+  group_by(fraktion) %>% 
+  summarise(abgeordnete = n())
+```
+
+Eben haben wir das Durchschnittsalter aller Abgeordneten berechnet. Dies können
+wir natürlich auch gruppiert nach Fraktionen machen.
+
+``` {r alter_by_partei}
+stammdaten_19 %>% 
+  group_by(fraktion) %>% 
+  summarise(minimum = min(alter),
+            arith_mittel = mean(alter),
+            std_abweichung = sd(alter),
+            median = median(alter),
+            maximum = max(alter),
+            anzahl = n())
+```
+
+Oft ist es hilfreich, die Daten nach einer Statistik, die uns interessiert, zu
+ordnen. Möchten wir beispielsweise wissen, welche Fraktion den höchsten
+beziehungsweise niedrigsten Mittelwert des Alters hat, können wir die Ergebnisse
+in einem weiteren Schritt mit der Funktion `arrange()` nach den Werten dieser
+Variable ordnen. Die zusätzliche Funktion `desc()` bewirkt, dass die Daten
+absteigend geordnet werden.
+
+``` {r alter_by_partei_ordered}
+stammdaten_19 %>% 
+  group_by(fraktion) %>% 
+  summarise(minimum = min(alter),
+            arith_mittel = mean(alter),
+            std_abweichung = sd(alter),
+            median = median(alter),
+            maximum = max(alter),
+            anzahl = n()) %>% 
+  arrange(desc(arith_mittel))
+```
+
+Für die Mehrzahl der Fraktionen liegt der Mittelwert des Alters bei ca. 50 Jahren.
+Dabei beträgt die Differenz des arithmetischen Mitels zwischen AfD und Union
+etwa 1 Jahr. Wir sehen für die AfD aber auch eine höhere Standardabweichung und
+einen niedrigeren Median. Wir könnten also vermuten, dass in der AfD einige
+besonders alte Abgeordnete vertreten sind, welche den Mittelwert nach oben
+verzerren. Die FDP ist dem Mittelwert nach die jüngste, die Grünen die
+zweitjüngste Fraktion. Während sich das Alter der jüngsten Fraktionsmitglieder
+relativ wenig unterscheidet, bestehen beim Alter der ältesten Mitglieder
+deutliche Unterschiede. Während es bei den Grünen keine MdBs über 64 gibt, geht
+das Maximalalter bei AfD, Union und FDP bis in die mittleren 70er. Die
+Statistiken für die Gruppe der fraktionslosen sind nicht besonders belastbar, da
+sie nur aus zwei Personen besteht, und lassen sich nicht sinnvoll analysieren.
+Diesen ersten Befunden werden wir bei der graphischen Analyse im folgenden
+Kapitel weiter auf den Grund gehen. 
+
+Die Spalte "titel_dummy" ist ein logischer Vektor der `TRUE` enthält, wenn ein
+MdB einen akademischen Titel besitzt und `FALSE`, wenn keiner vorliegt. Hinter
+einem logischen Vektor stehen Zahlenwerte. `TRUE` ist die Repräsentation von 1,
+`FALSE` von 0. Wir können also direkt mit den Werten des Vektors rechnen. Um die
+absolute Anzahl an Titeln zu berechenn, reicht es so die Summe des Vektors zu
+bilden. Alle Werte werden aufaddiert und da wir nur Einsen und Nullen haben, ist
+das Ergebnis gleich der Anzahl der Abgeordneten, die einen akademischen Titel
+tragen. Um den relativen Anteil zu berechnen, können wir das arithmetische
+Mittel nutzen. Alle Einsen und Nullen werden aufaddiert und durch die Anzahl der
+Beobachtungen geteilt. Dies ist der Anteil der Abgeordneten mit Titel.
+
+``` {r titel_summary}
+stammdaten_19 %>% 
+  summarise(absolut = sum(titel_dummy),
+            relativ = mean(titel_dummy)
+  )
+```
+
+Wir könnten uns dafür interessieren, ob sich das Alter der Abgeordneten mit
+Titel von denen unterscheidet die keinen Titel tragen. Dazu gruppieren wir nach
+der Spalte "titel_dummy" und berechnen die Statistiken zum Alter.
+
+``` {r alter_by_titel}
+stammdaten_19 %>% 
+  group_by(titel_dummy) %>% 
+  summarise(minimum = min(alter),
+            arith_mittel = mean(alter),
+            std_abweichung = sd(alter),
+            median = median(alter),
+            maximum = max(alter),
+            anzahl = n())
+```
+
+Abgeordnete mit Titel sind im Durchschnitt etwas älter. Dies macht Sinn, da
+sowohl das Erlangen eines Titels als auch eines Bundestagmandats hohe
+Zeitinvestitionen darstellen.
+
+Wir können auch nach mehreren Spalten gleichzeitig gruppieren. In diesem Fall
+werden die Statistiken für jede Gruppenkombination berechnet.
+
+``` {r alter_by_titel_by_partei}
+stammdaten_19 %>% 
+  group_by(fraktion, titel_dummy) %>% 
+  summarise(minimum = min(alter),
+            arith_mittel = mean(alter),
+            std_abweichung = sd(alter),
+            median = median(alter),
+            maximum = max(alter),
+            anzahl = n())
+```
+
+Wir sehen an den Mittelwerten, dass der oben für den gesamten Bundestag
+analysierte Unterschied im mittleren Alter von MdBs mit und ohne Titel nicht für
+alle Fraktionen gleichermaßen gilt. Während Titelträger in AfD, FDP und LINKE im
+Mittel klar älter sind als Abgeordnete ohne Titel, ist die Differenz für die
+Union und die SPD relativ gering. Bei den Grünen sind Titelträger im Mittel
+sogar deutlich jünger. Auch dies werden wir in der graphischen Analyse erneut
+betrachten.
+
+An dieser Stelle müssen wir noch über eine Besonderheit in der Zusammenarbeit
+von `group_by()` und `summarise()` sprechen, welche zu Problemen führen kann,
+wenn Sie sich ihr nicht bewusst sind. Grundsätzlich wird jeder Aufruf von
+`summarise()` nach einem `group_by()` Befehl eine Ebene der Gruppierung
+auflösen. Für die Beispiele in denen wir nur nach Fraktion oder Titel gruppiert
+haben, bedeutet dies also, dass die Daten nach dem `summarise()` Befehl nicht
+mehr gruppiert waren. Wir hatten *eine* Gruppierungsebene und diese wurde
+automatisch entfernt. Im letzten Beispiel hatten wir zwei Gruppierungsebenen.
+Von diesen wurde nur die niedrigere Gruppierungsebene -- die Reihenfolge der
+Variablen in `group_by()` bestimmt auch die Reihenfolge der Gruppierung --, also
+die Gruppierung nach dem Titel aufgelöst. Die Gruppierung nach der
+Fraktionsmitgliedschaft ist weiterhin aktiv. Dies ist auch im Output anhand der
+Zeile `# Groups:   fraktion [7]` erkennbar. Die Daten sind nach der Fraktion
+gruppiert und wir haben 7 Gruppen. Möchten wir mit den Ergebnissen dieser
+Berechnungen weiterarbeiten, müssen wir uns auch über die Gruppierung bewusst
+sein. Sollen die Daten weiterhin gruppiert sein? Dann ist alles gut, sollen
+sie es nicht sein müssen wir die Gruppierung vollständig auflösen. Dies machen
+wir mit der Funktion `ungroup()`. Solange Sie sich nicht sicher sind, dass Sie
+die Gruppierung wirklich weiterhin brauchen, würde ich immer zu einem
+`ungroup()` am Ende einer `group_by()` und `summarise()` Operation mit mehreren
+Gruppen tendieren. So verhindern sie versehentliche Berechnungen auf
+Gruppenbasis und die Gruppierung lässt sich jederzeit schnell wieder herstellen,
+sollte dies notwendig werden.
+
+``` {r ungroup}
+stammdaten_19 %>% 
+  group_by(fraktion, titel_dummy) %>% 
+  summarise(minimum = min(alter),
+            arith_mittel = mean(alter),
+            std_abweichung = sd(alter),
+            median = median(alter),
+            maximum = max(alter),
+            anzahl = n()) %>% 
+  ungroup()
+```
+
+
+## Export von Tabellen {#export}
+
+Ein flexibler Weg zum direkten Export von Tabellen ist es, diese als ".csv"
+abzuspeichern. Dieses Format kann wiederum direkt in Excel importiert werden.
+
+*CSV* steht für "comma-separated values". Da diese Dateien sehr einfach gehalten
+sind und von einer großen Bandbreite an Software verarbeitet werden können, ist
+CSV eines der meistgenutzten Formate für zweidimensionale Datenstrukturen.
+
+Hier fehlt der Platz um ins Detail zu gehen, aber wir können kurz die
+Grundstruktur einer CSV Datei betrachten:
+
+```
+column1, column2, column3
+data1_1, data1_2, data1_3
+data2_1, data2_2, data2_3
+data3_1, data3_2, data3_3
+```
+
+Die Zeilen einer Tabelle sind durch Zeilenumbrüche getrennt, die Spalten durch
+Kommata. In der ersten Zeile stehen dabei häufig, aber nicht immer, die
+Spaltennamen. Damit wissen Sie bereits das Wichtigste. Mehr zu ".csv" Dateien
+finden sie unter:
+<https://jakobtures.github.io/web-scraping/files.html>{target="_blank"}
+
+Wir können beispielsweise das Ergebnis einer `summarise()` Operation mit
+`write_csv()` aus **readr** (core **tidyverse**) abspeichern.
+
+``` {r save_csv_1}
+stammdaten_19 %>% 
+  group_by(fraktion, titel_dummy) %>% 
+  summarise(minimum = min(alter),
+            arith_mittel = mean(alter),
+            std_abweichung = sd(alter),
+            median = median(alter),
+            maximum = max(alter),
+            anzahl = n()) %>% 
+  ungroup() %>% 
+  write_csv(file = "alter_fraktion_titel_1.csv")
+```
+
+Aus Gründen, die vermutlich nur Microsoft selbst bekannt sind -- ich tippe auf
+missverstandene "Nutzerfreundlichkeit" --, können ".csv" Dateien, in denen die
+Spalten durch Kommata getrennt sind -- der internationale Standard --, auf
+deutschen Windows Systemen oft nicht ohne weiteres importiert werden. Nutzen Sie
+statt Microsoft Office die Open Source Alternative LibreOffice, ist das Problem
+bereits behoben. Möchten Sie aber Microsoft Office auf einem deutschen System
+nutzen, sollten Sie die Datei eventuel im Deutschen Standard speichern. Dabei
+werden statt Kommata Semikolons als Trennzeichen der Spalten verwendet, da die
+Kommata in Deutschland zur Darstellung von Dezimalzahlen benötigt werden. Dies
+ist mit `write_csv2()` auf einfachem Wege möglich.
+
+
+
+#### Weiterführende Resourcen
+
+Es existiert eine Vielzahl von Packages, die Funktionen zur Formatierung und dem
+Export von Tabellen mitbringen. Aus Platzgründen können wir nicht auf die
+Details eingehen, hier aber einige Startpunkte:
+
+Möchten sie direkt nach ".xlsx" exportieren, wären zwei der Optionen:
+
+* **writexl**: <https://cran.r-project.org/web/packages/writexl/index.html>{target="_blank"}
+* **openxlsx**: <https://cran.r-project.org/web/packages/openxlsx/index.html>{target="_blank"}
+
+Tabellen direkt im ".docx" Format zu erstellen ermöglicht **flextable**:
+<https://davidgohel.github.io/flextable/>{target="_blank"}
+
+**huxtable** kann Tabellen im ".tex" Format zur Arbeit in LaTeX ausgeben,
+beherrscht aber auch HTML sowie Word, Excel und Powerpoint Output:
+<https://hughjonesd.github.io/huxtable/>{target="_blank"}
+
+Möchten sie externe Software zum Schreiben von Hausarbeiten und Papers ganz
+umgehen, könnte *R Markdown* für Sie von Interesse sein. Dies ermöglicht das
+gleichzeitige Schreiben von Text und Code in einem Dokument. Die Ausgabe lässt
+sich in unterschiedliche Formate exportieren und kann neben dem Text auch Code, der
+dargestellt werden soll, sowie Tabellen und Grafiken enthalten. Einige Resourcen
+zu R Markdown finden Sie hier:
+
+* Einführung der RStudio website: <https://rmarkdown.rstudio.com/lesson-1.html>{target_"blank"}
+* Das R Markdown cheatsheet: <https://raw.githubusercontent.com/rstudio/cheatsheets/master/rmarkdown.pdf>{target="_blank"}
+* Kapitel zu R Markdown in "R for Data Science" von Hadley Wickham und Garrett Grolemund: <https://r4ds.had.co.nz/r-markdown.html>{target="_blank"}
+* "R Markdown Cookbook" von Yihui Xie, Christophe Dervieux, Emily Riederer: <https://bookdown.org/yihui/rmarkdown-cookbook/>{target="_blank"}
+
+Die Website, die Sie aktuell betrachten, sowie viele der verlinkten Resourcen
+sind mit **bookdown** geschrieben, welches auf R Markdown aufbaut und sich vor
+allem für umfangreichere Projekte eignet.
+
+* "bookdown: Authoring Books and Technical Documents with R Markdown" von Yihui Xie: <https://bookdown.org/yihui/bookdown/>{target="_blank"}

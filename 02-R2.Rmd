@@ -1,0 +1,579 @@
+# RStudio & das tidyverse {#R2}
+
+``` {r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(cache.path = 'cache/')
+```
+
+## RStudio workflow
+
+Im vorangegangenen Kapitel haben wir unsere Befehle direkt in die R Konsole
+eingegeben, mit “Enter” bestätigt und unseren Output zurückbekommen. Dies ist
+allerdings nicht die standardmäßige Anwendung von R (oder anderen
+Programmiersprachen). Das Hauptproblem besteht hierbei darin, dass unser Code
+nach dem Ausführen nicht erhalten bleibt. Wir können zwar durch die Konsole
+scrollen, um nachzuvollziehen, welche Befehle wir genutzt haben, dies ist uns
+aber spätestens nach dem Schließen von RStudio nicht mehr zugänglich. In der
+Realität werden Sie aber häufig längere Zeiträume an einem Projekt arbeiten und
+möchten eventuell ihren Code mit Kommiliton:innen, Kolleg:innen oder der R
+Community teilen. Je komplexer unser Code wird, desto mehr Fehler werden wir
+auch machen. Ein früher Fehler in der Konsole, der erst spät auffällt, kann
+bedeuten, dass der Großteil unserer Arbeit wiederholt werden müsste. Deswegen
+arbeitet man statt der Konsole mit sogenannten Scripts.
+
+
+### R Scripts
+
+Ein R Script ist eine Datei, in der wir unsere Befehle niederschreiben und so
+für die spätere Weiterarbeit und Weitergabe dokumentieren.
+
+Um ein neues R Script zu erstellen, klicken Sie auf "File" > "New File" > "R
+Script", oder nutzen Sie die praktische Tastenkombination "CTRL" + "Shift" +
+"N". So wird ein leeres und unbenanntes neues Script erstellt.
+
+Als erste Übung können wir ein Stück Code aus dem vorangegangenen Kapitel statt
+in die Konsole in unser R Script eingeben.
+
+``` {r Script_example}
+a <- 17
+b <- 4
+
+the_answer <- (a + b) * 2
+
+the_answer
+```
+
+Zur Erinnerung: wir erstellen zwei numerische Objekte a und b, weisen das
+Ergebnis einer Berechnung mit diesen zwei Objekten einem neuem Objekt
+`the_answer` zu und lassen uns dieses Objekt, also das Ergebnis der Berechnung,
+ausgeben.
+
+Statt die Befehle Zeile für Zeile in die Konsole einzugeben und jede Zeile
+direkt auszuführen, schreiben wir zunächst den kompletten Codeblock in unser
+neues Script. Danach können wir unser komplettes Script durch einen Klick auf
+"Source" in der toolbar des Script Fensters ausführen. Ich empfehle Ihnen
+stattdessen aber, Scripts stets Befehl für Befehl auszuführen. So haben Sie die
+volle Kontrolle über den Prozess, sehen sofort das Ergebnis (oder den Fehler)
+jedes einzelnen Befehls und können die Ausführung an jeder beliebigen Stelle
+pausieren, zum Beispiel um den Code besser nachzuvollziehen, Fehler zu erkennen
+oder Veränderungen vorzunehmen. Umsetzen können Sie dies mit einem Klick auf
+"Run" in der Toolbar des Scripttabs oder noch einfacher durch das Drücken von
+"CTRL" + "Enter". In beiden Fällen wird die Zeile, in der sich aktuell Ihr
+Cursor befindet ausgeführt. Dieser springt daraufhin automatisch in die nächste
+Zeile, sodass Sie auch Befehl für Befehl schnell ihr ganzes Script ausführen
+können, dabei aber die volle Kontrolle behalten. Was für Sie praktikabler ist,
+müssen Sie selbst entscheiden und kann auch von der Situation abhängen. Bedenken
+Sie aber immer, dass R zu jedem Zeitpunkt davon ausgeht, dass Sie wissen was Sie
+tun. Es wird keine Warnmeldungen geben, wenn Sie etwas überschreiben das Sie
+eigentlich nicht überschreiben wollten.
+
+Sie sollten ihr Script regelmäßig abspeichern. Nicht nur dann, wenn Sie eine
+Arbeitssession beenden, sondern *regelmäßig*. Dies können sie über "File" >
+"Save" erreichen oder durch die Tastenkombination "CTRL" + "S". Sie können den
+Namen des Scripts frei wählen, die Endung muss jedoch immer ".R" sein.
+
+Ein Problem, das Ihnen früher oder später begegnen wird, ist, dass Sie
+versehentlich versuchen werden inkompletten Code aus einem Script auszuführen.
+Der Grund ist sehr häufig eine fehlende schließende Klammer, wie in
+`print("Hello World"`. R kann den Code nicht interpretieren und geht aufgrund
+der fehlenden Klammer davon aus, dass der Code noch weitergehen soll. R
+übernimmt dann den inkompletten Code in die Konsole, führt ihn aber nicht aus,
+sondern beginnt eine neue Zeile mit einem `+`. Dies bedeutet, dass wir hinter
+dem `+` den Code fortsetzen können. In der Regel ist es dann am sinnvollsten,
+die Ausführung des Codes abzubrechen, indem sie in die Konsole klicken und
+danach "Esc" drücken. Dann können wir den Code in unserem Script korrigieren und
+erenut ausführen.
+
+
+### Projekte
+
+Häufig werden unsere R Vorhaben aus mehreren Dateien -- wie Scripts, Datensätzen
+oder ausgegebenen Graphiken -- bestehen. Es macht dann häufig Sinn, diese
+Dateien an einem gemeinsamen Ort abzuspeichern. Dies könnten wir natürlich "per
+Hand" managen, RStudio’s Projektfunktion kann hier aber sehr hilfreich sein.
+
+Durch Klicken auf "File" > "New Project", erstellen wir ein neues Projekt. Haben
+wir bereits einen Ordner für das Projekt angelegt, können wir auf "Existing
+Directory" klicken, den Ordner auswählen und die Erstellung mit "Create Project"
+abschließen. Oder wir erstellen mit "New Directory" > "New Project" einen neuen
+Ordner für das Projekt direkt aus RStudio.
+
+RStudio wird nun alle aktuell geöffneten Dateien schließen und in das neu
+erstellte Projekt wechseln. Der Name des gewählten oder erstellten Ordners ist
+auch gleichzeitig der Name des Projekts, angezeigt in der Titelleiste von
+RStudio. Der "Files" tab (rechts-unten) zeigt nun auch den Inhalt des
+Projektordners. Dies ist ihr aktuelles working directory, mehr dazu gleich. Sie
+können nun Dateien erstellen und bearbeiten und speichern diese ganz normal ab.
+Das Projekt selbst muss nie gespeichert werden. Möchten Sie in einer späteren R
+Session ihre Arbeit an dem Projekt fortsetzen, klicken Sie auf "File" > "Open
+Project". Das Projekt wird geöffnet, alle Dateien die Sie bei der letzten
+Session geöffnet hatten sind erneut geöffnet und Sie befinden sich auch wieder
+im working directory des Projekts. Projekte sind eine einfache und praktische
+Methode, um Ihre Arbeiten zu organisieren und aufgeräumt zu halten.
+
+An dieser Stelle wäre es eventuell sinnnvoll, wenn Sie ein Projekt zu diesem
+Seminar erstellen. Sie könnten dann Scripts für jedes Kapitel anlegen oder
+weitere Unterordner für Übungen usw. einrichten. Ob dies für Sie eine sinnvolle
+Arbeitsweise ist, bleibt aber Ihnen überlassen.
+
+Wir sollten nun noch kurz über das *working directory* sprechen. Dieses wird zum
+Beispiel dann relevant, wenn Sie versuchen eine Datei direkt aus einem Script
+heraus zu öffnen oder zu speichern. Geben Sie dabei keinen kompletten absoluten
+Pfad an, geht R immer davon aus, dass Sie sich auf das working directory
+beziehen. Arbeiten Sie in einem Projekt, ist das working directory automatisch
+das Hauptverzeichnis des Projekts. Mit `getwd()` gibt Ihnen R ihr aktuelles
+Arbeitsverzeichnis zurück. Ihr Arbeitsverzeichnis können Sie über "Session" >
+"Set Working Directory" > "Choose Directory..." oder mit der Funktion `setwd()`
+ändern, wobei der Pfad mit `""` eingefasst zwischen die Klammern geschrieben
+wird.
+
+
+### Kommentare
+
+Einer der wichtigsten Skills beim Schreiben von Code, ist das Kommentieren des
+Selbigen. Kommentare können wir direkt in Scripts schreiben, diese werden jedoch
+nicht ausgeführt, sondern dienen der Erläuterung und Strukturierung des Codes.
+Einen Kommentar markieren wir mit einem oder mehreren `#`. Text der auf ein `#`
+folgt wird von R als Kommentar erkannt und entsprechend nicht ausgeführt.
+
+Wenn Sie über längere Zeit an einem Projekt arbeiten oder dieses nach längerer
+Zeit erneut öffnen, kann es für sie selbst manchmal schwierig sein
+nachzuvollziehen, was Sie mit ihrem Code erreichen wollten. Gut kommentierter
+Code erleichtert dies stark. Dies wird nochmals relevanter, wenn Sie ihren Code
+mit anderen Personen teilen. Für die meisten Probleme in R bestehen eine
+Vielzahl möglicher Ansätze. Gut kommentierter Code hilft Anderen zu verstehen,
+was *ihr* Ansatz ist. Hier können Sie die Zeit, die Sie in das Kommentieren
+investieren als Respekt gegenüber der Zeit verstehen, die Andere investieren um
+Ihren Code zu verstehen.
+
+Ihnen wird eventuell aufgefallen sein, dass der Output der Codeblöcke auf dieser
+website mit `##` beginnt. Im Output Ihrer R Konsole fehlen diese. Beim Erstellen
+der Website mit dem package **bookdown** werden die Symbole automatisch im
+Output eingefügt, um das Kopieren und Einfügen der Code Blöcke in Ihre Scripts
+zu erleichtern. So wird der mit `##` markierte Output von R als Kommentar
+verstanden und nicht als Befehl ausgeführt. Dies ist oft praktisch, trotzdem
+empfehle ich weiterhin, so viel wie möglich selbst zu Tippen und copy/paste nur
+spärlich zu verwenden.
+
+Hier ein Beispiel eines bereits bekannten Codeblocks, diesmal mit Kommentaren
+versehen:
+
+``` {r Script_example_commented}
+# assigning objects
+a <- 17
+b <- 4
+
+# calculating the answer
+the_answer <- (a + b) * 2
+
+the_answer
+# but what is the question?
+```
+
+Falls Sie `setwd()` in Ihrem Script verwenden, empfiehlt es sich, dies
+auszukommentieren, bevor sie das Script weitergeben. Andere Personen haben andere
+Ordnerstrukturen als Sie und können mit Ihrem individuellen `setwd()` nichts
+anfangen. Im besten Fall wird ihr `setwd()` nicht ausführbar sein, im
+schlechtesten bringen Sie die Ordnerstruktur einer anderen Person durcheinander.
+Ähnliches gilt für Befehle, die etwas auf die Festplatte speichern,
+beispielsweise Datensätze oder exportierte Graphiken. Die R community ist
+grundsätzlich sehr bereitwillig auch Anfängern mit Coding Problemen zu helfen.
+Wir sollten diese Bereitschaft damit würdigen gut kommentierten Code
+weiterzugeben und davon abzusehen, in die Dateistruktur anderer Personen
+einzugreifen.
+
+### Speichern
+
+Aus dem Blickwinkel reproduzierbarer Datenanalyse ist es aus meiner Sicht meist
+der beste Ansatz, ein Script zu erstellen in dem die rohen Daten eingelesen,
+bereinigt, transformiert sowie statistisch und graphisch analysiert werden. So
+ist es jeder Person mit Zugriff auf die Daten und ihr Script möglich, jeden
+ihrer Arbeitsschritte nachzuvollziehen und zu reproduzieren. Dies ist eine der
+Säulen transparenter wissenschaftlicher Praxis. Bei diesem Ansatz müssen wir
+also selten die Ergebnisse unserer Analysen als Datensatz abspeichern. Das
+Script -- die ".R" Datei -- ist ausreichend.
+
+Es gibt aber auch Situationen, in denen es sinnvoll sein kann, Ergebnisse
+abzuspeichern. Quantitative Textanalysen können bespielsweise sehr
+rechenintensiv sein. Bei der Anwendung fortgeschrittener Methoden im Machine
+Learning auf sehr große Datensätze, können schonmal mehrere Stunden bis Tage
+Rechenzeit anfallen. Auch wenn wir solche Zeitdmensionen in diesem Seminar nicht
+erreichen, kann es hilfreich sein auch die Ergebnisse einer Operation im
+niedrigen Minutenbereich abzuspeichern, um Rechenzeit bei regelmäßiger Arbeit
+mit den Ergebnissen zu sparen.
+
+Die einfachste Möglichkeit ist es, zum Speichern das native R Datenformat
+".RData" zu nutzen.
+
+Erstellen wir einen kurzen Dataframe, um diesen gleich abzuspeichern:
+
+``` {r example_df}
+data <- data.frame(
+  name = c("Peter", "Paul", "Mary"),
+  age = c(42, 84, 24),
+  size = c(1.68, 1.82, 1.74),
+  retired = c(FALSE, TRUE, FALSE)
+)
+```
+
+Mit `save()` können wir ".RData" Dateien speichern. Dazu schreiben wir innerhalb
+der Klammern zunächst den Namen des Objekts -- oder mehrerer Objekte mit `c()`
+zusammengefasst -- gefolgt von einem `,` und dem Argument `file = ""`. Innerhalb
+der `""` legen wir einen Dateinamen mit einem optionalen Pfad fest. Eine Datei
+ohne angegebenen Pfad wird im aktuellen working directory gespeichert.
+
+``` {r df_save}
+save(data, file = "peter_paul_mary.RData")
+```
+
+Um die gespeicherten Daten wieder zu laden, nutzen wir die Funktion `load()` mit
+dem Namen beziehungsweise Pfad der Datei als einzigem Argument.
+
+``` {r df_load}
+load("peter_paul_mary.RData")
+```
+
+So haben wir Daten in dem schnellen und gut komprimierten nativen ".RData"
+Format gespeichert. Der Nachteil ist, dass diese Daten auch nur in R genutzt
+werden können. Interessieren sie sich dafür, Daten in einem besser
+transportierbaren Format zu speichern, bietet sich ".csv" an. Mehr dazu in
+Kapitel \@ref(export) sowie hier:
+<https://jakobtures.github.io/web-scraping/files.html>{target="_blank"}
+
+
+## tidyverse
+
+Weiter oben haben wir das **tidyverse** Package installiert und geladen. Dieses
+wird uns durch das ganze Seminar begleiten. Das tiydverse ist eine beliebte
+Sammlung von R Packages, die einer gemeinsamen Philosophie der Funktionssyntax
+sowie der Datenstruktur folgen und dabei viele datenanalytische Arbeitsprozesse
+abdecken. Der Vorteil ist, dass Sie, sobald Sie die Grundlogik verstanden haben,
+sehr schnell auch weitere tidyverse Packages verstehen werden. Letztlich ist es
+Geschmackssache, aber aus meiner Sicht führt das Arbeiten mit dem tidyverse zu
+intuitiverem und flüßiger zu schreibendem R Code.
+
+Aktuell besteht das core **tidyverse** Package aus acht individuellen Packages.
+Diese werden alle automatisch geladen, wenn wir `library(tidyverse)` schreiben.
+Das core **tidyverse** deckt einen Großteil der besonders regelmäßig
+auftretenden datenanalytischen Funktionalitäten ab. Dazu gehören das Einlesen,
+Reinigen und Transformieren von Daten oder die graphische Analyse. Im weiteren
+werden wir viele Funktionen aus dem core **tidyverse** sehr regelmäßig nutzen.
+
+Nebem dem core **tidyverse** besteht eine wachsende Zahl zugehöriger Packages,
+welche nach den selben Grundsätzen funktionieren, dabei aber speziellere
+Aufgabenfelder abdecken. Auch diese wurden mit `install.Packages("tidyverse")`
+bereits installiert, müssen aber explizit geladen werden. Darunter
+beispielsweise **lubridate** zum Umgang mit Datumsangaben und eine Reihe von
+Packages zum Einlesen bestimmter Datentypen.
+
+Eine volle Liste der tidyverse Packages finden Sie unter:
+<https://www.tidyverse.org/Packages/>{target="_blank"}
+
+Für eine umfassendere Einführung in das tidyverse bietet sich das Buch "R for
+Data Science" von Wickham & Grolemund an, welches auch Online zugänglich ist:
+<https://r4ds.had.co.nz/>{target="_blank"}
+
+
+### tidy data
+
+Das tidyverse folgt einer geteilten Philosophie der Datenstruktur namens
+*tidy data*. Einfach ausgedrückt steht tidy data dafür, dass jede Variable eines
+Datensatz eine eigene Spalte in einer Tabelle bekommt und jede Beobachtung eine
+eigene Zeile. Die Werte zu den Kombinationen von Variablen und Beobachtungen
+stehen dann logisch folgend in den Zellen.
+
+Betrachten wir folgenden Dataframe, welcher bisherige (04.09.2021) Umfragewerte
+für die Wahl zum 20. Bundestag enthält. Die Daten stammen von:
+<https://www.wahlrecht.de/umfragen/index.htm>{target="_blank"}
+
+``` {r untidy_data, echo = FALSE}
+data.frame(
+  Institut = c("Kantar", "Infratest"),
+  CDU_CSU = c(21, 20),
+  SPD = c(25, 25),
+  GRÜNE = c(19, 16),
+  FDP = c(11, 13),
+  LINKE = c(7, 6),
+  AfD = c(11, 12),
+  Sonstige = c(6, 8)
+)
+```
+
+Diese Darstellungsform ist uns sofort intuitiv verständlich. So sehen Tabellen
+in Excel oder in Zeitungen aus und die Darstellung ist kompakt und
+übersichtlich. Aber ist Sie auch *tidy*? Dazu müssen wir uns Gedanken darüber
+machen, welche Variablen die Tabelle enthält. Die erste Spalte bildet die
+Variable "Institut" ab. Dies macht Sinn. Die restlichen 7 Spalten enthalten die
+Umfragewerte für die 6 aktuell im Bundestag vertretenen Parteien sowie
+"Sonstige". Wir haben also eigentlich 2 Variablen: "Umfragewert" und "Partei",
+welche aktuell in 7 Spalten dargestellt werden. Sie erinnern sich, jede Variable
+bekommt in einem tidy Datensatz eine Spalte. Zudem werden die Werte der Variable
+"Partei" auch gar nicht als Werte in der Tabelle sondern in den Spaltennamen
+abgebildet. Die Tabelle ist also eindeutig nicht tidy.
+
+Vergleichen Sie dies zu folgendem Dataframe:
+
+``` {r tidy_data, echo = FALSE}
+data.frame(
+  Institut = c("Kantar", "Kantar", "Kantar", "Kantar", "Kantar", "Kantar", "Kantar",
+               "Infratest", "Infratest", "Infratest", "Infratest", "Infratest", "Infratest", "Infratest"),
+  Partei = c("CDU_CSU", "SPD", "GRÜNE", "FDP", "LINKE", "AfD", "Sonstige"),
+  Umfragewert = c(21, 25, 19, 11, 7, 11, 6, 20, 25, 16, 13, 6, 12, 8)
+)
+```
+
+Diese Darstellung ist tidy. Wir haben 3 Variablen "Institut", "Partei" und
+"Umfragewert" die jeweils in einer eigenen Spalte stehen. Beobachtungen sind nun
+nicht mehr das komplette Set von Umfragewerten eines Umfrageinstituts, sondern
+der Umfragewert einer Partei bei einem Insitut. Das Ergebnis ist eine Tabelle,
+die den Prinzipien der tidy data folgt, die uns auf den ersten Blick aber
+seltsam erscheint, da wir nicht daran gewohnt sind, Daten in dieser Form
+darzustellen. Wir sollten aber auch bedenken, dass es an dieser Stelle nicht das
+Ziel ist, eine schöne Tabelle für menschliche Leser zu präsentieren, sondern ein
+Datenobjekt zu konstruieren, welches uns die praktische und komfortabele
+Weiterarbeit mit den diversen tidyverse Packages ermöglicht.
+
+Mehr zu den angedeuteten Prinzipien der tidy data finden Sie im entsprechenden
+Kapitel von "R for Data Science" von Wickham & Grolemund:
+<https://r4ds.had.co.nz/tidy-data.html.>{target="_blank"}
+
+
+### Tibbles
+
+Das **tibble** Package ist Teil des core **tidyverse** und bietet eine
+Alternative zur base R Darstellung von Tabellen als Dataframes. Dabei liegen
+viele der Unterschiede zwischen Tibbles und Dataframes eher im Detail. Für uns
+sind vor allem die Art wie Tibbles in die Konsole gedruckt werden und wie das
+subsetting funktioniert relevant. Mehr zu Beidem gleich. Eine ausführlichere
+Einführung finden Sie erneut in "R for Data Science":
+<https://r4ds.had.co.nz/tibbles.html>{target="_blank"}
+
+Tibbles erstellen wir dabei auf die selbe Weise wie Dataframes, nutzen dazu
+aber die Funktion `tibble()`. Dazu müssen wir zunächst das **tibble**
+beziehungsweise das **tidyverse** Package, welches **tibble** enthält, laden.
+Das Laden von Packages sollte in den ersten Zeilen eines Scripts passieren. So
+werden alle notwendigen Packages zu Beginn eines Scripts geladen und andere
+Nutzer*innen sehen sofort welche Packages eventuell noch nachinstalliert werden
+müssen. 
+
+Hier geben wir die Daten direkt bei der Erstellung der Tibble ein. Wie bei
+Dataframes können wir Tibbles aber auch aus zuvor definierten Vektoren
+zusammensetzen.
+
+``` {r tibble_1}
+library(tidyverse)
+
+tibble(numbers = c(0, 1, 2), strings = c("zero", "one", "two"), logicals = c(FALSE, TRUE, TRUE))
+```
+
+Bevor wir den Output betrachten, ein genereller Hinweis: Je länger unser Code
+wird, desto unübersichtlicher wird er auch. Wir sollten längeren Code deshalb
+über mehrere Zeilen aufteilen und durch Einrücken kennzeichnen, welche
+Codesegmente zusammengehörig sind. Das Einrücken übernimmt RStudio weitestgehend
+automatisch, wir können aber auch selbst Tabs hinzufügen oder entfernen um
+Zeilen einzurücken. Eine übersichtlicher formatierte, inhaltlich aber identische
+Version des vorangegangenen Codes könnte wie folgt aussehen:
+
+``` {r tibble_2}
+tibble(
+  numbers = c(0, 1, 2),
+  strings = c("zero", "one", "two"),
+  logicals = c(FALSE, TRUE, TRUE)
+)
+```
+
+R interpretiert dies identisch zur Schreibweise in einer Zeile und weiß, dass
+alles zwischen der öffnenden und schließenden Klammer Teil der aufgerufenen
+Funktion ist.
+
+Lassen sie uns nun den Output betrachten. Dieser ist grundsätzlich ähnlich zu
+dem Output eines Dataframes, wobei 2 Unterschiede bestehen. Zum Einen wird der
+Datentyp einer Spalte unter deren Namen abgebildet. Zum Anderen werden längere
+Tibbles verkürzt abgedruckt, wie wir später noch sehen werden. Dataframes
+werden hingegen stets vollständig gedruckt, was bei großen Datenmengen nur dazu
+führt, dass in der Konsole eigentlich nichts mehr lesbar ist. 
+
+Ein weiterer wichtiger Unterschied besteht im Subsetting von Tibbles. Das
+Subsetting mit `[]` gibt uns immer einen neuen tibble zurück, mit `[[]]`
+bekommen wir einen Vektor. Sind wir nur an Spalten interessiert, reicht es
+übrigens nur die Spaltenposition zwischen den Klammern einzutragen. So bekommen
+wir die komplette Spalte, also über alle Zeilen, zurück. Alternativ zur 
+numerischen Position, können wir auch die Spaltennamen nutzen. Entweder zwischen
+den eckigen Klammern oder in der $-Notation.
+
+``` {r tibble_3}
+tbl_exmpl <- tibble(
+  numbers = c(0, 1, 2),
+  strings = c("zero", "one", "two"),
+  logicals = c(FALSE, TRUE, TRUE)
+)
+
+str(tbl_exmpl[1])
+str(tbl_exmpl[[1]])
+str(tbl_exmpl[["numbers"]])
+str(tbl_exmpl$numbers)
+```
+
+Viele tidyverse Funktionen nutzen Tibbles statt Dataframes -- so auch die
+Funktionen des **tidytext** Packages, welches wir im Verlaufe des Seminars
+ausgiebig nutzen werden -- und Funktionen aus anderen Packages werden meist
+Dataframes zurückgeben. Wir können beide Datenobjekte aber auch konvertieren.
+Dazu nutzen wir die base R Funktion `as.data.frame()` bzw. die **dplyr**
+Funktion `as_tibble()`.
+
+``` {r tibble_4}
+str(tbl_exmpl)
+
+df_exmpl <- as.data.frame(tbl_exmpl)
+str(df_exmpl)
+
+tbl_exmpl_2 <- as_tibble(df_exmpl)
+str(tbl_exmpl_2)
+```
+
+
+### Die Pipe `%>%`
+
+Ein weiteres Element des tidyverse ist die sogenannte Pipe `%>%`. Diese
+ermöglicht das Aneinanderketten von Befehlen, wobei das Ergebnis des
+vorangegangenen Befehls an den nächsten weitergegeben wird. Dies klingt im
+Moment noch sehr abstrakt. Betrachten wir also ein praktisches Beispiel.
+
+Folgender Code hat das Ziel, für einen Vektor von Zahlen den auf eine
+Nachkommastelle gerundeten Mittelwert zu berechnen. Dazu müssen wir zunächt den
+Vektor erstellen und einem Objekt zuweisen, dann den Mittelwert berechnen und
+erneut einem Objekt zuweisen und in einem letzten Schritt das Runden mit der
+Funktion `round()` vornehmen. Das Argument `digits =` legt dabei die Anzahl der
+Nachkommastellen fest.
+
+
+``` {r no_pipe}
+data <- c(4.8, 15.16, 23.42)
+mean_data <- mean(data)
+round(mean_data, digits = 1)
+```
+
+Dies funktioniert, wir mussten dazu aber auch jeden Zwischenschritt in ein neues
+Objekt speichern. Nutzen wir stattdessen die Pipe, umgehen wir diese
+Notwendigkeit und schreiben gleichzeitig kompakteren und intuitiveren Code.
+
+
+``` {r pipe}
+data <- c(4.8, 15.16, 23.42)
+
+data %>% 
+  mean() %>% 
+  round(digits = 1)
+```
+
+Die Pipe nimmt das Ergebnis einer Zeile und gibt dieses an die nächste Zeile
+weiter. Betrachten wir dieses Beispiel Schritt für Schritt: Die erste Pipe gibt
+das Objekt `data` an die Funktion `mean()` weiter. Wie Sie sehen steht dieses
+mal kein Argument zwischen den Klammern.  Trotzdem weiß R, dass `mean()` auf das
+Objekt `data` angewandt werden soll. Dies funktioniert, da die Pipe immer das
+Ergebnis der vorangegangenen Zeile als erstes Argument der Funktion in der
+folgenden Zeile einfügt. So wird hier `mean()` tatsächlich auf das Objekt `data`
+angewandt. Das Ergebnis, der Mittelwert, wird durch die nächste Pipe an die
+letzte Zeile weitergegeben und eneut als erstes Argument eingesetzt, hier in die
+Funktion `round()`. Die Rundung wird also auf den in der Zeile zuvor berechneten
+Mittelwert angewandt.
+
+Dies funktioniert reibungslos mit allen Funktionen, die ein Datenobjekt, auf das
+sie angewandt werden sollen, als erstes Argument nehmen. Dies ist sehr häufig der
+Fall, aber nicht immer.
+
+Der resultierende Code ist intuitiver zu lesen und weniger schreibintensiv,
+insbesondere wenn Sie sich früh angewöhnen die pipe mit der Tastenkombination
+"Ctrl" + "Shift" + "M" einzufügen.
+
+Das Endergebnis einer Pipe Operation können wir ebenfalls einem Objekt zuweisen.
+Die Objektzuweisung erfolt dabei allerdings bereits in der ersten Zeile.
+
+``` {r pipe_2}
+rounded_mean <- data %>% 
+  mean() %>% 
+  round(digits = 1)
+```
+
+Dies ist auf den ersten Blick etwas unintuitiv, da nicht `data` dem Objekt
+`rounded_mean` zugewiesen wird, sondern das Ergebnis der letzten Zeile, also
+der gerundetete Mittelwert.
+
+
+## Weitere Hilfe!
+
+### Packages
+
+Neben der Hilfefunktion, welche wir bereits in Kapitel \@ref(R1) kennen gelernt
+haben, stellen viele Packages sogenannte *vignettes* bereit:
+Hilfedateien, die in die Funktionalitäten des Packages einführen. Schauen wir
+uns dies für das **tibble** Package an:
+
+``` {r vignette_1, eval = FALSE}
+vignette(package = "tibble")
+```
+
+Wir bekommen so eine Liste mit allen zu **tibble** verfügbaren vignettes zurück.
+Einzelne dieser vignettes, rufen wir wie folgt auf:
+
+``` {r vignette_2, eval = FALSE}
+vignette("types")
+```
+
+Eine ausführlichere Dokumentation zu einem Package, finden Sie außerdem meist
+auf der dazugehörigen CRAN Seite, hier z.B. für **tibble**:
+<https://cran.r-project.org/web/Packages/tibble/index.html>{target="_blank"}.
+
+
+### Empfohlene externe Resourcen
+
+Es gibt eine Vielzahl von Websites und Büchern zu R und RStudio. Einige davon
+möchte ich hier vorstellen.
+
+Die Website von RStudio umfasst eine große Sammlung von Resourcen zu R und
+der Arbeit mit spezfischen Packages, darunter auch viele Webinare und Tutorial
+Videos. Diese finden sie unter dem Menüpunkt "Resources" auf:
+<https://www.rstudio.com/>{target="_blank"}
+
+Die RStudio *Cheatsheets* zu einigen der beliebteren Packages bieten auf kleinem
+Raum meist sehr gut zusammengefasste Informationen zu den Funktionen und der
+Arbeitsweise eines Packages. Die Nutzung der Cheatsheets sei von mir dringend
+empfohlen, und sie sind nicht nur beim Erlernen eines neuen Packages sondern
+auch als Erinnerungsstütze extrem hilfreich:
+<https://www.rstudio.com/resources/cheatsheets/>{target="_blank"}
+
+Eine weitere Sammlung von Tutorials zu unterschiedlichsten R Themen finden Sie
+auf "R-bloggers":
+<https://www.r-bloggers.com/>{target="_blank"}
+
+Generell finden Sie im Internet eine kaum überschaubare Fülle von Informationen
+und Resourcen zu R und spezifischen Packages in Form von Videos, Blogs, 
+digitalen Büchern und vor allem auch Foreneinträgen -- beispielsweise auf
+<https://stackoverflow.com/>{target="_blank"}. So ist einer der wichtigsten
+Skills, den Sie entwickeln müssen, das Formulieren von klaren und kurzen
+Suchanfragen zu Ihrem spezifischen R Problem. In der Regel können Sie davon
+ausgehen, dass die Antwort bereits im Netz existiert. Ihre Aufgabe ist es nun,
+ihr Problem gut genug zu verstehen und eine entsprechende Suchanfrage zu
+schreiben, um auf diese wertvollen Resourcen zugreifen zu können.
+
+Das Internet gibt Ihnen ebenfalls Zugang zu einer Vielzahl umfassender
+Einführungen in R sowie zu Online Versionen von R Büchern:
+
+* *Intro to R for Social Scientists* von Jasper Tjaden.
+Eine an Einsteiger*innen gerichtete Einführung in R, die über das in diesem
+Seminar gelernte R Basiswissen hinausgeht. Geschrieben als Begleitmaterial zu
+einem Seminar an der Universität Potsdam im Sommersemester 2021.
+<https://jaspertjaden.github.io/course-intro2r/>{target="_blank"}
+
+* *R Cookbook, 2nd Edition* von J.D. Long & Paul Teetor.
+Das Kochbuch besteht aus einer Reihe von Rezepten für spezifische Aufgaben, die
+Sie in R durchführen möchten. Dies ist weniger als durchgängig zu lesendes Buch
+und mehr als Nachschlagewerk zu nutzen.
+<https://rc2e.com/>{target="_blank"}
+
+* *R for Data Science* von Hadley Wickham & Garrett Grolemund.
+Eine Einführung in die Datenanalyse mit R, fokussiert auf die Arbeit mit dem
+tidyverse. Geschrieben von zwei zentralen Figuren des tidyverse und Mitarbeitern
+bei RStudio.
+<https://r4ds.had.co.nz/>{target="_blank"}
