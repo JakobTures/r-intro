@@ -140,7 +140,7 @@ sie anwendbar sind. Dieser Logik folgt auch das oben verlinkte cheatsheet.
 Das Alter ist die einzige kontinuierliche Variable in unserem
 Beispielsdatensatz. Damit eignet sich der Beispieldatensatz nicht zum Plotten
 zweier kontinuierlicher Variablen. Stattdessen, generieren wir im folgenden
-Zufallswerte für eine x-Variable und eine damit positiv korrelierte y-Variable.
+Zufallssaten für Mietpreise und Quadratmeter fiktiver Wohnungen in einer Stadt.
 
 Bevor wir nun Zufallswerte generieren, müssen wir uns über eines bewusst sein:
 Zufallswerte sind **Zufalls**werte. Bei jeder wiederholten Ziehung der
@@ -155,39 +155,42 @@ generiert werden und sicher die Reproduzierbarkeit unserer Arbeit. Die Funktion
 `set.seed()`, mit einer beliebigen Zahl zwischen den Klammern -- hier das Datum
 der Seminarsitzung -- setzt den Seed.
 
-Der folgende Codeblock generiert unsere Zufallsdaten als eine Tibble. Die erste
-Spalte enthält 100 Zufallswerte aus einer Normalverteilung mit einem Mittelwert
-von 50 und einer Standardabweichung von 20. In der zweiten Spalte ziehen wir
-erneut 100 Zufallswerte, diesmal mit einem Mittelwert von 0 und einer
-Standardabweichung von 10. Die Werte werden damit etwa zur Hälfte positiv bzw.
-negativ sein. Diese Werte benötigen wir gleich um unserer y-Variable etwas
-*Rauschen* (Noise) hinzuzufügen. Die y-Variable selbst wird in der dritten Spalte
-generiert. Falls Sie die Formel zur Generierung der abhängigen Variable an eine
-Regressionsgleichung erinnert, liegen Sie richtig. Dem *Intercept* von 20, wird
-der jeweilige Wert der x-Variable multipliziert mit einem Koeffizienten von 0.4
--- also einer deutlichen positiven Korrelation -- und im Anschluss noch das
-zuvor erstellte zufällige Rauschen hinzuaddiert.
+Der folgende Codeblock generiert unsere Zufallsdaten als eine Tibble. Die Spalte
+"size" enthält 1000 Zufallswerte aus einer Normalverteilung mit einem Mittelwert
+von 70 und einer Standardabweichung von 15. Dies sind die Quadratmeterzahlen
+unser fiktiver Wohnungen. Für die Spalte "premium" werden 1000 Werte aus der
+Binomialverteilung gezogen. Mit einer Wahrscheinlichkeit von 20% ist der Wert
+`TRUE`, mit 80% `FALSE`. Die Variable soll einige Wohnungen zufällig als
+besonders teuer kennzeichnen -- möglicherweise aufgrund ihrer exklusiven Lage.
+Auf Basis der Werte von "size" und "premium", berechnet sich der Mitpreis in
+"price" wie folgt: Ausgehend von einer fiktiven Quadratmetermiete von 10€, wird
+zunächst etwas "Rauschen" hinzugefügt (Addition/Subtraktion von Werten aus einer
+Normalverteilung mit einem Mittelwert von 0 und einer Standardabweichung von 3).
+Handelt es sich um eine "Premiumwohnung", werden auf diesen Preis nochmals 10€
+aufgeschlagen. Nun wird der Quadratmeterpreis mit der Größe der Wohnung
+multipliziert um den finalen Mietpreis zu berechnen.
 
 ``` {r random_data}
 set.seed(170522)
 
-random_data <- tibble(
-  x_var = rnorm(100, mean = 50, sd = 20),
-  noise = rnorm(100, sd = 10),
-  y_var = 20 + 0.4 * x_var + noise
+rent <- tibble(
+  size = rnorm(1000, mean = 70, sd = 15),
+  premium = as.logical(rbinom(n = 1000, size = 1, prob = 0.2)),
+  price = size * (10 + rnorm(1000, mean = 0, sd = 3) + (10 * premium))
 )
 
-random_data
+rent %>% 
+  head(n = 5)
 ```
 
-Nun können wir unsere kontinuierlichen Zufallsdaten plotten. Typischerweise,
-wird die erklärende unabhängige Variable auf der x-Achse, die zu erklärende
-abhängige Variable auf der y-Achse abgetragen. Mit `geom_point()` können wir
+Nun können wir unsere Zufallsdaten plotten. Typischerweise wird die erklärende
+unabhängige Variable, hier `size`, auf der x-Achse und die zu erklärende
+abhängige Variable, `price`, auf der y-Achse abgetragen. Mit `geom_point()` können wir
 einen scatterplot erstellen um die Kombinationen der Werte für x- und y-Variablen
 als Punkte in einem Koordinatensystem darzustellen.
 
-``` {r scatter_1}
-ggplot(data = random_data, aes(x = x_var, y = y_var)) +
+``` {r scatter}
+ggplot(data = rent, aes(x = size, y = price)) +
   geom_point()
 ```
 
@@ -206,18 +209,37 @@ Maß für die Unsicherheit des geschätzten Zusammenhangs -- um die Gerade
 angezeigt wird.
 
 ``` {r scatter_lm}
-ggplot(data = random_data, aes(x = x_var, y = y_var)) +
+ggplot(data = rent, aes(x = size, y = price)) +
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+  geom_smooth(method = 'lm', se = FALSE)
 ```
 
 Der Winkel in dem die Regressionsgerade verläuft -- die *slope* -- zeigt uns den
-Zusammenhang zwischen beiden Variablen an. Wir sehen einen klaren linearen
-Zusammenhang zwischen x- und y-Variable.
+Zusammenhang zwischen beiden Variablen an, welcher hier klar positiv ist. 
 
-Weiterführende Informationen dazu, wie wir scatterplots und Regressionsgeraden
-nach einer dritten Variable gruppiert darstellen können, finden Sie unter:
-<https://jakobtures.github.io/web-scraping/ggplot.html#continuous-x-continuous-y>{target="_blank"}
+Wir haben die Zufallsdaten so konstruiert, dass es eine Klasse von Wohnungen
+gibt, welche besonders teuer sind. Die Korrelation zwischen Größe und Preis
+unterscheidet sich also zwischen diesen Gruppen. Dies können wir in unserem Plot
+visualisieren in dem wir die Variable `premium` nutzen um die Daten zu gruppieren
+und sowohl Punkte als auch Regressionsgeraden getrennt nach dem Wert der dritten
+Variable abzutragen. Zur Gruppierung legen wir eine weitere aesthetic fest.
+Dazu könnten wir das Argument `group = premium` setzen. Um Punkte und Geraden
+auch farblich abzugrenzen, bietet sich aber `colour = premium` an.
+
+``` {r scatter_grouped_lm}
+ggplot(data = rent, aes(x = size, y = price, colour = premium)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE)
+```
+
+Wir sehen klar, dass sich die Slope beider Geraden unterscheidet. Die Korrelation
+zwischen Größe und Preis ist für Premiumwohnungen stärker.
+
+Sidenote: In diesem Fall haben wir die Daten selbst konstruiert und waren uns
+über die Zusammenhänge der Variablen im Vorfeld bewusst. Die Zusammenhänge in
+echten Daten kennen wir nicht, wir können aber basiert auf theoretischen
+Überlegungen Annahmen zu Zusammenhängen treffen und diese, unter anderem, mit
+vergleichbaren graphischen Analysen überprüfen.
 
 
 ### kategoriales x, kontinuierliches y

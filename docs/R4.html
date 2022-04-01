@@ -24,7 +24,7 @@
 <meta name="author" content="Jakob Tures" />
 
 
-<meta name="date" content="2022-03-28" />
+<meta name="date" content="2022-04-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -355,7 +355,7 @@ sie anwendbar sind. Dieser Logik folgt auch das oben verlinkte cheatsheet.</p>
 <p>Das Alter ist die einzige kontinuierliche Variable in unserem
 Beispielsdatensatz. Damit eignet sich der Beispieldatensatz nicht zum Plotten
 zweier kontinuierlicher Variablen. Stattdessen, generieren wir im folgenden
-Zufallswerte für eine x-Variable und eine damit positiv korrelierte y-Variable.</p>
+Zufallssaten für Mietpreise und Quadratmeter fiktiver Wohnungen in einer Stadt.</p>
 <p>Bevor wir nun Zufallswerte generieren, müssen wir uns über eines bewusst sein:
 Zufallswerte sind <strong>Zufalls</strong>werte. Bei jeder wiederholten Ziehung der
 Zufallswerte, werden wir andere Werte erhalten. Meist sind wir aber daran
@@ -368,49 +368,46 @@ fest. Dieser Startpunkt bestimmt, welche Zahlen in welcher Reihenfolge zufällig
 generiert werden und sicher die Reproduzierbarkeit unserer Arbeit. Die Funktion
 <code>set.seed()</code>, mit einer beliebigen Zahl zwischen den Klammern – hier das Datum
 der Seminarsitzung – setzt den Seed.</p>
-<p>Der folgende Codeblock generiert unsere Zufallsdaten als eine Tibble. Die erste
-Spalte enthält 100 Zufallswerte aus einer Normalverteilung mit einem Mittelwert
-von 50 und einer Standardabweichung von 20. In der zweiten Spalte ziehen wir
-erneut 100 Zufallswerte, diesmal mit einem Mittelwert von 0 und einer
-Standardabweichung von 10. Die Werte werden damit etwa zur Hälfte positiv bzw.
-negativ sein. Diese Werte benötigen wir gleich um unserer y-Variable etwas
-<em>Rauschen</em> (Noise) hinzuzufügen. Die y-Variable selbst wird in der dritten Spalte
-generiert. Falls Sie die Formel zur Generierung der abhängigen Variable an eine
-Regressionsgleichung erinnert, liegen Sie richtig. Dem <em>Intercept</em> von 20, wird
-der jeweilige Wert der x-Variable multipliziert mit einem Koeffizienten von 0.4
-– also einer deutlichen positiven Korrelation – und im Anschluss noch das
-zuvor erstellte zufällige Rauschen hinzuaddiert.</p>
+<p>Der folgende Codeblock generiert unsere Zufallsdaten als eine Tibble. Die Spalte
+“size” enthält 1000 Zufallswerte aus einer Normalverteilung mit einem Mittelwert
+von 70 und einer Standardabweichung von 15. Dies sind die Quadratmeterzahlen
+unser fiktiver Wohnungen. Für die Spalte “premium” werden 1000 Werte aus der
+Binomialverteilung gezogen. Mit einer Wahrscheinlichkeit von 20% ist der Wert
+<code>TRUE</code>, mit 80% <code>FALSE</code>. Die Variable soll einige Wohnungen zufällig als
+besonders teuer kennzeichnen – möglicherweise aufgrund ihrer exklusiven Lage.
+Auf Basis der Werte von “size” und “premium”, berechnet sich der Mitpreis in
+“price” wie folgt: Ausgehend von einer fiktiven Quadratmetermiete von 10€, wird
+zunächst etwas “Rauschen” hinzugefügt (Addition/Subtraktion von Werten aus einer
+Normalverteilung mit einem Mittelwert von 0 und einer Standardabweichung von 3).
+Handelt es sich um eine “Premiumwohnung”, werden auf diesen Preis nochmals 10€
+aufgeschlagen. Nun wird der Quadratmeterpreis mit der Größe der Wohnung
+multipliziert um den finalen Mietpreis zu berechnen.</p>
 <div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="R4.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">170522</span>)</span>
 <span id="cb89-2"><a href="R4.html#cb89-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb89-3"><a href="R4.html#cb89-3" aria-hidden="true" tabindex="-1"></a>random_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb89-4"><a href="R4.html#cb89-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_var =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">20</span>),</span>
-<span id="cb89-5"><a href="R4.html#cb89-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">noise =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">10</span>),</span>
-<span id="cb89-6"><a href="R4.html#cb89-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y_var =</span> <span class="dv">20</span> <span class="sc">+</span> <span class="fl">0.4</span> <span class="sc">*</span> x_var <span class="sc">+</span> noise</span>
+<span id="cb89-3"><a href="R4.html#cb89-3" aria-hidden="true" tabindex="-1"></a>rent <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb89-4"><a href="R4.html#cb89-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="fu">rnorm</span>(<span class="dv">1000</span>, <span class="at">mean =</span> <span class="dv">70</span>, <span class="at">sd =</span> <span class="dv">15</span>),</span>
+<span id="cb89-5"><a href="R4.html#cb89-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">premium =</span> <span class="fu">as.logical</span>(<span class="fu">rbinom</span>(<span class="at">n =</span> <span class="dv">1000</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fl">0.2</span>)),</span>
+<span id="cb89-6"><a href="R4.html#cb89-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">price =</span> size <span class="sc">*</span> (<span class="dv">10</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1000</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">3</span>) <span class="sc">+</span> (<span class="dv">10</span> <span class="sc">*</span> premium))</span>
 <span id="cb89-7"><a href="R4.html#cb89-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb89-8"><a href="R4.html#cb89-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb89-9"><a href="R4.html#cb89-9" aria-hidden="true" tabindex="-1"></a>random_data</span>
-<span id="cb89-10"><a href="R4.html#cb89-10" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 100 × 3</span></span>
-<span id="cb89-11"><a href="R4.html#cb89-11" aria-hidden="true" tabindex="-1"></a><span class="do">##    x_var    noise y_var</span></span>
-<span id="cb89-12"><a href="R4.html#cb89-12" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb89-13"><a href="R4.html#cb89-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  1  59.5 -15.2     28.6</span></span>
-<span id="cb89-14"><a href="R4.html#cb89-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  2  44.9  -6.42    31.5</span></span>
-<span id="cb89-15"><a href="R4.html#cb89-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  3  31.9   0.0549  32.8</span></span>
-<span id="cb89-16"><a href="R4.html#cb89-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  4  77.6   9.17    60.2</span></span>
-<span id="cb89-17"><a href="R4.html#cb89-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  5  36.4   2.97    37.5</span></span>
-<span id="cb89-18"><a href="R4.html#cb89-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  6  50.0  18.9     58.9</span></span>
-<span id="cb89-19"><a href="R4.html#cb89-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  7  51.4   0.362   40.9</span></span>
-<span id="cb89-20"><a href="R4.html#cb89-20" aria-hidden="true" tabindex="-1"></a><span class="do">##  8  33.8   2.18    35.7</span></span>
-<span id="cb89-21"><a href="R4.html#cb89-21" aria-hidden="true" tabindex="-1"></a><span class="do">##  9  50.6  -6.19    34.0</span></span>
-<span id="cb89-22"><a href="R4.html#cb89-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 10  56.0  15.5     57.9</span></span>
-<span id="cb89-23"><a href="R4.html#cb89-23" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 90 more rows</span></span></code></pre></div>
-<p>Nun können wir unsere kontinuierlichen Zufallsdaten plotten. Typischerweise,
-wird die erklärende unabhängige Variable auf der x-Achse, die zu erklärende
-abhängige Variable auf der y-Achse abgetragen. Mit <code>geom_point()</code> können wir
+<span id="cb89-9"><a href="R4.html#cb89-9" aria-hidden="true" tabindex="-1"></a>rent <span class="sc">%&gt;%</span> </span>
+<span id="cb89-10"><a href="R4.html#cb89-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">5</span>)</span>
+<span id="cb89-11"><a href="R4.html#cb89-11" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 5 × 3</span></span>
+<span id="cb89-12"><a href="R4.html#cb89-12" aria-hidden="true" tabindex="-1"></a><span class="do">##    size premium price</span></span>
+<span id="cb89-13"><a href="R4.html#cb89-13" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;dbl&gt; &lt;lgl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb89-14"><a href="R4.html#cb89-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 1  77.2 TRUE    1473.</span></span>
+<span id="cb89-15"><a href="R4.html#cb89-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 2  66.1 FALSE    574.</span></span>
+<span id="cb89-16"><a href="R4.html#cb89-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 3  56.4 FALSE    801.</span></span>
+<span id="cb89-17"><a href="R4.html#cb89-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  90.7 TRUE    2290.</span></span>
+<span id="cb89-18"><a href="R4.html#cb89-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 5  59.8 TRUE    1197.</span></span></code></pre></div>
+<p>Nun können wir unsere Zufallsdaten plotten. Typischerweise wird die erklärende
+unabhängige Variable, hier <code>size</code>, auf der x-Achse und die zu erklärende
+abhängige Variable, <code>price</code>, auf der y-Achse abgetragen. Mit <code>geom_point()</code> können wir
 einen scatterplot erstellen um die Kombinationen der Werte für x- und y-Variablen
 als Punkte in einem Koordinatensystem darzustellen.</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="R4.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> random_data, <span class="fu">aes</span>(<span class="at">x =</span> x_var, <span class="at">y =</span> y_var)) <span class="sc">+</span></span>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="R4.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rent, <span class="fu">aes</span>(<span class="at">x =</span> size, <span class="at">y =</span> price)) <span class="sc">+</span></span>
 <span id="cb90-2"><a href="R4.html#cb90-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div>
-<p><img src="r-intro_files/figure-html/scatter_1-1.png" width="672" /></p>
+<p><img src="r-intro_files/figure-html/scatter-1.png" width="672" /></p>
 <p>Da wir die Daten selbst generiert haben, wissen wir bereits, dass x- und
 y-Variable positiv miteinander korreliert sind. Auch ohne dieses Wissen, würde
 uns ein erster Blick auf die Punktewolke vermutlich einen positiven linearen
@@ -424,17 +421,33 @@ setzen. “lm” steht dabei für “linear model”, also eine lineare Regressi
 weitere Argument <code>se = FALSE</code> sorgt dafür, dass kein Konfidenzinterval – ein
 Maß für die Unsicherheit des geschätzten Zusammenhangs – um die Gerade
 angezeigt wird.</p>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="R4.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> random_data, <span class="fu">aes</span>(<span class="at">x =</span> x_var, <span class="at">y =</span> y_var)) <span class="sc">+</span></span>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="R4.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rent, <span class="fu">aes</span>(<span class="at">x =</span> size, <span class="at">y =</span> price)) <span class="sc">+</span></span>
 <span id="cb91-2"><a href="R4.html#cb91-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb91-3"><a href="R4.html#cb91-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb91-3"><a href="R4.html#cb91-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&#39;lm&#39;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb91-4"><a href="R4.html#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="do">## `geom_smooth()` using formula &#39;y ~ x&#39;</span></span></code></pre></div>
 <p><img src="r-intro_files/figure-html/scatter_lm-1.png" width="672" /></p>
 <p>Der Winkel in dem die Regressionsgerade verläuft – die <em>slope</em> – zeigt uns den
-Zusammenhang zwischen beiden Variablen an. Wir sehen einen klaren linearen
-Zusammenhang zwischen x- und y-Variable.</p>
-<p>Weiterführende Informationen dazu, wie wir scatterplots und Regressionsgeraden
-nach einer dritten Variable gruppiert darstellen können, finden Sie unter:
-<a href="https://jakobtures.github.io/web-scraping/ggplot.html#continuous-x-continuous-y" target="_blank">https://jakobtures.github.io/web-scraping/ggplot.html#continuous-x-continuous-y</a></p>
+Zusammenhang zwischen beiden Variablen an, welcher hier klar positiv ist.</p>
+<p>Wir haben die Zufallsdaten so konstruiert, dass es eine Klasse von Wohnungen
+gibt, welche besonders teuer sind. Die Korrelation zwischen Größe und Preis
+unterscheidet sich also zwischen diesen Gruppen. Dies können wir in unserem Plot
+visualisieren in dem wir die Variable <code>premium</code> nutzen um die Daten zu gruppieren
+und sowohl Punkte als auch Regressionsgeraden getrennt nach dem Wert der dritten
+Variable abzutragen. Zur Gruppierung legen wir eine weitere aesthetic fest.
+Dazu könnten wir das Argument <code>group = premium</code> setzen. Um Punkte und Geraden
+auch farblich abzugrenzen, bietet sich aber <code>colour = premium</code> an.</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="R4.html#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rent, <span class="fu">aes</span>(<span class="at">x =</span> size, <span class="at">y =</span> price, <span class="at">colour =</span> premium)) <span class="sc">+</span></span>
+<span id="cb92-2"><a href="R4.html#cb92-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb92-3"><a href="R4.html#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&#39;lm&#39;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb92-4"><a href="R4.html#cb92-4" aria-hidden="true" tabindex="-1"></a><span class="do">## `geom_smooth()` using formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r-intro_files/figure-html/scatter_grouped_lm-1.png" width="672" /></p>
+<p>Wir sehen klar, dass sich die Slope beider Geraden unterscheidet. Die Korrelation
+zwischen Größe und Preis ist für Premiumwohnungen stärker.</p>
+<p>Sidenote: In diesem Fall haben wir die Daten selbst konstruiert und waren uns
+über die Zusammenhänge der Variablen im Vorfeld bewusst. Die Zusammenhänge in
+echten Daten kennen wir nicht, wir können aber basiert auf theoretischen
+Überlegungen Annahmen zu Zusammenhängen treffen und diese, unter anderem, mit
+vergleichbaren graphischen Analysen überprüfen.</p>
 </div>
 <div id="kategoriales-x-kontinuierliches-y" class="section level3 hasAnchor" number="4.2.2">
 <h3><span class="header-section-number">4.2.2</span> kategoriales x, kontinuierliches y<a href="R4.html#kategoriales-x-kontinuierliches-y" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -446,22 +459,22 @@ Variable vor. Dies benötigen wir aber auch nicht, da <code>geom_bar()</code> �
 barplots – die Anzahl von Beobachtungen pro Kategorie der x Variable
 automatisch berechnet. So müssen wir in den aesthetics auch nur die x Variable
 zuordnen.</p>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="R4.html#cb92-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb92-2"><a href="R4.html#cb92-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
-<span id="cb92-3"><a href="R4.html#cb92-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="R4.html#cb93-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb93-2"><a href="R4.html#cb93-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
+<span id="cb93-3"><a href="R4.html#cb93-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>()</span></code></pre></div>
 <p><img src="r-intro_files/figure-html/mdb_partei_1-1.png" width="672" /></p>
 <p>So schnell und einfach kommen wir zu einem barplot der Fraktionsmitgliedschaft. Die
 Darstellung ist dabei aber nicht sonderlich hübsch. Ein erster Schritt wäre es,
 die Achsen sowie die Graphik selbst sinnvoll zu beschriften. die Funktion
 <code>labs()</code> erlaubt die Benennung der zentralen Graphikbestandteile,
 beispielsweise:</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="R4.html#cb93-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb93-2"><a href="R4.html#cb93-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
-<span id="cb93-3"><a href="R4.html#cb93-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb93-4"><a href="R4.html#cb93-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
-<span id="cb93-5"><a href="R4.html#cb93-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
-<span id="cb93-6"><a href="R4.html#cb93-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
-<span id="cb93-7"><a href="R4.html#cb93-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="R4.html#cb94-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb94-2"><a href="R4.html#cb94-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
+<span id="cb94-3"><a href="R4.html#cb94-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb94-4"><a href="R4.html#cb94-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
+<span id="cb94-5"><a href="R4.html#cb94-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
+<span id="cb94-6"><a href="R4.html#cb94-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
+<span id="cb94-7"><a href="R4.html#cb94-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>)</span></code></pre></div>
 <p><img src="r-intro_files/figure-html/mdb_partei_3-1.png" width="672" /></p>
 <p>Soweit, so gut. Aber die Balken sind doch noch sehr eintönig grau. In der
 <code>aes()</code> Funktion innerhalb von <code>geom_bar()</code> oder auch <code>ggplot()</code>, können wir
@@ -469,13 +482,13 @@ beispielsweise:</p>
 Variable eingefärbt werden sollen. Setzen wir dieses gleich der Variable
 “fraktion”, bekommt jeder Balken eine eigene Farbe zugewiesen. Die automatisch
 erstellte Farblegende, verstecken wir mit einem weiteren Argument.</p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="R4.html#cb94-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb94-2"><a href="R4.html#cb94-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
-<span id="cb94-3"><a href="R4.html#cb94-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> fraktion), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb94-4"><a href="R4.html#cb94-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
-<span id="cb94-5"><a href="R4.html#cb94-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
-<span id="cb94-6"><a href="R4.html#cb94-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
-<span id="cb94-7"><a href="R4.html#cb94-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="R4.html#cb95-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb95-2"><a href="R4.html#cb95-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
+<span id="cb95-3"><a href="R4.html#cb95-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> fraktion), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb95-4"><a href="R4.html#cb95-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
+<span id="cb95-5"><a href="R4.html#cb95-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
+<span id="cb95-6"><a href="R4.html#cb95-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
+<span id="cb95-7"><a href="R4.html#cb95-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>)</span></code></pre></div>
 <p><img src="r-intro_files/figure-html/mdb_partei_4-1.png" width="672" /></p>
 <p>Noch schöner wäre es, wenn die Balkenfarben mit den tatsächlichen Parteifarben
 übereinstimmen würden. Dazu können wir die Farben der Balken per Hand festlegen
@@ -484,15 +497,15 @@ Farbnamen den wir dann für das <code>fill =</code> Argument nutzen. Beachten Si
 dass <code>fill =</code> diesmal nicht innerhalb von <code>aes()</code> steht. Dies liegt daran, dass
 wir die Farben nicht anhand einer Variable festlegen sondern konstant zuweisen,
 was außerhalb von <code>aes()</code> erfolgt.</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="R4.html#cb95-1" aria-hidden="true" tabindex="-1"></a>parteifarben <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;deepskyblue&quot;</span>, <span class="st">&quot;yellow2&quot;</span>, <span class="st">&quot;limegreen&quot;</span>, <span class="st">&quot;violetred&quot;</span>, <span class="st">&quot;grey&quot;</span>)</span>
-<span id="cb95-2"><a href="R4.html#cb95-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb95-3"><a href="R4.html#cb95-3" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb95-4"><a href="R4.html#cb95-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
-<span id="cb95-5"><a href="R4.html#cb95-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">fill =</span> parteifarben) <span class="sc">+</span></span>
-<span id="cb95-6"><a href="R4.html#cb95-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
-<span id="cb95-7"><a href="R4.html#cb95-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
-<span id="cb95-8"><a href="R4.html#cb95-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
-<span id="cb95-9"><a href="R4.html#cb95-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="R4.html#cb96-1" aria-hidden="true" tabindex="-1"></a>parteifarben <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;deepskyblue&quot;</span>, <span class="st">&quot;yellow2&quot;</span>, <span class="st">&quot;limegreen&quot;</span>, <span class="st">&quot;violetred&quot;</span>, <span class="st">&quot;grey&quot;</span>)</span>
+<span id="cb96-2"><a href="R4.html#cb96-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-3"><a href="R4.html#cb96-3" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb96-4"><a href="R4.html#cb96-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
+<span id="cb96-5"><a href="R4.html#cb96-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">fill =</span> parteifarben) <span class="sc">+</span></span>
+<span id="cb96-6"><a href="R4.html#cb96-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
+<span id="cb96-7"><a href="R4.html#cb96-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
+<span id="cb96-8"><a href="R4.html#cb96-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
+<span id="cb96-9"><a href="R4.html#cb96-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>)</span></code></pre></div>
 <p><img src="r-intro_files/figure-html/mdb_partei_5-1.png" width="672" /></p>
 <p>Eine Übersicht über alle verfügbaren Farben, finden Sie unter:
 <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf" target="_blank">http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf</a></p>
@@ -500,41 +513,41 @@ was außerhalb von <code>aes()</code> erfolgt.</p>
 Dieser ist Teil des standard <em>themes</em> von <strong>ggplot2</strong>, <code>theme_gray()</code>. Wir
 können aber auch andere themes auswählen. Eine Übersicht finden sie hier:
 <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" target="_blank">https://ggplot2.tidyverse.org/reference/ggtheme.html</a></p>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="R4.html#cb96-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb96-2"><a href="R4.html#cb96-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
-<span id="cb96-3"><a href="R4.html#cb96-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">fill =</span> parteifarben) <span class="sc">+</span></span>
-<span id="cb96-4"><a href="R4.html#cb96-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
-<span id="cb96-5"><a href="R4.html#cb96-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
-<span id="cb96-6"><a href="R4.html#cb96-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
-<span id="cb96-7"><a href="R4.html#cb96-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
-<span id="cb96-8"><a href="R4.html#cb96-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="R4.html#cb97-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb97-2"><a href="R4.html#cb97-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
+<span id="cb97-3"><a href="R4.html#cb97-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">fill =</span> parteifarben) <span class="sc">+</span></span>
+<span id="cb97-4"><a href="R4.html#cb97-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
+<span id="cb97-5"><a href="R4.html#cb97-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
+<span id="cb97-6"><a href="R4.html#cb97-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
+<span id="cb97-7"><a href="R4.html#cb97-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
+<span id="cb97-8"><a href="R4.html#cb97-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="r-intro_files/figure-html/mdb_partei_6-1.png" width="672" /></p>
 <p>Nutzen wir für die <code>fill</code> aesthetic eine zweite Variable, beispielsweise die
 Informationen zu akademischen Titeln, erhalten wir einen gestapelten barplot.
 Hier macht es wiederum Sinn, die automatisch erstellte Farblegende nicht
 auszublenden.</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="R4.html#cb97-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb97-2"><a href="R4.html#cb97-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
-<span id="cb97-3"><a href="R4.html#cb97-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> titel_dummy)) <span class="sc">+</span></span>
-<span id="cb97-4"><a href="R4.html#cb97-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
-<span id="cb97-5"><a href="R4.html#cb97-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
-<span id="cb97-6"><a href="R4.html#cb97-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate mit/ohne Titel im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
-<span id="cb97-7"><a href="R4.html#cb97-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
-<span id="cb97-8"><a href="R4.html#cb97-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="R4.html#cb98-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb98-2"><a href="R4.html#cb98-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
+<span id="cb98-3"><a href="R4.html#cb98-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> titel_dummy)) <span class="sc">+</span></span>
+<span id="cb98-4"><a href="R4.html#cb98-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
+<span id="cb98-5"><a href="R4.html#cb98-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
+<span id="cb98-6"><a href="R4.html#cb98-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate mit/ohne Titel im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
+<span id="cb98-7"><a href="R4.html#cb98-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
+<span id="cb98-8"><a href="R4.html#cb98-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="r-intro_files/figure-html/mdb_partei_titel_1-1.png" width="672" /></p>
 <p>Möchten wir die Balken nicht stapeln sondern nebeneinander darstellen, können
 wir dies über das Argument <code>position = "dodge"</code> festlegen. Um die Darstellung
 weiter aufzuhübschen können wir außerdem den Titel der Farblegende in <code>labs()</code>
 anpassen.</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="R4.html#cb98-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb98-2"><a href="R4.html#cb98-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
-<span id="cb98-3"><a href="R4.html#cb98-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> titel_dummy), <span class="at">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="sc">+</span></span>
-<span id="cb98-4"><a href="R4.html#cb98-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
-<span id="cb98-5"><a href="R4.html#cb98-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
-<span id="cb98-6"><a href="R4.html#cb98-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate mit/ohne Titel im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
-<span id="cb98-7"><a href="R4.html#cb98-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>,</span>
-<span id="cb98-8"><a href="R4.html#cb98-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">fill =</span> <span class="st">&quot;Akadem. Titel&quot;</span>) <span class="sc">+</span></span>
-<span id="cb98-9"><a href="R4.html#cb98-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="R4.html#cb99-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb99-2"><a href="R4.html#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
+<span id="cb99-3"><a href="R4.html#cb99-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> titel_dummy), <span class="at">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="sc">+</span></span>
+<span id="cb99-4"><a href="R4.html#cb99-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
+<span id="cb99-5"><a href="R4.html#cb99-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
+<span id="cb99-6"><a href="R4.html#cb99-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate mit/ohne Titel im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
+<span id="cb99-7"><a href="R4.html#cb99-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>,</span>
+<span id="cb99-8"><a href="R4.html#cb99-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">fill =</span> <span class="st">&quot;Akadem. Titel&quot;</span>) <span class="sc">+</span></span>
+<span id="cb99-9"><a href="R4.html#cb99-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="r-intro_files/figure-html/mdb_partei_titel_2-1.png" width="672" /></p>
 </div>
 <div id="kontinuierliches-x" class="section level3 hasAnchor" number="4.2.3">
@@ -546,15 +559,15 @@ Variable in eine festlegbare Anzahl von Abschnitten – <em>bins</em> – und st
 die Anzahl von Beobachtungen die in jedes bin fallen als Balken dar. Als
 Standard unterteilt <strong>ggplot2</strong> eine Variable in 30 bins, dies können wir aber
 über das <code>bins =</code> Argument beeinflussen.</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="R4.html#cb99-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb99-2"><a href="R4.html#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alter)) <span class="sc">+</span></span>
-<span id="cb99-3"><a href="R4.html#cb99-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
-<span id="cb99-4"><a href="R4.html#cb99-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Alter&quot;</span>,</span>
-<span id="cb99-5"><a href="R4.html#cb99-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Anzahl&quot;</span>,</span>
-<span id="cb99-6"><a href="R4.html#cb99-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Altersverteilung im 19. Bundestag&quot;</span>,</span>
-<span id="cb99-7"><a href="R4.html#cb99-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
-<span id="cb99-8"><a href="R4.html#cb99-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
-<span id="cb99-9"><a href="R4.html#cb99-9" aria-hidden="true" tabindex="-1"></a><span class="do">## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="R4.html#cb100-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb100-2"><a href="R4.html#cb100-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alter)) <span class="sc">+</span></span>
+<span id="cb100-3"><a href="R4.html#cb100-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb100-4"><a href="R4.html#cb100-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Alter&quot;</span>,</span>
+<span id="cb100-5"><a href="R4.html#cb100-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Anzahl&quot;</span>,</span>
+<span id="cb100-6"><a href="R4.html#cb100-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Altersverteilung im 19. Bundestag&quot;</span>,</span>
+<span id="cb100-7"><a href="R4.html#cb100-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
+<span id="cb100-8"><a href="R4.html#cb100-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb100-9"><a href="R4.html#cb100-9" aria-hidden="true" tabindex="-1"></a><span class="do">## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span></code></pre></div>
 <p><img src="r-intro_files/figure-html/alter_distribution_histo_1-1.png" width="672" /></p>
 <p>Um die Grafik besser interpretierbar zu machen, könnten wir eine vertikale Linie
 hinzufügen die den Mittelwert der x Variable markiert. Dazu nutzen wir
@@ -562,15 +575,15 @@ hinzufügen die den Mittelwert der x Variable markiert. Dazu nutzen wir
 eingezeichnet werden soll. Außerdem scheint es angebracht, die Anzahl der bins
 zu reduzieren. Mit 30 bins, deckt jeder Balken knapp 2 Jahre ab. So werden
 zufällige Fluktuationen in der Altersverteilung überbetont.</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="R4.html#cb100-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb100-2"><a href="R4.html#cb100-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alter)) <span class="sc">+</span></span>
-<span id="cb100-3"><a href="R4.html#cb100-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
-<span id="cb100-4"><a href="R4.html#cb100-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(alter)), <span class="at">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
-<span id="cb100-5"><a href="R4.html#cb100-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Alter&quot;</span>,</span>
-<span id="cb100-6"><a href="R4.html#cb100-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Anzahl&quot;</span>,</span>
-<span id="cb100-7"><a href="R4.html#cb100-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Altersverteilung im 19. Bundestag&quot;</span>,</span>
-<span id="cb100-8"><a href="R4.html#cb100-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
-<span id="cb100-9"><a href="R4.html#cb100-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="R4.html#cb101-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb101-2"><a href="R4.html#cb101-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alter)) <span class="sc">+</span></span>
+<span id="cb101-3"><a href="R4.html#cb101-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb101-4"><a href="R4.html#cb101-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(alter)), <span class="at">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb101-5"><a href="R4.html#cb101-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Alter&quot;</span>,</span>
+<span id="cb101-6"><a href="R4.html#cb101-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Anzahl&quot;</span>,</span>
+<span id="cb101-7"><a href="R4.html#cb101-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Altersverteilung im 19. Bundestag&quot;</span>,</span>
+<span id="cb101-8"><a href="R4.html#cb101-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
+<span id="cb101-9"><a href="R4.html#cb101-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="r-intro_files/figure-html/alter_distribution_histo_2-1.png" width="672" /></p>
 <p>Wir sehen, dass die Alterstruktur annäherend um den Mittelwert normalverteilt
 ist, die Verteilung aber leicht links-schief ist. Das bedeutet, dass die
@@ -590,35 +603,35 @@ nutzen. Dabei werden in einem plot mehrere einzelne plots neben- und
 untereinander dargestellt. In der Funktion <code>facet_wrap()</code> schreiben wir dazu
 den Namen der Variable nachdem die Kacheln gebildet werden sollen und setzen
 davor eine Tilde <code>~</code>.</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="R4.html#cb101-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb101-2"><a href="R4.html#cb101-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alter)) <span class="sc">+</span></span>
-<span id="cb101-3"><a href="R4.html#cb101-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
-<span id="cb101-4"><a href="R4.html#cb101-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> fraktion) <span class="sc">+</span></span>
-<span id="cb101-5"><a href="R4.html#cb101-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Alter&quot;</span>,</span>
-<span id="cb101-6"><a href="R4.html#cb101-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Anzahl&quot;</span>,</span>
-<span id="cb101-7"><a href="R4.html#cb101-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Altersverteilung im 19. Bundestag nach Fraktion&quot;</span>,</span>
-<span id="cb101-8"><a href="R4.html#cb101-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
-<span id="cb101-9"><a href="R4.html#cb101-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="R4.html#cb102-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb102-2"><a href="R4.html#cb102-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alter)) <span class="sc">+</span></span>
+<span id="cb102-3"><a href="R4.html#cb102-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb102-4"><a href="R4.html#cb102-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> fraktion) <span class="sc">+</span></span>
+<span id="cb102-5"><a href="R4.html#cb102-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Alter&quot;</span>,</span>
+<span id="cb102-6"><a href="R4.html#cb102-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Anzahl&quot;</span>,</span>
+<span id="cb102-7"><a href="R4.html#cb102-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Altersverteilung im 19. Bundestag nach Fraktion&quot;</span>,</span>
+<span id="cb102-8"><a href="R4.html#cb102-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
+<span id="cb102-9"><a href="R4.html#cb102-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="r-intro_files/figure-html/alter_distribution_histo_3-1.png" width="672" /></p>
 <p>Um dies besser interpretierbar zu machen, könnten wir die Mittelwerte des Alters
 für jede Fraktion einzeichnen. Diese müssen wir dazu zunächst pro Fraktion berechen.
 Dazu nutzen wir wiederum die dplyr Funktionen und hängen <code>ggplot()</code> am Ende der
 Pipe an. In diesem Zuge, können wir auch die Fraktionslosen herausfiltern, da ihre
 Anzahl für eine inhaltliche Interpretation deutlich zu klein ist.</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="R4.html#cb102-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span></span>
-<span id="cb102-2"><a href="R4.html#cb102-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(fraktion <span class="sc">!=</span> <span class="st">&quot;Flos&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb102-3"><a href="R4.html#cb102-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(fraktion) <span class="sc">%&gt;%</span> </span>
-<span id="cb102-4"><a href="R4.html#cb102-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arith_mittel =</span> <span class="fu">mean</span>(alter)) <span class="sc">%&gt;%</span> </span>
-<span id="cb102-5"><a href="R4.html#cb102-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb102-6"><a href="R4.html#cb102-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alter)) <span class="sc">+</span></span>
-<span id="cb102-7"><a href="R4.html#cb102-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
-<span id="cb102-8"><a href="R4.html#cb102-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> arith_mittel), <span class="at">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
-<span id="cb102-9"><a href="R4.html#cb102-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> fraktion) <span class="sc">+</span></span>
-<span id="cb102-10"><a href="R4.html#cb102-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Alter&quot;</span>,</span>
-<span id="cb102-11"><a href="R4.html#cb102-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Anzahl&quot;</span>,</span>
-<span id="cb102-12"><a href="R4.html#cb102-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Altersverteilung im 19. Bundestag nach Fraktion&quot;</span>,</span>
-<span id="cb102-13"><a href="R4.html#cb102-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
-<span id="cb102-14"><a href="R4.html#cb102-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="R4.html#cb103-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span></span>
+<span id="cb103-2"><a href="R4.html#cb103-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(fraktion <span class="sc">!=</span> <span class="st">&quot;Flos&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb103-3"><a href="R4.html#cb103-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(fraktion) <span class="sc">%&gt;%</span> </span>
+<span id="cb103-4"><a href="R4.html#cb103-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arith_mittel =</span> <span class="fu">mean</span>(alter)) <span class="sc">%&gt;%</span> </span>
+<span id="cb103-5"><a href="R4.html#cb103-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb103-6"><a href="R4.html#cb103-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alter)) <span class="sc">+</span></span>
+<span id="cb103-7"><a href="R4.html#cb103-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb103-8"><a href="R4.html#cb103-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> arith_mittel), <span class="at">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb103-9"><a href="R4.html#cb103-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> fraktion) <span class="sc">+</span></span>
+<span id="cb103-10"><a href="R4.html#cb103-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Alter&quot;</span>,</span>
+<span id="cb103-11"><a href="R4.html#cb103-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Anzahl&quot;</span>,</span>
+<span id="cb103-12"><a href="R4.html#cb103-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Altersverteilung im 19. Bundestag nach Fraktion&quot;</span>,</span>
+<span id="cb103-13"><a href="R4.html#cb103-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
+<span id="cb103-14"><a href="R4.html#cb103-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="r-intro_files/figure-html/alter_distribution_histo_4-1.png" width="672" /></p>
 <p>Die Befunde aus Kapitel <a href="R3.html#R3">3</a> lassen sich zunächst bestätigen. Der relativ
 hohe Mittelwert der AfD wird durch viele besonders alte Mandatsträger:innen
@@ -651,15 +664,15 @@ zwei übereinandergelegten density plots gleichzeitig betrachten und vergleichen
 Dazu plotten wir mit <code>geom_density()</code> und nutzen entweder die <code>fill</code> oder
 <code>colour</code> aesthetic. Bei <code>fill</code> wird die Fläche unter der Kurve gefüllt, bei
 <code>colour</code> werden nur die Kurven farblich gezeichnet.</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="R4.html#cb103-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb103-2"><a href="R4.html#cb103-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alter, <span class="at">colour =</span> titel_dummy)) <span class="sc">+</span></span>
-<span id="cb103-3"><a href="R4.html#cb103-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>() <span class="sc">+</span></span>
-<span id="cb103-4"><a href="R4.html#cb103-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Alter&quot;</span>,</span>
-<span id="cb103-5"><a href="R4.html#cb103-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Density&quot;</span>,</span>
-<span id="cb103-6"><a href="R4.html#cb103-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Altersverteilung im 19. Bundestag&quot;</span>,</span>
-<span id="cb103-7"><a href="R4.html#cb103-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>,</span>
-<span id="cb103-8"><a href="R4.html#cb103-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">colour =</span> <span class="st">&quot;Akadem. Titel&quot;</span>) <span class="sc">+</span></span>
-<span id="cb103-9"><a href="R4.html#cb103-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="R4.html#cb104-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb104-2"><a href="R4.html#cb104-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alter, <span class="at">colour =</span> titel_dummy)) <span class="sc">+</span></span>
+<span id="cb104-3"><a href="R4.html#cb104-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb104-4"><a href="R4.html#cb104-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Alter&quot;</span>,</span>
+<span id="cb104-5"><a href="R4.html#cb104-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Density&quot;</span>,</span>
+<span id="cb104-6"><a href="R4.html#cb104-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Altersverteilung im 19. Bundestag&quot;</span>,</span>
+<span id="cb104-7"><a href="R4.html#cb104-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>,</span>
+<span id="cb104-8"><a href="R4.html#cb104-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">colour =</span> <span class="st">&quot;Akadem. Titel&quot;</span>) <span class="sc">+</span></span>
+<span id="cb104-9"><a href="R4.html#cb104-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="r-intro_files/figure-html/alter_titel_dens_1-1.png" width="672" /></p>
 <p>Beide Verteilungen sind sich relativ ähnlich, bei den Titelträgern gibt es aber
 einen höheren Anteil besonders alter MdBs. Wir haben auch bereits gesehen, dass
@@ -667,17 +680,17 @@ es möglicherweise Unterschiede zwischen den Fraktionen gibt. Diese können wir
 erneut mit einem facet vergleichen. Dazu filtern wir zunächst die Fraktionslosen
 heraus, da durch ihre geringe Anzahl nicht genug Daten zur Verfügung stehen um
 belastbare Ergebnisse zur Verteilung zu berechnen.</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="R4.html#cb104-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb104-2"><a href="R4.html#cb104-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(fraktion <span class="sc">!=</span> <span class="st">&quot;Flos&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb104-3"><a href="R4.html#cb104-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alter, <span class="at">colour =</span> titel_dummy)) <span class="sc">+</span></span>
-<span id="cb104-4"><a href="R4.html#cb104-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>() <span class="sc">+</span></span>
-<span id="cb104-5"><a href="R4.html#cb104-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> fraktion) <span class="sc">+</span></span>
-<span id="cb104-6"><a href="R4.html#cb104-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Alter&quot;</span>,</span>
-<span id="cb104-7"><a href="R4.html#cb104-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Density&quot;</span>,</span>
-<span id="cb104-8"><a href="R4.html#cb104-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Altersverteilung im 19. Bundestag&quot;</span>,</span>
-<span id="cb104-9"><a href="R4.html#cb104-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>,</span>
-<span id="cb104-10"><a href="R4.html#cb104-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">colour =</span> <span class="st">&quot;Akadem. Titel&quot;</span>) <span class="sc">+</span></span>
-<span id="cb104-11"><a href="R4.html#cb104-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="R4.html#cb105-1" aria-hidden="true" tabindex="-1"></a>stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb105-2"><a href="R4.html#cb105-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(fraktion <span class="sc">!=</span> <span class="st">&quot;Flos&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb105-3"><a href="R4.html#cb105-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> alter, <span class="at">colour =</span> titel_dummy)) <span class="sc">+</span></span>
+<span id="cb105-4"><a href="R4.html#cb105-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb105-5"><a href="R4.html#cb105-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> fraktion) <span class="sc">+</span></span>
+<span id="cb105-6"><a href="R4.html#cb105-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Alter&quot;</span>,</span>
+<span id="cb105-7"><a href="R4.html#cb105-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Density&quot;</span>,</span>
+<span id="cb105-8"><a href="R4.html#cb105-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Altersverteilung im 19. Bundestag&quot;</span>,</span>
+<span id="cb105-9"><a href="R4.html#cb105-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>,</span>
+<span id="cb105-10"><a href="R4.html#cb105-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">colour =</span> <span class="st">&quot;Akadem. Titel&quot;</span>) <span class="sc">+</span></span>
+<span id="cb105-11"><a href="R4.html#cb105-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="r-intro_files/figure-html/alter_titel_dens_2-1.png" width="672" /></p>
 <p>Die plots bestätigen die Ergebnisse aus Kapitel <a href="R3.html#R3">3</a> weitestgehend. Union
 und SPD Mandatsträger mit und ohne Titel sind in der Altersverteilung sehr
@@ -706,8 +719,8 @@ Darstellung zunehmend verschwommen. Das Verkleinern funktioniert eventuell
 besser, kann aber auch graphische Artefakte erzeugen.</p>
 <p>Hier speichern wir die letzte erstellte Graphik – die density plots nach
 Fraktionen – als “.eps”.</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="R4.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;age_density_by_party.eps&quot;</span>)</span>
-<span id="cb105-2"><a href="R4.html#cb105-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Saving 7 x 5 in image</span></span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="R4.html#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;age_density_by_party.eps&quot;</span>)</span>
+<span id="cb106-2"><a href="R4.html#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Saving 7 x 5 in image</span></span></code></pre></div>
 <p>Flexibler einsetzen lässt sich sich <code>ggsave()</code> wenn wir plots zunächst einem
 Objekt zuweisen. So ist es nicht mehr notwendig direkt nach der Erstellung einer
 Graphik den Export vorzunehmen. Hier erstellen wir zwei Graphiken und weisen
@@ -718,28 +731,28 @@ erst dann hinzuzufügen. Die erstellten Graphiken exportieren wir am Ende des
 Blocks. Dabei handelt es sich um den barplot der Abgeordneten nach Fraktionen.
 Einmal wie oben als Version mit den Parteifarben, einmal als greyscale Variante,
 welche sich besser zum Druck eignet. Dazu fügen wir <code>scale_fill_grey()</code> hinzu.</p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="R4.html#cb106-1" aria-hidden="true" tabindex="-1"></a>mdb_partei_colour <span class="ot">&lt;-</span> stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb106-2"><a href="R4.html#cb106-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
-<span id="cb106-3"><a href="R4.html#cb106-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">fill =</span> parteifarben) <span class="sc">+</span></span>
-<span id="cb106-4"><a href="R4.html#cb106-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
-<span id="cb106-5"><a href="R4.html#cb106-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
-<span id="cb106-6"><a href="R4.html#cb106-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
-<span id="cb106-7"><a href="R4.html#cb106-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
-<span id="cb106-8"><a href="R4.html#cb106-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
-<span id="cb106-9"><a href="R4.html#cb106-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb106-10"><a href="R4.html#cb106-10" aria-hidden="true" tabindex="-1"></a>mdb_partei_grey <span class="ot">&lt;-</span> stammdaten_19 <span class="sc">%&gt;%</span> </span>
-<span id="cb106-11"><a href="R4.html#cb106-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
-<span id="cb106-12"><a href="R4.html#cb106-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> fraktion)) <span class="sc">+</span></span>
-<span id="cb106-13"><a href="R4.html#cb106-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
-<span id="cb106-14"><a href="R4.html#cb106-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
-<span id="cb106-15"><a href="R4.html#cb106-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
-<span id="cb106-16"><a href="R4.html#cb106-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb106-17"><a href="R4.html#cb106-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_grey</span>()</span>
-<span id="cb106-18"><a href="R4.html#cb106-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb106-19"><a href="R4.html#cb106-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;mdb_party_colour.eps&quot;</span>, <span class="at">plot =</span> mdb_partei_colour)</span>
-<span id="cb106-20"><a href="R4.html#cb106-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Saving 7 x 5 in image</span></span>
-<span id="cb106-21"><a href="R4.html#cb106-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;mdb_party_grey.eps&quot;</span>, <span class="at">plot =</span> mdb_partei_grey)</span>
-<span id="cb106-22"><a href="R4.html#cb106-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Saving 7 x 5 in image</span></span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="R4.html#cb107-1" aria-hidden="true" tabindex="-1"></a>mdb_partei_colour <span class="ot">&lt;-</span> stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb107-2"><a href="R4.html#cb107-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
+<span id="cb107-3"><a href="R4.html#cb107-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">fill =</span> parteifarben) <span class="sc">+</span></span>
+<span id="cb107-4"><a href="R4.html#cb107-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
+<span id="cb107-5"><a href="R4.html#cb107-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
+<span id="cb107-6"><a href="R4.html#cb107-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
+<span id="cb107-7"><a href="R4.html#cb107-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span></span>
+<span id="cb107-8"><a href="R4.html#cb107-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb107-9"><a href="R4.html#cb107-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-10"><a href="R4.html#cb107-10" aria-hidden="true" tabindex="-1"></a>mdb_partei_grey <span class="ot">&lt;-</span> stammdaten_19 <span class="sc">%&gt;%</span> </span>
+<span id="cb107-11"><a href="R4.html#cb107-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fraktion)) <span class="sc">+</span></span>
+<span id="cb107-12"><a href="R4.html#cb107-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> fraktion)) <span class="sc">+</span></span>
+<span id="cb107-13"><a href="R4.html#cb107-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fraktion&quot;</span>,</span>
+<span id="cb107-14"><a href="R4.html#cb107-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Mandate&quot;</span>,</span>
+<span id="cb107-15"><a href="R4.html#cb107-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Anzahl Mandate im 19. Bundestag nach Fraktionszugehörigkeit&quot;</span>,</span>
+<span id="cb107-16"><a href="R4.html#cb107-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">&quot;Daten: https://www.bundestag.de/services/opendata&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb107-17"><a href="R4.html#cb107-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_grey</span>()</span>
+<span id="cb107-18"><a href="R4.html#cb107-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-19"><a href="R4.html#cb107-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;mdb_party_colour.eps&quot;</span>, <span class="at">plot =</span> mdb_partei_colour)</span>
+<span id="cb107-20"><a href="R4.html#cb107-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Saving 7 x 5 in image</span></span>
+<span id="cb107-21"><a href="R4.html#cb107-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;mdb_party_grey.eps&quot;</span>, <span class="at">plot =</span> mdb_partei_grey)</span>
+<span id="cb107-22"><a href="R4.html#cb107-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Saving 7 x 5 in image</span></span></code></pre></div>
 <p>Wir können für <code>ggsave()</code> noch weitere Argumente festlegen. Zum Beispiel um die
 Größe und Auflösung der Graphik einzustellen. Diese sind vor allem interessant,
 wenn wir uns für das Speichern in einem pixelbasierten Format entscheiden. Für
